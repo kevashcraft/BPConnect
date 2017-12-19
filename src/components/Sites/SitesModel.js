@@ -1,0 +1,83 @@
+import * as Model from '../Model'
+
+exports.list = async (req) => {
+  let sql = `
+    SELECT * FROM sites_view
+    WHERE ticket_date_scheduled >= :drstart
+        AND ticket_date_scheduled <= :drend
+      AND (:ticket_id = 0
+        OR sites_view.ticket_id = :ticket_id)
+      AND (:subdivision_id = 0
+        OR sites_view.subdivision_id = :subdivision_id)
+      AND (:house_id = 0
+        OR sites_view.house_id = :house_id)
+  `
+  let bind = [
+    req.drstart, req.drend,
+    req.ticketId, req.houseId
+  ]
+
+  return await Model.list(sql, bind)
+}
+
+exports.retrieve = async (req) => {
+  let sql = `
+    SELECT * FROM sites_view
+    WHERE ticket_id = $1
+  `
+  let bind = [ req.id ]
+
+  return await Model.query(sql, bind)
+}
+
+exports.search = async (req) => {
+  let sql = `
+    SELECT * FROM (
+      SELECT
+        'subdivisions' as category,
+        similarity(subdivisions.name, :query) as ord1,
+        0 as ord2,
+        subdivisions.id,
+        subdivisions.name as title,
+        'By ' || builders.name as description
+      FROM subdivisions
+      JOIN builders
+        ON builders.id = subdivisions.builder_id
+      WHERE subdivisions.name ILIKE ANY $query
+      UNION
+      SELECT
+        'Tickets' as category,
+        similarity(orders_view.ticket_id::text, :query) as ord1,
+        1 as ord2,
+        orders_view.ticket_id,
+        '#' || orders_view.ticket_id::text || ' lot ' || houses.lot as title,
+        subdivisions.name || 'By ' || builders.name as description
+      FROM orders_view
+      JOIN tickets
+        ON tickets.id = orders_view.ticket_id
+      JOIN houses
+        ON houses.id = tickets.house_id
+      JOIN subdivisions
+        ON subdivisions.id = houses.subdivision_id
+      JOIN builders
+        ON builders.id = subdivisions.builder_id
+      WHERE orders_view.ticket_id::text ILIKE ANY $query
+        OR builders.name ILIKE ANY $query
+        OR houses.lot ILIKE ANY $query
+        OR houses.address ILIKE ANY $query
+    ) search
+    ORDER BY ord1 DESC, ord2 ASC
+    LIMIT 10
+  `
+  let bind = [ req.query ]
+
+  return await Model.query(sql, bind)
+}
+
+exports.update = async (req) => {
+  let sql = `
+    UPDATE tickets SET ready = $1
+    WHERE id = $2
+  `
+  let bind = [req.ready, req.ticketId]
+}

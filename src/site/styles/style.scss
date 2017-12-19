@@ -1,0 +1,74 @@
+@import 'colors';
+
+html,body{min-height:100%;}
+
+body { background: $background-dark-grey; }
+/*
+body > .grid {
+  height: 100%;
+}
+
+.column {
+  max-width: 450px;
+}*/
+
+.invisible { visibility: hidden; }
+.visible { visibility: visible; }
+.relative { position: relative; }
+.padding5 { padding: 5px; }
+.padding15 { padding: 15px; }
+.padding30 { padding: 30px !important; }
+.padding45 { padding: 45px; }
+.h100p { height: 100%; }
+.maxw450 { max-width: 450px; }
+.maxw300 { max-width: 300px; }
+.margin5 { margin: 5px; }
+.margin15 { margin: 15px; }
+.margin-t5 { margin-top: 5px; }
+.margin-t15 {margin-top: 15px; }
+.valign { vertical-align: middle; }
+.page-container {
+  padding: 15px;
+}
+
+.w300 { width: 300px }
+
+/* MAIN SIDEBAR MENU */
+
+/* fixes dropdown submenu */
+.ui.main.menu { overflow: visible !important; }
+
+/* page title */
+.ui.main.menu .page.dropdown {
+  font-size: 1.5rem;
+  padding: 1.5rem;
+  font-weight: bold;
+}
+.ui.main.menu .page.dropdown .item:hover i { color: $hover-highlight-red; }
+
+.ui.main.menu.sidebar a,
+.ui.main.menu.sidebar label {
+  color: $hover-highlight-red;
+}
+
+.ui.main.menu .controls .item { padding-top: 25px; padding-bottom: 25px; }
+
+.pusher {
+  width: 100%;
+}
+
+/* Date Picker */
+
+.ui.daterangepicker-container { position: relative; }
+.ui.daterangepicker {
+  position: absolute;
+  left: 0px;
+  top: -10px;
+}
+
+
+@media (min-width: 1000px) {
+  .pusher {
+    width: calc(100% - 260px);
+  }
+}
