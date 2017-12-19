@@ -13,6 +13,9 @@
         <div class="bar"></div>
         <label>Uploading File</label>
       </div>
+      <div>
+        <a @click="again">DO IT AGAIN!</a>
+      </div>
     </div>
     <div class="content" v-show="page == 'complete'">
       <p class="padding30">File has been uploaded!</p>
@@ -31,37 +34,40 @@
 </template>
 
 <script>
+import Modal from '../Misc/Modal'
 import SocketIOFileClient from 'socket.io-file-client'
 
 export default {
   data () {
     return {
+      meta: {
+        name: 'TicketImportDataModal'
+      },
       ticket: {},
       row: {},
       page: 'start',
     }
   },
+  mixins: [ Modal ],
   mounted: function() {
-    // console.log("start", BPC.s.item);
-    // BPC.s.item = 'thing'
-    // console.log("end", BPC.s.item);
     $('#file_progress_bar').progress();
   },
   methods: {
-    open: function(ticket) {
-      $(this.$el).modal('show');
-      this.$set('page', 'start');
+    afterOpen: function(ticket) {
+      console.log("ticketAO",ticket);
+      this.page = 'start'
       $('#data_file_input').val('');
       this.ticket = JSON.parse(JSON.stringify(ticket))
-    },
-    close: function() {
-      $(this.$el).modal('hide');
+      this.upload_open()
     },
     upload_open: function () {
       $('#data_file_input').click();
     },
+    again () {
+      this.upload_file()
+    },
     upload_file: function (event) {
-      // var uploader = new SocketIOFileClient(BPC.socket);
+      let uploader = new SocketIOFileClient(this.$root.socket);
       let pb = $('#file_progress_bar')
       console.log("pb",pb);
 
@@ -75,6 +81,7 @@ export default {
         console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
       });
       uploader.on('complete', (fileInfo) => {
+        uploader.destroy()
         console.log('Upload Complete', fileInfo);
       });
       uploader.on('error', (err) => {
@@ -88,10 +95,14 @@ export default {
 
       uploader.on('ready', () => {
         var fileEl = document.getElementById('data_file_input');
-        var uploadIds = uploader.upload(fileEl, { ticket_id: this.ticket.ticket_id });
-        console.log("uploadIds",uploadIds);
+        var uploadIds = uploader.upload(fileEl, {
+          data: {
+            route: 'TicketsExt:dataImport',
+            ticketId: this.ticket.ticketId
+          }
+        });
+
         pb.progress('set percent', 0);
-        uploader.destroy()
       })
 
       //     data = JSON.parse(data);

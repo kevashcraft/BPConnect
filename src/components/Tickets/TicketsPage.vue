@@ -33,7 +33,7 @@
     watch: {
       filters: {
         handler () {
-          console.log("updated!!!!");
+          console.log("updated!!!!", this.filters.daterange);
           this.update()
         },
         deep: true
@@ -46,24 +46,14 @@
     methods: {
       init () {
         this.init_table()
+        this.update()
       },
       update () {
-        this.ticketsTable.clear()
-        this.ticketsTable.draw()
-
-        let data = {}
-
         this.$root.req('Tickets:list', this.filters).then(response => {
+          this.ticketsTable.clear()
           this.ticketsTable.rows.add(response)
           this.ticketsTable.draw()
         })
-
-        $('.daterangepicker').data('daterangepicker').setStartDate(
-          moment('2016-01-01')
-        )
-        $('.daterangepicker').data('daterangepicker').setEndDate(
-          moment('2017-08-01')
-        )
       },
       ticketHide () {
         $('#ticket').removeClass('show')
@@ -98,7 +88,9 @@
         $('#ticketsTable').on('click', 'a[href="#import_data"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var table = this.ticketsTable
+          console.log("row",row);
           var ticket = table.row(row).data()
+          console.log("ticket",ticket);
           this.$refs.import.open(ticket)
         })
         $('#ticketsTable').on('click', 'a[href="#ticket_work"]', (event) => {

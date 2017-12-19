@@ -258,6 +258,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Modal from '../Misc/Modal'
 
 export default {
   data () {
@@ -304,9 +305,6 @@ export default {
     }
   },
   computed: {
-    modal () {
-      return this.$store.state.modal
-    },
     builderSupervisors () {
       let builderSupervisorsAll = this.$store.state.builderSupervisors
       let builderSupervisors = builderSupervisorsAll[this.ticket.builderId] || []
@@ -323,18 +321,10 @@ export default {
       'ticketTypes'
     ])
   },
+  mixins: [ Modal ],
   mounted () {
     this.emptyTicket = JSON.stringify(this.ticket)
     this.stepsLength = this.steps.length - 1
-
-    $(this.$el).modal({
-      closable: false,
-      onHidden: () => {
-        if (this.modal === this.meta.name) {
-          this.$store.commit('modalEmpty')
-        }
-      }
-    })
 
     $(this.$el).find('.refresh').on('click', () => {
       setTimeout(() => {
@@ -501,15 +491,6 @@ export default {
     })
   },
   watch: {
-    modal (n, o) {
-      if (n === this.meta.name) {
-        this.open()
-      }
-
-      if (o === this.meta.name) {
-        this.close()
-      }
-    },
     step () {
       setTimeout(() => {
         $(this.$el).modal('refresh')
@@ -530,17 +511,10 @@ export default {
     },
   },
   methods: {
-    open () {
+    afterOpen () {
       this.step = this.steps[0]
       this.stepIndex = 0
       this.ticket = JSON.parse(this.emptyTicket)
-      $(this.$el).modal('show')
-    },
-    close () {
-      $(this.$el).modal('hide')
-      if (this.modal === this.meta.name) {
-        this.$store.commit('modalEmpty')
-      }
     },
     goto (step) {
       if (Number.isInteger(step)) {

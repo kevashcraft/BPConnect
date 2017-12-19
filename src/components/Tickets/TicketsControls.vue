@@ -4,8 +4,7 @@
       <div class="field padding-b15">
         <label>Dates</label>
         <div class="ui input daterangepicker-container">
-          <input type="text" class="ui daterangepicker">
-          <!-- <input type="text" class="ui daterangepicker" v-model="dr_string"> -->
+          <input type="text" class="ui daterangepicker" v-model="daterange">
         </div>
       </div>
     </div>
@@ -27,9 +26,6 @@
       <div>
         <a href="#clear" v-show="search.length > 0" @click="clear_search">Clear</a>
       </div>
-    </div>
-    <div class="item" data-step="3" data-intro="Select which columns you want to see and which you don't.">
-      <button class="ui blue button" onclick="BPC.columns_modal.open(event)">Configure Columns</button>
     </div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="addTicketModalOpen">
@@ -71,10 +67,17 @@ export default {
     }
   },
   computed: {
+    daterange () {
+      let dr = this.$store.state.filters.daterange
+      let drstart = moment(dr[0]).format('MM/DD/YY')
+      let drend = moment(dr[1]).format('MM/DD/YY')
+      return drstart + ' - ' + drend
+    },
     filters () { return this.$store.state.filters }
   },
   mounted: function() {
 
+    console.log("this.filters",this.filters);
     if (!this.filters.page || this.filters.page !== this.meta.page) {
       this.$store.commit('filtersSet', this.filtersTemplate)
     }
@@ -94,6 +97,7 @@ export default {
     //   }.bind(this),
     // });
 
+    console.log("this.filters.daterange",this.filters.daterange);
     $('.daterangepicker').daterangepicker({
       opens: 'right',
       drops: 'down',
@@ -111,7 +115,9 @@ export default {
         start.format('YYYY-MM-DD'),
         end.format('YYYY-MM-DD')
       ];
-      this.filters.daterange = daterange;
+      this.filters.daterange = daterange
+      this.$store.commit('filtersSet', this.filters)
+      // this.filters.daterange = daterange;
     });
   },
   methods: {

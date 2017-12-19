@@ -1,4 +1,4 @@
-import xlsx from 'xlsx'
+import XLSX from 'xlsx'
 
 import TicketsModel     from './TicketsModel'
 import TicketsExtModel  from './TicketsExtModel'
@@ -31,11 +31,16 @@ exports.tasksRetrieve = async (req, res) => {
   await TicketsExtModel.tasksRetrieve(req.body.ticketId, req.db)
 }
 
-exports.dataImport = async (req, res) => {
-  let workbook = XLSX.readFile(req.body) /* need filename */
+exports.dataImport = async (req) => {
+  let workbook = XLSX.readFile(req.filepath) /* need filename */
   let sheetNames = workbook.SheetNames
-  let rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]])
 
+  let csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetNames[0]], {FS:':::::', RS:'|||||'})
+  let rows = csv.split("|||||").map(row => row.split(':::::'))
+  // rows.map
+  // console.log("workbook.Sheets[sheetNames[0]]",workbook.Sheets[sheetNames[0]]);
+
+  let rooms = []
   let start = false
   let expectRoom = false
   let hand = null
@@ -52,15 +57,15 @@ exports.dataImport = async (req, res) => {
       return
     }
 
-    if (!row[0].length || row[0] === "0") {
+    if (!row[0] || !row[0].length || row[0] === "0") {
       expectRoom = true
     }
 
-    if (!row[3].length || row[3] === "0") {
+    if (!row[3] || !row[3].length || row[3] === "0") {
       return
     }
 
-    if (row[0].length && row[0] !== "0" && !row[0].match(/left|right/i)) {
+    if (row[0] && row[0].length && row[0] !== "0" && !row[0].match(/left|right/i)) {
       if (expectRoom) {
         expectRoom = false
         if (room) {
@@ -81,7 +86,7 @@ exports.dataImport = async (req, res) => {
       }
     }
 
-    payout = row[2].replace(/[^0-9,.]/, '')
+    let payout = row[2].replace(/[^0-9,.]/, '')
     if (!payout.length) {
       payout = 0
     }
@@ -97,6 +102,7 @@ exports.dataImport = async (req, res) => {
     rooms.push(room)
   }
 
+  console.log("rooms",rooms);
   let ticket = await TicketsModel.retrieve(ticketId, req.db)
   TicketsModel.update(ticketId, { imported: 'NOW()'})
 

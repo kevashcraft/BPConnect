@@ -1,9 +1,7 @@
-import socket from './socket'
-
 export default {
   req (route, data) {
     return new Promise((resolve,reject) => {
-      socket.emit('request', {route, data}, (response) => {
+      this.socket.emit('request', {route, data}, (response) => {
         resolve(response)
       })
     })
