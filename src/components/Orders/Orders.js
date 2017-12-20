@@ -12,16 +12,9 @@ exports.create = async (req, res) => {
   })
 }
 
-exports.list = async (req, res) => {
-  let fields = {
-    drstart: req.body.daterange[0],
-    drend: req.body.daterange[1],
-    orderId: req.body.orderId,
-    ticketId: req.body.ticketId,
-    supplierId: req.body.supplierId,
-  }
+exports.list = async (req) => {
 
-  return await OrdersModel.search(fields, req.db)
+  return await OrdersModel.list(req)
 }
 
 exports.retrieve = async (req, res) => {

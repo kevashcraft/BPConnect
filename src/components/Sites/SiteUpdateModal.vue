@@ -1,6 +1,5 @@
 <template>
-
-  <div class="ui small modal" id="site_update_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Update Site</div>
     <form class="ui form padding30">
@@ -18,13 +17,13 @@
           </div>
         </div>
         <div class="field" v-show="!site.ready">
-          <div class="ui button" @click="reason_add_modal">Add</div>
+          <div class="ui button" @click="reasonAddModal">Add</div>
         </div>
       </div>
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="update">
+      <div class="ui green icon button" @click="submit">
         Update Site
         <i class="checkmark icon"></i>
       </div>
@@ -33,56 +32,61 @@
 </template>
 
 <script>
+import Modal from '../Modal/Modal'
+
 export default {
+  mixins: [ Modal ],
   data () {
     return {
+      meta: {
+        page: 'Sites',
+        name: 'SiteUpdateModal'
+      },
       row: {},
       site: {},
     }
   },
-  mounted: function() {
+  mounted () {
 
-    $('#site_update_modal .ui.checkbox').checkbox();
-    $(this.$el).modal({allowMultiple: true});
-    $('#site_update_modal .ui.search').search({
-      apiSettings: {
-        url: BPC.r.sites.reasons_search + '?query={query}',
-        method: 'post'
-      },
-      selectFirstResult: true,
-      onSelect: function (result, response) {
-        this.site.reason_id = result.id;
-      }.bind(this),
-    });
+    $('#siteUpdateModal .ui.checkbox').checkbox()
+    // $('#siteUpdateModal .ui.search').search({
+    //   apiSettings: {
+    //     url: BPC.r.sites.reasonsSearch + '?query={query}',
+    //     method: 'post'
+    //   },
+    //   selectFirstResult: true,
+    //   onSelect: function (result, response) {
+    //     this.site.reasonId = result.id
+    //   }.bind(this),
+    // })
   },
   methods: {
-    open: function(data, row) {
-      this.row  = row;
-      this.$set('site', {
-        ticket_id: data.ticket_id,
-        reason_id: null,
+    afterOpen (info) {
+      this.row  = info.row
+      this.site = {
+        ticketId: info.data.ticketId,
+        reasonId: null,
         ready    : false,
-      });
+      }
 
-      $('#site_update_modal .ui.search').search('set value', '');
-      $(this.$el).modal('show');
+      $('#siteUpdateModal .ui.search').search('set value', '')
     },
-    update: function(event) {
-      if (!this.site.ready && !this.site.reason_id) BPC.overhang('Please add a reason', false);
+    submit: function(event) {
+      // if (!this.site.ready && !this.site.reasonId) BPC.overhang('Please add a reason', false)
 
-      var data = {
-        site: this.site,
-      };
-      $.post(BPC.r.sites.update, data, function(data) {
-        BPC.overhang(data.message, data.success, 2);
-        if (data.success) {
-          $(this.$el).modal('hide');
-          BPC.sites.sites_table.row(this.row).data(data.site);
-        }
-      }.bind(this), 'json');
+      // var data = {
+      //   site: this.site,
+      // }
+      // $.post(BPC.r.sites.update, data, function(data) {
+      //   BPC.overhang(data.message, data.success, 2)
+      //   if (data.success) {
+      //     $(this.$el).modal('hide')
+      //     BPC.sites.sitesTable.row(this.row).data(data.site)
+      //   }
+      // }.bind(this), 'json')
     },
-    reason_add_modal: function () {
-      BPC.sites.reason_add_modal.open();
+    reasonAddModal: function () {
+      // BPC.sites.reasonAddModal.open()
     },
   }
 }

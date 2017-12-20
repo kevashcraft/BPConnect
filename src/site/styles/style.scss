@@ -11,6 +11,12 @@ body > .grid {
 .column {
   max-width: 450px;
 }*/
+#app {
+  min-height: 100%;
+}
+.pusher {
+  position: absolute;
+}
 
 .invisible { visibility: hidden; }
 .visible { visibility: visible; }
@@ -55,6 +61,8 @@ body > .grid {
 
 .pusher {
   width: 100%;
+  overflow-x: auto;
+  min-height: 100%;
 }
 
 /* Date Picker */

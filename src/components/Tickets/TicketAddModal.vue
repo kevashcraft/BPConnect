@@ -258,7 +258,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Modal from '../Misc/Modal'
+import Modal from '../Modal/Modal'
 
 export default {
   data () {

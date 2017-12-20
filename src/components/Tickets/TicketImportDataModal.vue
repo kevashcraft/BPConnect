@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import Modal from '../Misc/Modal'
+import Modal from '../Modal/Modal'
 import SocketIOFileClient from 'socket.io-file-client'
 
 export default {

@@ -43,9 +43,9 @@ export default (socket) => {
     let route = fileInfo.data.route.split(':')
     let controller = route[0]
     let method = route[1]
-    let filepath = `${uploadDir}/${fileInfo.name}`
+    fileInfo.filepath = `${uploadDir}/${fileInfo.name}`
 
-    router[controller][method]({filepath})
+    router[controller][method](fileInfo)
     // let response = await router[controller][method](data)
   });
   uploader.on('error', (err) => {

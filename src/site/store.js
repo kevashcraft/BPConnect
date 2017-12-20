@@ -25,8 +25,16 @@ export default new Vuex.Store({
     modalSet (state, modal) {
       state.modal = modal
     },
-    modalEmpty (state) {
-      state.modal = ''
+    modalStackPush (state, modal) {
+      if (state.modalStack.indexOf(modal) < 0) {
+        state.modalStack.push(modal)
+      }
+    },
+    modalStackSet (state, stack) {
+      this.modalStack = stack
+    },
+    modalStackSplice (state, index) {
+      state.modalStack.splice(index, 1)
     },
     pageTitleSet (state, title) {
       state.pageTitle = title
@@ -39,9 +47,40 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    modalOpen ({ commit }, modal) {
-      commit('modalEmpty')
+    modalClear ({ commit }) {
+      commit('modalSet', '')
+      commit('modalStackSet', [])
+    },
+    modalOpen ({ commit, state }, modal) {
+      // remove if in the stack
+      let prevIndex = state.modalStack.indexOf(modal)
+      if (prevIndex > -1) commit('modalStackSplice', prevIndex)
+
       commit('modalSet', modal)
+    },
+    modalNext ({ commit, state }) {
+      // commit('modalEmpty')
+      let modal = ''
+
+      if (state.modalStack.length) {
+        modal = state.modalStack[0]
+
+        setTimeout(() => {
+          commit('modalStackSplice', 0)
+        }, 350)
+      }
+
+      commit('modalSet', modal)
+    },
+    modalSave ({ commit, state }, modal) {
+      console.log("modal", modal)
+      if (modal !== state.modal) {
+        commit('modalStackPush', state.modal)
+        commit('modalSet', modal)
+      } else {
+        console.log("you're trying to save the wrong modal")
+      }
+
     }
   }
 })

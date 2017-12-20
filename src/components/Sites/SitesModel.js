@@ -3,21 +3,21 @@ import * as Model from '../Model'
 exports.list = async (req) => {
   let sql = `
     SELECT * FROM sites_view
-    WHERE ticket_date_scheduled >= :drstart
-        AND ticket_date_scheduled <= :drend
-      AND (:ticket_id = 0
-        OR sites_view.ticket_id = :ticket_id)
-      AND (:subdivision_id = 0
-        OR sites_view.subdivision_id = :subdivision_id)
-      AND (:house_id = 0
-        OR sites_view.house_id = :house_id)
+    WHERE ticket_date_scheduled >= $1
+        AND ticket_date_scheduled <= $2
+      AND ($3 = 0
+        OR sites_view.ticket_id = $3)
+      AND ($4 = 0
+        OR sites_view.subdivision_id = $4)
+      AND ($5 = 0
+        OR sites_view.house_id = $5)
   `
   let bind = [
-    req.drstart, req.drend,
-    req.ticketId, req.houseId
+    req.daterange[0], req.daterange[1],
+    req.ticketId, req.subdivisionId, req.houseId
   ]
 
-  return await Model.list(sql, bind)
+  return await Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {

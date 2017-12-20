@@ -43,18 +43,18 @@
               <i class="info icon"></i>
               Inspections
             </router-link>
-            <router-link class="item" to="billing">
+<!--             <router-link class="item" to="billing">
               <i class="money icon"></i>
               Billing
-            </router-link>
+            </router-link> -->
             <router-link class="item" to="config">
               <i class="settings icon"></i>
               Config
             </router-link>
-            <router-link class="item" to="reports">
+<!--             <router-link class="item" to="reports">
               <i class="bar chart icon"></i>
               Reports
-            </router-link>
+            </router-link> -->
           </div>
         </div>
         <div class="controls">

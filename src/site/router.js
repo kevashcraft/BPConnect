@@ -63,7 +63,7 @@ let router = new Router({
       },
       meta: {requiresAuth: true},
     }, {
-      path: '/site',
+      path: '/site-ready-checklist',
       components: {
         page: SitesPage,
         controls: SitesControls

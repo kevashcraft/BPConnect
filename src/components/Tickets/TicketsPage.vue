@@ -8,12 +8,12 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import Page from '../Page/Page'
+  import TicketColumns from './TicketColumns'
+
   import TicketAddModal from './TicketAddModal.vue'
   import TicketImportDataModal from './TicketImportDataModal.vue'
   import TicketWorkModal from './TicketWorkModal.vue'
-  import columns from '../../site/defs/columns'
-  import Page from '../Misc/Page'
 
   export default {
     components: {
@@ -21,7 +21,6 @@
       TicketImportDataModal,
       TicketWorkModal
     },
-    computed: mapState([ 'filters' ]),
     data () {
       return {
         meta: {
@@ -30,25 +29,13 @@
         tickets: [],
       }
     },
-    watch: {
-      filters: {
-        handler () {
-          console.log("updated!!!!", this.filters.daterange);
-          this.update()
-        },
-        deep: true
-      }
-    },
     mixins: [ Page ],
-    mounted () {
-      this.init()
-    },
     methods: {
       init () {
-        this.init_table()
-        this.update()
+        this.initTable()
+        this.list()
       },
-      update () {
+      list () {
         this.$root.req('Tickets:list', this.filters).then(response => {
           this.ticketsTable.clear()
           this.ticketsTable.rows.add(response)
@@ -59,14 +46,14 @@
         $('#ticket').removeClass('show')
       },
 
-      init_table () {
+      initTable () {
         // var columns = $.extend(true, [], BPC.i.columns)
 
         var config = {
           stateSave: true,
           colReorder: true,
           responsive: true,
-          columns: columns,
+          columns: TicketColumns,
           paging: false,
           dom: 'Bt',
           buttons: [ 'colvis' ]
@@ -79,34 +66,32 @@
           this.ticketsTable.draw()
         }
 
-        // $('#ticketsTable').on('click', '.ticket_id', function(event) {
+        // $('#ticketsTable').on('click', '.ticketId', function(event) {
         //   var row = $(this).closest('tr')
         //   var table = BPC.tickets.ticketsTable
         //   var data = table.row(row).data()
         //   BPC.ticket.open(data)
         // })
-        $('#ticketsTable').on('click', 'a[href="#import_data"]', (event) => {
+        $('#ticketsTable').on('click', 'a[href="#importData"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var table = this.ticketsTable
-          console.log("row",row);
           var ticket = table.row(row).data()
-          console.log("ticket",ticket);
           this.$refs.import.open(ticket)
         })
-        $('#ticketsTable').on('click', 'a[href="#ticket_work"]', (event) => {
+        $('#ticketsTable').on('click', 'a[href="#ticketWork"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.ticketsTable.row(row).data()
-          this.$refs.work.open(data.ticket_id)
+          this.$refs.work.open(data.ticketId)
         })
       },
-      // reload_table () {
+      // reloadTable () {
       //   this.ticketsTable.destroy()
       //   $('#ticketsTable').remove()
 
       //   var container = $('#ticketsTableContainer')
       //   container.append('<table id="ticketsTable" class="ui celled responsive table"></table>')
 
-      //   this.init_table()
+      //   this.initTable()
       // },
     },
   }

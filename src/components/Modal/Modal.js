@@ -14,7 +14,7 @@ export default {
       closable: false,
       onHidden: () => {
         if (this.modal === this.meta.name) {
-          this.$store.commit('modalEmpty')
+          this.$store.dispatch('modalNext')
         }
       }
     })
@@ -26,14 +26,22 @@ export default {
       if (this.modal !== this.meta.name) {
         this.$store.commit('modalSet', this.meta.name)
       }
-      if (this.afterOpen) this.afterOpen(data)
+
+      console.log("this.$store.state.modalStack", this.$store.state.modalStack)
+      if (this.$store.state.modalStack.indexOf(this.meta.name) < 0) {
+        if (this.afterOpen) {
+          this.afterOpen(data)
+        }
+      }
+
     },
-    close (data) {
+    close (data, outside) {
       this.opened = false
       $(this.$el).modal('hide')
-      if (this.modal === this.meta.name) {
-        this.$store.commit('modalEmpty')
+      if (!outside) {
+        this.$store.dispatch('modalNext')
       }
+
       if (this.afterClose) this.afterClose(data)
     },
   },
@@ -44,7 +52,7 @@ export default {
       }
 
       if (o === this.meta.name && this.opened) {
-        this.close()
+        this.close({}, true)
       }
     },
   }

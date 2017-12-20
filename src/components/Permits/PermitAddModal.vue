@@ -1,5 +1,5 @@
 <template>
-  <div class="ui small modal" id="permit_add_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Add a Permit</div>
     <form class="ui form padding30">
@@ -26,65 +26,68 @@
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="add">
+      <div class="ui green icon button" @click="submit">
         Add Permit
         <i class="checkmark icon"></i>
       </div>
     </div>
   </div>
-
 </template>
+
 <script>
+  import Modal from '../Modal/Modal'
+
   export default {
+    mixins: [ Modal ],
     data () {
       return {
+        meta: {
+          page: 'Permits',
+          name: 'PermitAddModal'
+        },
+        permit: {
+          name: '',
+          starts: moment().format('YYYY-MM-DD'),
+          ends: moment().add('days', 60).format('YYYY-MM-DD'),
+        },
         wip: {
           ticket_id : 0,
         },
       }
     },
     mounted: function() {
-
-      $(this.$el).modal({allowMultiple: true});
-      $('#permit_add_modal .ui.search').search({
-        apiSettings: {
-          url: BPC.routes['permits.inspectors_search'] + '?query={query}',
-          method: 'post'
-        },
-        selectFirstResult: true,
-        onSelect: function (result, response) {
-          this.permit.inspector_id = result.id;
-        }.bind(this),
-      });
+      this.permitTemplate = JSON.stringify(this.permit)
+      // $('#permit_add_modal .ui.search').search({
+      //   apiSettings: {
+      //     url: BPC.routes['permits.inspectors_search'] + '?query={query}',
+      //     method: 'post'
+      //   },
+      //   selectFirstResult: true,
+      //   onSelect: function (result, response) {
+      //     this.permit.inspector_id = result.id;
+      //   }.bind(this),
+      // });
     },
     methods: {
-      open: function(data) {
-        this.$set('permit', {
-          permit_id: data.permit_id,
-          starts: moment().format('YYYY-MM-DD'),
-          ends: moment().add('days', 60).format('YYYY-MM-DD'),
-        });
-
-        $(this.$el).modal('show');
+      afterOpen: function(data) {
+        console.log("opening")
+        this.permit = JSON.parse(this.permitTemplate)
       },
-      add: function(event) {
-        if (!this.permit.inspector_id) BPC.overhang('Please select an inspector', false);
-        if (!this.permit.starts) BPC.overhang('Please add a start date', false);
-        if (!this.permit.ends) BPC.overhang('Please add an end date', false);
-        var data = {
-          data: this.permit,
-        };
-        var url = BPC.routes['permits.add'];
-        $.post(url, data, function(data) {
-          BPC.overhang(data.message, data.success, 2);
-          if (data.success) {
-            $(this.$el).modal('hide');
-            BPC.permits.permits_table.row(this.row).data(data.inspection);
-          }
-        }.bind(this), 'json');
-      },
-      supplier_add_modal: function () {
-        BPC.permits.supplier_add_modal.open();
+      submit: function(event) {
+        // if (!this.permit.inspector_id) BPC.overhang('Please select an inspector', false);
+        // if (!this.permit.starts) BPC.overhang('Please add a start date', false);
+        // if (!this.permit.ends) BPC.overhang('Please add an end date', false);
+        // var data = {
+        //   data: this.permit,
+        // };
+        // var url = BPC.routes['permits.add'];
+        // $.post(url, data, function(data) {
+        //   BPC.overhang(data.message, data.success, 2);
+        //   if (data.success) {
+        //     $(this.$el).modal('hide');
+        //     BPC.permits.permits_table.row(this.row).data(data.inspection);
+        //   }
+        // }.bind(this), 'json');
       },
     }
   }

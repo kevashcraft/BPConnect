@@ -1,5 +1,4 @@
 <template>
-
   <div class="ui small modal" id="supplier_add_modal">
     <i class="close icon"></i>
     <div class="header">Add Supplier</div>
@@ -18,39 +17,38 @@
       </div>
     </form>
     <div class="actions">
-      <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green button" @click="add">Add</div>
+      <button class="ui black deny button left floated">Exit</button>
+      <button class="ui green button" @click="submit">Add</button>
     </div>
   </div>
 </template>
 
 <script>
+import Modal from '../Modal/Modal'
+
 export default {
+  mixins: [ Modal ],
   data () {
     return {
+      meta: {
+        page: 'Orders',
+        name: 'OrderSupplierAddModal'
+      },
       supplier: {},
     }
   },
-  mounted: function() {
-    $(this.$el).modal({allowMultiple: true});
-  },
   methods: {
-    open: function() {
-      this.$set('supplier', {
+    afterOpen: function() {
+      this.supplier = {
         name     : '',
         address  : '',
         phone    : '',
-      });
-      $(this.$el).modal('show');
+      }
     },
-    add: function() {
-      var data = { data: this.supplier };
-      $.post(BPC.r.orders.supplier_add, data, function (data) {
-        BPC.overhang(data.message, data.success);
-        if (data.success) {
-          $(this.$el).modal('hide');
-        }
-      }.bind(this), 'json');
+    submit: function() {
+      this.$root.req('Suppliers:create', this.supplier).then(response => {
+        this.close()
+      })
     },
   }
 }

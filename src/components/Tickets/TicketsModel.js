@@ -23,15 +23,43 @@ exports.create = async (req) => {
 
 }
 
-exports.update = async (id, fields) => {
-  let update = Model.updateFields(fields)
-
+exports.list = async (req) => {
   let sql = `
-    UPDATE tickets SET ${update.set}
-    WHERE id = $1
+    SELECT * FROM tickets_view
+    WHERE ticket_date_scheduled >= $1
+      AND ticket_date_scheduled <= $2
+      AND (
+        $3 = 0
+        OR tickets_view.ticket_id = $3
+      ) AND (
+        $4 = 0
+        OR tickets_view.builder_id = $4
+      ) AND (
+        $5 = 0
+        OR tickets_view.subdivision_id = $5
+      ) AND (
+        $6 = 0
+        OR tickets_view.house_id = $6
+      )
+    LIMIT 1000
   `
+  let bind = [
+    req.daterange[0], req.daterange[1],
+    req.ticketId, req.builderId,
+    req.subdivisionId, req.houseId
+  ]
 
-  Model.run(sql, update.bind)
+  return await Model.query(sql, bind)
+}
+
+exports.retrieve = async (req) => {
+  let sql = `
+    SELECT * FROM tickets_view
+    WHERE ticket_id = $1
+  `
+  let bind = [ req.id ]
+
+  return await Model.query(sql, bind, true)
 }
 
 exports.search = async (req) => {
@@ -100,41 +128,14 @@ exports.search = async (req) => {
   return await Model.query(sql, bind)
 }
 
-exports.list = async (req) => {
+exports.update = async (id, fields) => {
+  let update = Model.updateFields(fields)
+
   let sql = `
-    SELECT * FROM tickets_view
-    WHERE ticket_date_scheduled >= $1
-      AND ticket_date_scheduled <= $2
-      AND (
-        $3 = 0
-        OR tickets_view.ticket_id = $3
-      ) AND (
-        $4 = 0
-        OR tickets_view.builder_id = $4
-      ) AND (
-        $5 = 0
-        OR tickets_view.subdivision_id = $5
-      ) AND (
-        $6 = 0
-        OR tickets_view.house_id = $6
-      )
-    LIMIT 1000
+    UPDATE tickets SET ${update.set}::timestamp
+    WHERE id = $1
   `
-  let bind = [
-    req.daterange[0], req.daterange[1],
-    req.ticketId, req.builderId,
-    req.subdivisionId, req.houseId
-  ]
+  update.bind.push(id)
 
-  return await Model.query(sql, bind)
-}
-
-exports.retrieve = async (req) => {
-  let sql = `
-    SELECT * FROM tickets_view
-    WHERE ticket_id = $1
-  `
-  let bind = [ req.id ]
-
-  return await Model.query(sql, bind, true)
+  Model.run(sql, update.bind)
 }

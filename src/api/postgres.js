@@ -1,6 +1,6 @@
-import { Pool } from 'pg'
+import { native } from 'pg'
 
-const pool = new Pool({
+const pool = new native.Pool({
   user: 'bpconnect',
   password: 'bpconnect',
   database: 'bpconnect',

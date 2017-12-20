@@ -69,7 +69,7 @@ exports.createPart = async (req) => {
     req.payout, req.description
   ]
 
-  return await Module.query(sql, bind)
+  return await Model.query(sql, bind)
 }
 
 exports.updatePart = async (req) => {
@@ -80,22 +80,7 @@ exports.updatePart = async (req) => {
     WHERE id = $1
   `
 
-  Model.run(db, sql, update.bind)
-}
-
-/* PAYOUT PAYOUT PAYOUT PAYOUT */
-
-exports.updatePayout = async (req) => {
-  let sql = `
-    UPDATE tickets SET payout = (
-      SELECT sum(payout)
-      FROM ticket_parts
-      WHERE ticket_id = $1
-    ) WHERE id = $1
-  `
-  let bind = [ req.id ]
-
-  return await Module.run(db, sql, id)
+  Model.run(sql, update.bind)
 }
 
 /* PERMITS PERMITS PERMITS PERMITS */

@@ -1,6 +1,5 @@
 <template>
-
-  <div class="ui small modal" id="order_parts_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Order Parts</div>
     <form class="ui form padding30">
@@ -12,7 +11,7 @@
           </div>
         </div>
         <div class="field">
-          <div class="ui button" @click="supplier_add_modal">Add New</div>
+          <div class="ui button" @click="openOrderSupplierAddModal">Add New</div>
         </div>
       </div>
       <div class="field">
@@ -27,19 +26,17 @@
         <label>Order Date</label>
         <input type="date" v-model="order.ordered" placeholder="Order Date">
       </div>
-      {% verbatim %}
       <div v-for="part in parts">
         <div class="ui checkbox part">
           <label>{{ part.description }}</label>
           <input type="checkbox" v-model="part.ordered">
         </div>
       </div>
-      {% endverbatim %}
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui blue button" @click="select_all">Select All</div>
-      <div class="ui green icon button" @click="order_parts">
+      <div class="ui blue button" @click="selectAll">Select All</div>
+      <div class="ui green icon button" @click="submit">
         Parts Ordered
         <i class="checkmark icon"></i>
       </div>
@@ -48,76 +45,75 @@
 </template>
 
 <script>
+import Modal from '../Modal/Modal'
+
 export default {
+  mixins: [ Modal ],
   data () {
     return {
+      meta: {
+        page: 'Orders',
+        name: 'OrderPartsModal'
+      },
       search: '',
       row: {},
       order: {},
       parts: [],
     }
   },
-  mounted: function() {
+  mounted () {
 
-    $(this.$el).modal({allowMultiple: true});
-    $('#order_parts_modal .ui.search').search({
-      apiSettings: {
-        url: BPC.r.orders.suppliers_search + '?query={query}',
-        method: 'post'
-      },
-      selectFirstResult: true,
-      onSelect: function (result, response) {
-        console.log("result",result);
-        this.order.supplier_id = result.id;
-      }.bind(this),
-    });
+    // $(this.$el).modal({allowMultiple: true})
+    // $('#orderPartsModal .ui.search').search({
+    //   apiSettings: {
+    //     url: BPC.r.orders.suppliersSearch + '?query={query}',
+    //     method: 'post'
+    //   },
+    //   selectFirstResult: true,
+    //   onSelect  (result, response) {
+    //     console.log("result",result)
+    //     this.order.supplierId = result.id
+    //   }.bind(this),
+    // })
   },
   methods: {
-    open: function(data, row) {
-      this.row  = row;
+    afterOpen (obj) {
+      this.row  = obj.row
       this.order = {
-        ticket_id: data.ticket_id,
+        ticketId: obj.data.ticketId,
         number: '',
         total: '',
         parts: [],
         ordered  : moment().format('YYYY-MM-DD'),
-      };
-      this.$set('search', '');
+      }
 
-      $(this.$el).modal('show');
-      this.get_parts();
+      // this.$set('search', '')
+
+      this.list()
     },
-    get_parts: function() {
-      var data = {ticket_id: this.order.ticket_id};
-      $.post(BPC.r.orders.get_parts, data, function(data) {
-        this.$set('parts', data.parts);
-        setTimeout(function(){
-          $('.ui.checkbox').checkbox();
-        },100);
-        setTimeout(function(){
-          $(this.$el).modal('refresh');
-        }.bind(this),250);
-      }.bind(this), 'json');
+    list () {
+      let data = {orderId: this.orderId}
+      this.$root.req('Orders:listParts', data).then(response => {
+        this.parts = response
+
+        setTimeout(() => {
+          $('.ui.checkbox').checkbox()
+        },100)
+        setTimeout(() => {
+          $(this.$el).modal('refresh')
+        },250)
+      })
     },
-    order_parts: function(event) {
-      if (!this.order.supplier_id) BPC.overhang('Please select a supplier', false);
-      var data = {
-        order: this.order,
-        parts: this.parts,
-      };
-      $.post(BPC.r.orders.order_parts, data, function(data) {
-        BPC.overhang(data.message, data.success, 2);
-        if (data.success) {
-          $(this.$el).modal('hide');
-          BPC.orders.update();
-        }
-      }.bind(this), 'json');
+    submit () {
+      this.$root.req('Orders:createParts', this.parts).then(response => {
+        this.$emit('update', this.row)
+      })
     },
-    select_all: function() {
-      $('.ui.checkbox.part').checkbox('check');
+    selectAll () {
+      $('.ui.checkbox.part').checkbox('check')
     },
-    supplier_add_modal: function () {
-      BPC.orders.supplier_add_modal.open();
+    openOrderSupplierAddModal  () {
+      this.$store.dispatch('modalSave', 'OrderSupplierAddModal')
     },
   }
 }

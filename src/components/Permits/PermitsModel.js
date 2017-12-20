@@ -45,7 +45,7 @@ exports.list = async (req) => {
         OR permits_view.house_id = $6)
   `
   let bind = [
-    req.drstart, req.drend,
+    req.daterange[0], req.daterange[1],
     req.permitId, req.ticketId,
     req.inspectorId, req.houseId
   ]

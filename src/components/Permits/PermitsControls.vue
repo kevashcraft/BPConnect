@@ -1,106 +1,105 @@
 <template>
-  <div id="permits_controls">
-    <div class="item">
-      <div class="ui permits category search">
-        <div class="ui icon fluid input">
-          <input class="prompt" type="text" :placeholder="page.title" v-model="search">
+  <form class="ui form" onsubmit="event.preventDefault()">
+    <div class="item" data-step="1" data-intro="Select a date range to begin. Remeber, only permits in this range will be visible." data-position="right">
+      <div class="field padding-b15">
+        <label>Dates</label>
+        <div class="ui input daterangepicker-container">
+          <input type="text" class="ui daterangepicker" v-model="drString">
+        </div>
+      </div>
+    </div>
+    <div class="item" data-step="2" data-intro="Search for specific permits by id, builder, subdivision or type.">
+      <div class="ui category search ticket">
+        <div class="ui icon input">
           <i class="search icon"></i>
+          <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
         </div>
         <div class="results"></div>
       </div>
-      <div>
-        <a href="#clear" @click="clear" v-show="search.length > 0">Clear</a>
-      </div>
+<!--       <div>
+        <div class="pointer" v-for="filter in filters" v-show="filter.value !== 0" @click="filterRemove" :data-filter="filter.category">
+          <i class="remove circle icon"></i>
+          <span>{{ filter.name }}</span>
+          <span>{{ filter.description }}</span>
+        </div>
+      </div> -->
+<!--       <div>
+        <a href="#clear" v-show="search.length > 0" @click="clearSearch">Clear</a>
+      </div> -->
     </div>
     <div class="item">
-      <div class="ui input">
-        <label>Dates</label>
-        <input type="text" class="ui daterangepicker">
-      </div>
+      <button class="ui labeled blue icon button" @click="walkthrough">
+        <i class="street view icon"></i>
+        Walkthrough
+      </button>
     </div>
-    <div class="item">
-      <button class="ui blue button" onclick="BPC.columns_modal.open()">Configure Columns</button>
-    </div>
-  </div>
+  </form>
 </template>
 
 <script>
+import Controls from '../Controls/Controls'
+
 export default {
+  mixins: [ Controls ],
   data () {
     return {
-      search    : '',
-      daterange : [],
-      filters   : {
-        permit_id      : 0,
-        inspector_id   : 0,
-        ticket_id      : 0,
-        house_id       : 0,
+      meta: {
+        page: 'Permits',
+        name: 'PermitsControls'
+      },
+      search : '',
+      filtersTemplate : {
+        page: 'Permits',
+        daterange : [
+          moment().format('YYYY-MM-DD'),
+          moment().add(30, 'days').format('YYYY-MM-DD')
+        ],
+        permitId : 0,
+        inspectorId : 0,
+        ticketId : 0,
+        houseId : 0,
       },
     }
   },
   mounted: function() {
-    $('.daterangepicker').daterangepicker({
-      opens: 'right',
-      drops: 'down',
-      format: 'MM/DD/YY',
-      ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-          'Last Year': [moment().subtract(1, 'year').startOf('month'), moment()]
-      },
-    }, function(start, end, label) {
-      var daterange = [
-        start.format('YYYY-MM-DD'),
-        end.format('YYYY-MM-DD')
-      ];
-      BPC.permits_controls.$set('daterange', daterange);
-      if (BPC.isLocalStorageAvailable) {
-        localStorage.setItem('daterange', JSON.stringify(daterange));
-      }
-      BPC.permits.update();
-    }.bind(this));
 
-    $('.ui.permits.search').search({
-      type: 'category',
-      apiSettings: {
-        method: 'post',
-        url: BPC.r.permits.search + '?q={query}',
-      },
-      selectFirstResult: true,
-      onSelect: function (result, response) {
-        this.resetFilters();
-        switch (result.category) {
-          case 'Permits':
-            this.filters.permit_id = result.id;
-            break;
-          case 'Tickets':
-            this.filters.ticket_id = result.id;
-            break;
-          case 'Inspectors':
-            this.filters.inspector_id = result.id;
-            break;
-        }
-        BPC.permits.update();
-      }.bind(this),
-    });
+    // $('.ui.permits.search').search({
+    //   type: 'category',
+    //   apiSettings: {
+    //     method: 'post',
+    //     url: BPC.r.permits.search + '?q={query}',
+    //   },
+    //   selectFirstResult: true,
+    //   onSelect: function (result, response) {
+    //     this.resetFilters();
+    //     switch (result.category) {
+    //       case 'Permits':
+    //         this.filters.permitId = result.id;
+    //         break;
+    //       case 'Tickets':
+    //         this.filters.ticketId = result.id;
+    //         break;
+    //       case 'Inspectors':
+    //         this.filters.inspectorId = result.id;
+    //         break;
+    //     }
+    //     BPC.permits.update();
+    //   }.bind(this),
+    // });
   },
   methods: {
     resetFilters: function() {
       this.filters = {
-        permit_id    : 0,
-        inspector_id : 0,
-        ticket_id    : 0,
-        house_id     : 0,
+        permitId    : 0,
+        inspectorId : 0,
+        ticketId    : 0,
+        houseId     : 0,
       };
     },
     clear: function() {
       this.$set('search', '');
       this.resetFilters();
-      BPC.permits.update();
+      // BPC.permits.update();
     },
   },
 }

@@ -1,104 +1,103 @@
-<tempate>
-  <div id="sites_controls">
-    <div class="item">
-      <div class="ui sites category search">
-        <div class="ui icon fluid input">
-          <input class="prompt" type="text" placeholder="Search Sites.." v-model="search">
+<template>
+  <form class="ui form" onsubmit="event.preventDefault()">
+    <div class="item" data-step="1" data-intro="Select a date range to begin. Remeber, only permits in this range will be visible." data-position="right">
+      <div class="field padding-b15">
+        <label>Dates</label>
+        <div class="ui input daterangepicker-container">
+          <input type="text" class="ui daterangepicker" v-model="drString">
+        </div>
+      </div>
+    </div>
+    <div class="item" data-step="2" data-intro="Search for specific permits by id, builder, subdivision or type.">
+      <div class="ui category search ticket">
+        <div class="ui icon input">
           <i class="search icon"></i>
+          <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
         </div>
         <div class="results"></div>
       </div>
-      <div>
-        <a href="#clear" @click="clear" v-show="search.length > 0">Clear</a>
-      </div>
+<!--       <div>
+        <div class="pointer" v-for="filter in filters" v-show="filter.value !== 0" @click="filterRemove" :data-filter="filter.category">
+          <i class="remove circle icon"></i>
+          <span>{{ filter.name }}</span>
+          <span>{{ filter.description }}</span>
+        </div>
+      </div> -->
+<!--       <div>
+        <a href="#clear" v-show="search.length > 0" @click="clearSearch">Clear</a>
+      </div> -->
     </div>
     <div class="item">
-      <div class="ui input">
-        <label>Dates</label>
-        <input type="text" class="ui daterangepicker">
-      </div>
+      <button class="ui labeled blue icon button" @click="walkthrough">
+        <i class="street view icon"></i>
+        Walkthrough
+      </button>
     </div>
-    <div class="item">
-      <button class="ui blue button" onclick="BPC.columns_modal.open()">Configure Columns</button>
-    </div>
-  </div>
-</tempate>
+  </form>
+</template>
 
 <script>
-export default {
-  data () {
-    return {
-      daterange : [],
-      filters   : {
-        ticket_id      : 0,
-        subdivision_id : 0,
-        house_id       : 0,
-      },
-    }
-  },
-  mounted: function() {
-    $('.daterangepicker').daterangepicker({
-      opens: 'right',
-      drops: 'down',
-      format: 'MM/DD/YY',
-      ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-          'Last Year': [moment().subtract(1, 'year').startOf('month'), moment()]
-      },
-    }, function(start, end, label) {
-      var daterange = [
-        start.format('YYYY-MM-DD'),
-        end.format('YYYY-MM-DD')
-      ];
-      this.daterange = daterange;
-      if (BPC.isLocalStorageAvailable) {
-        localStorage.setItem('daterange', JSON.stringify(daterange));
-      }
-      BPC.sites.update();
-    }.bind(this));
+  import Controls from '../Controls/Controls'
 
-    $('.ui.sites.search').search({
-      type: 'category',
-      apiSettings: {
-        method: 'post',
-        url: BPC.r.sites.search + '?q={query}',
+  export default {
+    mixins: [ Controls ],
+    data () {
+      return {
+        meta: {
+          page: 'Sites',
+          name: 'SitesControls'
+        },
+        search: '',
+        filtersTemplate : {
+          page: 'Sites',
+          daterange : [
+            moment().format('YYYY-MM-DD'),
+            moment().add(30, 'days').format('YYYY-MM-DD')
+          ],
+          ticketId : 0,
+          subdivisionId : 0,
+          houseId : 0,
+        },
+      }
+    },
+    mounted () {
+      // $('.ui.sites.search').search({
+      //   type: 'category',
+      //   apiSettings: {
+      //     method: 'post',
+      //     url: BPC.r.sites.search + '?q={query}',
+      //   },
+      //   selectFirstResult: true,
+      //   onSelect  (result, response) {
+      //     this.resetFilters();
+      //     switch (result.category) {
+      //       case 'Permits':
+      //         this.filters.siteId = result.id;
+      //         break;
+      //       case 'Tickets':
+      //         this.filters.ticketId = result.id;
+      //         break;
+      //       case 'Inspectors':
+      //         this.filters.inspectorId = result.id;
+      //         break;
+      //     }
+      //     BPC.site.update();
+      //   }.bind(this),
+      // });
+    },
+    methods: {
+      resetFilters () {
+        this.filters = {
+          ticketId      : 0,
+          subdivisionId : 0,
+          houseId       : 0,
+        };
       },
-      selectFirstResult: true,
-      onSelect: function (result, response) {
+      clear () {
+        this.$set('search', '');
         this.resetFilters();
-        switch (result.category) {
-          case 'Permits':
-            this.filters.site_id = result.id;
-            break;
-          case 'Tickets':
-            this.filters.ticket_id = result.id;
-            break;
-          case 'Inspectors':
-            this.filters.inspector_id = result.id;
-            break;
-        }
-        BPC.site.update();
-      }.bind(this),
-    });
-  },
-  methods: {
-    resetFilters: function() {
-      this.filters = {
-        ticket_id      : 0,
-        subdivision_id : 0,
-        house_id       : 0,
-      };
+        // BPC.sites.update();
+      },
     },
-    clear: function() {
-      this.$set('search', '');
-      this.resetFilters();
-      BPC.sites.update();
-    },
-  },
-}
+  }
 </script>

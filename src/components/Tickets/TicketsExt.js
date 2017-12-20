@@ -3,32 +3,32 @@ import XLSX from 'xlsx'
 import TicketsModel     from './TicketsModel'
 import TicketsExtModel  from './TicketsExtModel'
 import TicketTypesModel from '../TicketTypes/TicketTypesModel'
-
+import HousesExtModel   from '../Houses/HousesExtModel'
 
 exports.punchCreate = async (req, res) => {
   let ticketId = req.body.ticketId
-  let ticket = await TicketsModel.retrieve(ticketId, req.db)
-  let ticketType = await TicketTypesModel.retrieve(ticket.ticketTypeId, req.db)
+  let ticket = await TicketsModel.retrieve(ticketId)
+  let ticketType = await TicketTypesModel.retrieve(ticket.ticketTypeId)
 
   ticket.ticketTypeId = ticketType.punchTypeId
 
-  let punchId = await TicketsModel.create(ticket, req.db)
+  let punchId = await TicketsModel.create(ticket)
 
-  TicketsModel.update(ticket.id, { punch_id: punchId }, req.db)
+  TicketsModel.update(ticket.id, { punch_id: punchId })
 
-  let workers = await TicketsExtModel.retrieveWorkers(ticket.id, req.db)
+  let workers = await TicketsExtModel.retrieveWorkers(ticket.id)
   workers.forEach((e, i, a) => {
     workers[i].ticketId = punchId
   })
-  TicketsExtModel.createWorkers(workers, req.db)
+  TicketsExtModel.createWorkers(workers)
 }
 
 exports.taskCreate = async (req, res) => {
-  await TicketsExtModel.taskCreate(req.body.ticketTask, req.db)
+  await TicketsExtModel.taskCreate(req.body.ticketTask)
 }
 
 exports.tasksRetrieve = async (req, res) => {
-  await TicketsExtModel.tasksRetrieve(req.body.ticketId, req.db)
+  await TicketsExtModel.tasksRetrieve(req.body.ticketId)
 }
 
 exports.dataImport = async (req) => {
@@ -86,13 +86,13 @@ exports.dataImport = async (req) => {
       }
     }
 
-    let payout = row[2].replace(/[^0-9,.]/, '')
+    let payout = parseFloat(row[2].replace(/[^0-9,.]/g, ''))
     if (!payout.length) {
       payout = 0
     }
 
     room.parts.push({
-      qty: row[1],
+      qty: parseInt(row[1]),
       payout: payout,
       description: row[3]
     })
@@ -102,36 +102,36 @@ exports.dataImport = async (req) => {
     rooms.push(room)
   }
 
-  console.log("rooms",rooms);
-  let ticket = await TicketsModel.retrieve(ticketId, req.db)
-  TicketsModel.update(ticketId, { imported: 'NOW()'})
+  let ticketId = req.data.ticketId
+  let ticket = await TicketsModel.retrieve({ id: ticketId })
+
+  TicketsModel.update(ticketId, { imported: { safe: 'NOW()' } })
 
   rooms.forEach(async room => {
     room.houseId = ticket.houseId
-    let roomId = HousesExtModel.retrieveRoomIdByHNC(room, req.db)
+    let roomId = await HousesExtModel.retrieveRoomIdByHNC(room)
     if (!roomId) {
-      roomId = await HousesExtModel.createRoom(room, req.db)
+      roomId = await HousesExtModel.createRoom(room)
     }
 
     room.parts.forEach(async part => {
-      part.ticketId = ticket.id
+      part.ticketId = ticket.ticketId
       part.roomId = roomId
-      await TicketsExtModel.createPart(part, req.db)
+      await TicketsExtModel.createPart(part)
     })
   })
 
-  TicketsExtModel.updatePayout(ticket.id, req.db)
 }
 
 exports.deleteWorkTask = async (req, res) => {
   let taskId = req.body.taskId
-  await TicketsExtModel.deleteWorkTask(taskId, req.db)
+  await TicketsExtModel.deleteWorkTask(taskId)
 }
 
 exports.print = async (req, res) => {
   let ticketId = req.body.ticketId
-  let ticket = TicketsModel.retrieve(ticketId, req.db)
-  let ticketRooms = TicketsExtModel.retrieveRoomsAndsParts(ticketId, req.db)
+  let ticket = TicketsModel.retrieve(ticketId)
+  let ticketRooms = TicketsExtModel.retrieveRoomsAndsParts(ticketId)
 
   // make pdf
 }
@@ -140,18 +140,18 @@ exports.print = async (req, res) => {
 
 exports.listWorkers = async (req, res) => {
   let ticketId = req.body.ticketId
-  return await TicketsExtModel.listWorkers(ticketId, req.db)
+  return await TicketsExtModel.listWorkers(ticketId)
 }
 
 exports.updateWorkers = async (req, res) => {
   let workers = req.body.workers
   let ticketId = req.body.ticketId
 
-  await TicketsExtModel.deleteWorkers(ticketId, req.db)
+  await TicketsExtModel.deleteWorkers(ticketId)
 
   workers.forEach(async worker => {
     worker.ticketId = ticketId
-    await TicketsExtModel.createWorker(worker, req.db)
+    await TicketsExtModel.createWorker(worker)
   })
 }
 
@@ -160,6 +160,6 @@ exports.updateWorkers = async (req, res) => {
 exports.sendoutTicket = async (req, res) => {
   let ticketId = req.body.ticketId
   let fields = { sentout: 'NOW()' }
-  await TicketsModel.update(ticketId, fields, req.db)
+  await TicketsModel.update(ticketId, fields)
 }
 

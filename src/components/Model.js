@@ -32,8 +32,10 @@ exports.query = async (sql, bind, astr = false, asv = false) =>{
     }
 
     if (asv) {
-      let key = Object.keys(ret)
-      ret = ret[key]
+      if (typeof ret === 'object') {
+        let key = Object.keys(ret)
+        ret = ret[key]
+      }
     }
 
     return ret
@@ -43,9 +45,9 @@ exports.query = async (sql, bind, astr = false, asv = false) =>{
   }
 }
 
-exports.run = async (sql, data, db) => {
+exports.run = async (sql, bind) => {
   try {
-    db.query(sql, data)
+    db.query(sql, bind)
   } catch(e) {
     console.log("Could not run query", sql, data, e);
   }
@@ -56,8 +58,12 @@ exports.updateFields = (fields) => {
   let set = Object
     .keys(fields)
     .map((field, index) => {
-      bind.push(fields[field])
-      return field + '=$' + index
+      if (typeof fields[field] === 'object') {
+        return field + ' = ' + fields[field].safe
+      } else {
+        bind.push(fields[field])
+        return field + ' = $' + (index + 1)
+      }
     })
     .join(',')
 
