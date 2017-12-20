@@ -1,9 +1,9 @@
 <template>
   <div>
-    <table id="ticketsTable" class="ui celled responsive table" cellspacing="0" width="100%"></table>
-    <ticket-import-data-modal ref="import"></ticket-import-data-modal>
-    <ticket-work-modal ref="work"></ticket-work-modal>
-    <ticket-add-modal ref="add"></ticket-add-modal>
+    <table ref="table" class="ui celled responsive table"></table>
+    <ticket-import-data-modal ref="TicketImportDataModal"></ticket-import-data-modal>
+    <ticket-work-modal ref="TicketWorkModal"></ticket-work-modal>
+    <ticket-add-modal ref="TicketAddModal"></ticket-add-modal>
   </div>
 </template>
 
@@ -37,9 +37,9 @@
       },
       list () {
         this.$root.req('Tickets:list', this.filters).then(response => {
-          this.ticketsTable.clear()
-          this.ticketsTable.rows.add(response)
-          this.ticketsTable.draw()
+          this.table.clear()
+          this.table.rows.add(response)
+          this.table.draw()
         })
       },
       ticketHide () {
@@ -59,11 +59,11 @@
           buttons: [ 'colvis' ]
         }
 
-        this.ticketsTable = $('#ticketsTable').DataTable(config)
+        this.table = $(this.$refs.table).DataTable(config)
         if (this.tickets) {
           var rows = $.extend(true, [], this.tickets)
-          this.ticketsTable.rows.add(rows)
-          this.ticketsTable.draw()
+          this.table.rows.add(rows)
+          this.table.draw()
         }
 
         // $('#ticketsTable').on('click', '.ticketId', function(event) {
@@ -72,16 +72,15 @@
         //   var data = table.row(row).data()
         //   BPC.ticket.open(data)
         // })
-        $('#ticketsTable').on('click', 'a[href="#importData"]', (event) => {
+        $(this.$refs.table).on('click', 'a[href="#import_data"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
-          var table = this.ticketsTable
-          var ticket = table.row(row).data()
-          this.$refs.import.open(ticket)
+          var data = this.table.row(row).data()
+          this.$refs.TicketImportDataModal.open({row, data})
         })
-        $('#ticketsTable').on('click', 'a[href="#ticketWork"]', (event) => {
+        $(this.$refs.table).on('click', 'a[href="#ticket_work"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
-          var data = this.ticketsTable.row(row).data()
-          this.$refs.work.open(data.ticketId)
+          var data = this.table.row(row).data()
+          this.$refs.TicketWorkModal.open({row, data})
         })
       },
       // reloadTable () {

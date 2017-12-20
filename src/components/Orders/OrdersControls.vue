@@ -44,18 +44,7 @@ export default {
   data () {
     return {
       meta: {
-        page: 'Orders'
-      },
-      search : '',
-      filtersTemplate : {
-        page: 'Orders',
-        daterange : [
-          moment().format('YYYY-MM-DD'),
-          moment().add(30, 'days').format('YYYY-MM-DD')
-        ],
-        ticketId: 0,
-        orderId: 0,
-        supplierId: 0,
+        name: 'OrdersControls'
       },
     }
   },

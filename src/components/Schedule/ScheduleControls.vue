@@ -46,19 +46,6 @@ export default {
       meta: {
         name: 'ScheduleControls'
       },
-      search : '',
-      filtersTemplate : {
-        daterange : [
-          moment().format('YYYY-MM-DD'),
-          moment().add(30, 'days').format('YYYY-MM-DD')
-        ],
-        ticketId: 0,
-        builderId: 0,
-        subdivisionId: 0,
-        houseId: 0,
-        plumberId: 0,
-        helperId: 0,
-      },
     }
   },
   mounted () {

@@ -47,18 +47,6 @@ export default {
       meta: {
         name: 'InspectionsControls'
       },
-      search    : '',
-      filtersTemplate : {
-        daterange : [
-          moment().format('YYYY-MM-DD'),
-          moment().add(30, 'days').format('YYYY-MM-DD')
-        ],
-        ticketId: 0,
-        permitId: 0,
-        inspectionId: 0,
-        inspectorId: 0,
-        houseId: 0,
-      },
     }
   },
   mounted: function() {

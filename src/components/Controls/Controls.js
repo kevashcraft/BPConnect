@@ -2,6 +2,29 @@ import { mapState } from 'vuex'
 import { introJs } from 'intro.js'
 
 export default {
+  data () {
+    return {
+      search: '',
+      filtersTemplate : {
+        daterange : [
+          moment().format('YYYY-MM-DD'),
+          moment().add(30, 'days').format('YYYY-MM-DD')
+        ],
+        ticketId: 0,
+        orderId: 0,
+        supplierId: 0,
+        permitId: 0,
+        inspectionId: 0,
+        inspectorId: 0,
+        houseId: 0,
+
+        builderId: 0,
+        subdivisionId: 0,
+        plumberId: 0,
+        helperId: 0,
+      },
+    }
+  },
   computed: {
     searchPlaceholder () { return 'Search ' + this.$store.state.pageTitle + '..' },
     drString () {
@@ -12,11 +35,8 @@ export default {
     },
     ...mapState([ 'filters' ]),
   },
-  created () {
-    this.filtersTemplate.page = this.meta.name
-  },
   mounted () {
-    if (!this.filters.page || this.filters.page !== this.meta.name) {
+    if (!this.filters.daterange) {
       this.$store.commit('filtersSet', this.filtersTemplate)
     }
 

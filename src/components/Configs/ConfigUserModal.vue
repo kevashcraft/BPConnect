@@ -1,6 +1,5 @@
 <template>
-
-  <div id="user_modal" class="ui tiny modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Update User</div>
     <div class="content">
@@ -35,37 +34,38 @@
 </template>
 
 <script>
+import Modal from '../Modal/Modal'
+
 export default {
+  mixins: [ Modal ],
   data () {
     return {
+      meta: {
+        name: 'ConfigUserModal'
+      },
       user: {},
       updating: false,
     }
   },
-  mounted: function() {
-    $(this.$el).modal();
-  },
   methods: {
-    open: function(user) {
-      this.$set('user', user);
-      this.$set('updating', false);
-      $(this.$el).modal('show');
+    afterOpen: function({row, data}) {
+      this.user = data
     },
     update: function(event) {
-      event.preventDefault();
-      if (this.updating) return;
-      this.$set('updating', true);
-      $.post(BPC.r.config.user.update, this.user, function (data) {
-        this.$set('updating', false);
-        BPC.overhang(data.message, data.success);
-        if (data.success) {
-          $(this.$el).modal('hide');
-          BPC.config.update();
-        }
-      }.bind(this), 'json');
+      // event.preventDefault();
+      // if (this.updating) return;
+      // this.$set('updating', true);
+      // $.post(BPC.r.config.user.update, this.user, function (data) {
+      //   this.$set('updating', false);
+      //   BPC.overhang(data.message, data.success);
+      //   if (data.success) {
+      //     $(this.$el).modal('hide');
+      //     BPC.config.update();
+      //   }
+      // }.bind(this), 'json');
 
-      event.preventDefault();
-      console.log("event",event);
+      // event.preventDefault();
+      // console.log("event",event);
     },
   },
 }

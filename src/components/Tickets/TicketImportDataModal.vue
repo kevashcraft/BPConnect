@@ -1,15 +1,15 @@
 <template>
-  <div class="ui small modal" id="import_data_modal">
+  <div class="ui small modal" id="importDataModal">
     <i class="close icon"></i>
     <div class="header">Import Data</div>
     <div class="content" v-show="page == 'start'">
-      <p class="padding30">Click <a href="#upload_data" @click.prevent="upload_open">Upload</a> to add parts from a bid.<br><strong>Remember</strong> the parts must be on the first worksheet.</p>
+      <p class="padding30">Click <a href="#uploadData" @click.prevent="uploadOpen">Upload</a> to add parts from a bid.<br><strong>Remember</strong> the parts must be on the first worksheet.</p>
       <div hidden="">
-        <input type="file" name="data" id="data_file_input" @change="upload_file">
+        <input type="file" name="data" id="dataFileInput" @change="uploadFile">
       </div>
     </div>
     <div class="content" v-show="page == 'progress'">
-      <div class="ui progress" id="file_progress_bar">
+      <div class="ui progress" id="fileProgressBar">
         <div class="bar"></div>
         <label>Uploading File</label>
       </div>
@@ -22,7 +22,7 @@
     </div>
     <div class="padding30" v-show="page == 'start'">
       <div class="ui black button" @click="close">Exit</div>
-      <div class="ui green icon button right floated" @click.prevent="upload_open">
+      <div class="ui green icon button right floated" @click.prevent="uploadOpen">
         Upload
         <i class="checkmark icon"></i>
       </div>
@@ -50,25 +50,24 @@ export default {
   },
   mixins: [ Modal ],
   mounted: function() {
-    $('#file_progress_bar').progress();
+    $('#fileProgressBar').progress();
   },
   methods: {
-    afterOpen: function(ticket) {
-      console.log("ticketAO",ticket);
+    afterOpen: function({row, data}) {
       this.page = 'start'
-      $('#data_file_input').val('');
-      this.ticket = JSON.parse(JSON.stringify(ticket))
-      this.upload_open()
+      $('#dataFileInput').val('');
+      this.ticket = JSON.parse(JSON.stringify(data))
+      this.uploadOpen()
     },
-    upload_open: function () {
-      $('#data_file_input').click();
+    uploadOpen: function () {
+      $('#dataFileInput').click();
     },
     again () {
-      this.upload_file()
+      this.uploadFile()
     },
-    upload_file: function (event) {
+    uploadFile: function (event) {
       let uploader = new SocketIOFileClient(this.$root.socket);
-      let pb = $('#file_progress_bar')
+      let pb = $('#fileProgressBar')
       console.log("pb",pb);
 
       uploader.on('start', (fileInfo) => {
@@ -94,7 +93,7 @@ export default {
       this.page = 'progress'
 
       uploader.on('ready', () => {
-        var fileEl = document.getElementById('data_file_input');
+        var fileEl = document.getElementById('dataFileInput');
         var uploadIds = uploader.upload(fileEl, {
           data: {
             route: 'TicketsExt:dataImport',
@@ -106,8 +105,8 @@ export default {
       })
 
       //     data = JSON.parse(data);
-      //     BPC.tickets.import_data_modal.$set('page', 'complete');
-      //     BPC.tickets.tickets_table.row(this.row).data(data.ticket);
+      //     BPC.tickets.importDataModal.$set('page', 'complete');
+      //     BPC.tickets.ticketsTable.row(this.row).data(data.ticket);
     },
   }
 }

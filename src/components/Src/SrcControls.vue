@@ -44,19 +44,7 @@
     data () {
       return {
         meta: {
-          page: 'Src',
           name: 'SrcControls'
-        },
-        search: '',
-        filtersTemplate : {
-          page: 'Src',
-          daterange : [
-            moment().format('YYYY-MM-DD'),
-            moment().add(30, 'days').format('YYYY-MM-DD')
-          ],
-          ticketId : 0,
-          subdivisionId : 0,
-          houseId : 0,
         },
       }
     },

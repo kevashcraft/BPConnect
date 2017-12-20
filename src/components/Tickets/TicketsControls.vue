@@ -1,5 +1,5 @@
 <template>
-  <form id="tickets_controls" class="ui form" onsubmit="event.preventDefault()">
+  <form class="ui form" onsubmit="event.preventDefault()">
     <div class="item" data-step="1" data-intro="Select a date range to begin. Remeber, only tickets in this range will be visible." data-position="right">
       <div class="field padding-b15">
         <label>Dates</label>
@@ -50,19 +50,7 @@ export default {
   data () {
     return {
       meta: {
-        page: 'Tickets'
-      },
-      search    : '',
-      filtersTemplate : {
-        page: 'Tickets',
-        daterange : [
-          moment().format('YYYY-MM-DD'),
-          moment().add(30, 'days').format('YYYY-MM-DD')
-        ],
-        ticketId: 0,
-        builderId: 0,
-        subdivisionId: 0,
-        houseId: 0,
+        name: 'TicketsControls'
       },
     }
   },

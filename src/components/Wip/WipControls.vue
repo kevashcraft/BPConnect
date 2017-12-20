@@ -46,17 +46,6 @@ export default {
       meta: {
         name: 'WipControls',
       },
-      search    : '',
-      filtersTemplate : {
-        daterange : [
-          moment().format('YYYY-MM-DD'),
-          moment().add(30, 'days').format('YYYY-MM-DD')
-        ],
-        permitId : 0,
-        inspectorId : 0,
-        ticketId : 0,
-        houseId : 0,
-      },
     }
   },
   mounted () {

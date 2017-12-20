@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div id="config" class="page-container">
-      <div id="table_container"></div>
-    </div>
+    <config-user-modal ref="ConfigUserModal"></config-user-modal>
+    <config-subdivision-modal ref="ConfigSubdivisionModal"></config-subdivision-modal>
+    <config-task-template-modal ref="ConfigTaskTemplateModal"></config-task-template-modal>
   </div>
-  <config-user-modal></config-user-modal>
-  <config-subdivision-modal></config-subdivision-modal>
-  <config-task-template-modal></config-task-template-modal>
-
 </template>
 
 <script>
+  import Page from '../Page/Page'
   import ConfigUserModal from './ConfigUserModal.vue'
   import ConfigSubdivisionModal from './ConfigSubdivisionModal.vue'
   import ConfigTaskTemplateModal from './ConfigTaskTemplateModal.vue'
 
   export default {
+    mixins: [ Page ],
     components: {
       ConfigUserModal
       ConfigSubdivisionModal
@@ -23,62 +21,66 @@
     },
     data () {
       return {
+        meta: {
+          name: 'ConfigPage',
+          title: 'Config'
+        },
         selected: '',
       }
     },
-    mounted: function() {
+    mounted () {
       if (window.location.hash) {
-        var selected = window.location.hash.replace('#', '');
+        var selected = window.location.hash.replace('#', '')
       } else {
-        var selected = 'user';
+        var selected = 'user'
       }
-      BPC.config_controls.$set('selected', selected);
+      BPC.configControls.$set('selected', selected)
     },
     watch: {
       selected: function(selected) {
-        this.update();
+        this.update()
       },
     },
     methods: {
-      update: function() {
-        var options = JSON.parse(JSON.stringify(BPC.config_controls.options));
-        var selected = this.selected;
+      update () {
+        var options = JSON.parse(JSON.stringify(BPC.configControls.options))
+        var selected = this.selected
         if (!options.some(function(property) { return property.value === selected })) {
-          selected = 'user';
+          selected = 'user'
         }
 
         if (this.selected !== selected) {
-          BPC.config_controls.$set('selected', selected);
+          BPC.configControls.$set('selected', selected)
         }
 
-        var url = BPC.routes['config'] + '#' + selected;
-        history.pushState(null, null, url);
+        var url = BPC.routes['config'] + '#' + selected
+        history.pushState(null, null, url)
 
         var data = {
           selected: selected,
-        };
-        var route = 'config.' + [selected] + '.list';
-        route = BPC.routes[route];
+        }
+        var route = 'config.' + [selected] + '.list'
+        route = BPC.routes[route]
         $.post(route, data, function (data) {
 
-          var table = $('#config_table');
-          if (table) table.remove();
+          var table = $('#configTable')
+          if (table) table.remove()
 
-          var container = $('#table_container');
-          container.append('<table id="config_table" class="ui celled table"></table>');
-          $('#config_table').on('click', 'tr', function(event) {
-            var table = BPC.config.config_table;
-            var data = table.row(this).data();
-            var modal = BPC.config.selected + '_modal';
-            BPC.config[modal].open(data);
-          });
-          this.config_table = $('#config_table').DataTable({
+          var container = $('#tableContainer')
+          container.append('<table id="configTable" class="ui celled table"></table>')
+          $('#configTable').on('click', 'tr', function(event) {
+            var table = BPC.config.configTable
+            var data = table.row(this).data()
+            var modal = BPC.config.selected + 'Modal'
+            BPC.config[modal].open(data)
+          })
+          this.configTable = $('#configTable').DataTable({
             paging: false,
             data: data.rows,
             columns: data.columns,
             dom: 't',
-          });
-        }.bind(this), "json");
+          })
+        }.bind(this), "json")
       },
     },
   }

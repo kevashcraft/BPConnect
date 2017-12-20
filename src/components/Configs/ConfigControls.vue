@@ -1,5 +1,5 @@
 <template>
-  <div class="item" id="config_controls">
+  <div class="item">
     <div class="segment">
       <div class="ui fluid selection dropdown">
         <input type="hidden" v-dropdown="selected">
