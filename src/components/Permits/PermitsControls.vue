@@ -44,12 +44,10 @@ export default {
   data () {
     return {
       meta: {
-        page: 'Permits',
         name: 'PermitsControls'
       },
       search : '',
       filtersTemplate : {
-        page: 'Permits',
         daterange : [
           moment().format('YYYY-MM-DD'),
           moment().add(30, 'days').format('YYYY-MM-DD')

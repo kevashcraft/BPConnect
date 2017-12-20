@@ -39,8 +39,8 @@ export default {
   data () {
     return {
       meta: {
-        page: 'Sites',
-        name: 'SiteUpdateModal'
+        page: 'Src',
+        name: 'SrcUpdateModal'
       },
       row: {},
       site: {},
@@ -48,7 +48,7 @@ export default {
   },
   mounted () {
 
-    $('#siteUpdateModal .ui.checkbox').checkbox()
+    $(this.$el).find('.ui.checkbox').checkbox()
     // $('#siteUpdateModal .ui.search').search({
     //   apiSettings: {
     //     url: BPC.r.sites.reasonsSearch + '?query={query}',

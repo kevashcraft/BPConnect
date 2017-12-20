@@ -12,8 +12,11 @@ export default {
     },
     ...mapState([ 'filters' ]),
   },
+  created () {
+    this.filtersTemplate.page = this.meta.name
+  },
   mounted () {
-    if (!this.filters.page || this.filters.page !== this.meta.page) {
+    if (!this.filters.page || this.filters.page !== this.meta.name) {
       this.$store.commit('filtersSet', this.filtersTemplate)
     }
 

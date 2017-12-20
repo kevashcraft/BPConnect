@@ -1,41 +1,32 @@
 import InspectionsModel from './InspectionsModel'
 
-exports.schedule = async (req, res) => {
+exports.schedule = async (req) => {
   let inspectionId = req.body.inspectionId
   let fields = { scheduled: req.body.scheduled }
   return await InspectionsModel.update(inspectionId, fields)
 }
 
-exports.pass = async (req, res) => {
+exports.pass = async (req) => {
   let inspectionId = req.body.inspectionId
   let fields = { passed: req.body.passed }
   return await InspectionsModel.update(inspectionId, fields)
 }
 
-exports.fail = async (req, res) => {
+exports.fail = async (req) => {
   let inspectionId = req.body.inspectionId
   let fields = { failed: req.body.failed }
   return await InspectionsModel.update(inspectionId, fields)
 }
 
-exports.list = async (req, res) => {
-  let fields = {
-    drstart: req.body.daterange[0],
-    drend: req.body.daterange[1],
-    ticketId: req.body.ticketId,
-    houseId: req.body.houseId,
-    permitId: req.body.permitId,
-    inspectionId: req.body.inspectionId,
-    inspectorId: req.body.inspectorId
-  }
+exports.list = async (req) => {
 
-  let list = await InspectionsModel.list(fields, req.db)
+  return await InspectionsModel.list(req)
 }
 
-exports.search = async (req, res) => {
+exports.search = async (req) => {
   return await InspectionsModel.search(query, req.db)
 }
 
-exports.searchInspectors = async (req, res) => {
+exports.searchInspectors = async (req) => {
   return await InspectionsModel.searchInspectors(query, req.db)
 }

@@ -44,12 +44,12 @@
     data () {
       return {
         meta: {
-          page: 'Sites',
-          name: 'SitesControls'
+          page: 'Src',
+          name: 'SrcControls'
         },
         search: '',
         filtersTemplate : {
-          page: 'Sites',
+          page: 'Src',
           daterange : [
             moment().format('YYYY-MM-DD'),
             moment().add(30, 'days').format('YYYY-MM-DD')

@@ -1,12 +1,12 @@
-import TicketsModel from '../Tickets/TicketsModel'
+import WipModel from '../Wip/WipModel'
 
-exports.start = async (req, res) => {
+exports.start = async (req) => {
   let ticketId = req.body.ticketId
   let fields = { started: 'NOW()' }
   await TicketsModel.update(ticketId, req.db)
 }
 
-exports.checkin = async (req, res) => {
+exports.checkin = async (req) => {
   let ticketId = req.body.ticketId
   let fields = { completed: 'NOW()' }
   await TicketsModel.update(ticketId, req.db)
@@ -22,23 +22,18 @@ exports.checkin = async (req, res) => {
   }
 }
 
-exports.walk = async (req, res) => {
+exports.walk = async (req) => {
   let ticketId = req.body.ticketId
   let fields = { walked: 'NOW()'}
   await TicketsModel.update(ticketId, fields)
 }
 
-exports.list = async (req, res) => {
-  let fields = {
-    drstart: req.body.daterange[0],
-    drend: req.body.daterange[1],
-    ticketId: req.body.ticketId,
-    houseId: req.body.houseId
-  }
-  let list = await WipModel.list(fields, req.db)
+exports.list = async (req) => {
+
+  return await WipModel.list(req)
 }
 
-exports.search = async (req, res) => {
+exports.search = async (req) => {
   let query = req.body.query
 
   let results = await WipModel.search(query, req.db)

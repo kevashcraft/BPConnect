@@ -12,8 +12,8 @@ import PermitsPage from '../components/Permits/PermitsPage.vue'
 import PermitsControls from '../components/Permits/PermitsControls.vue'
 import SchedulePage from '../components/Schedule/SchedulePage.vue'
 import ScheduleControls from '../components/Schedule/ScheduleControls.vue'
-import SitesPage from '../components/Sites/SitesPage.vue'
-import SitesControls from '../components/Sites/SitesControls.vue'
+import SrcPage from '../components/Src/SrcPage.vue'
+import SrcControls from '../components/Src/SrcControls.vue'
 import TicketsPage from '../components/Tickets/TicketsPage.vue'
 import TicketsControls from '../components/Tickets/TicketsControls.vue'
 import WipPage from '../components/Wip/WipPage.vue'
@@ -65,8 +65,8 @@ let router = new Router({
     }, {
       path: '/site-ready-checklist',
       components: {
-        page: SitesPage,
-        controls: SitesControls
+        page: SrcPage,
+        controls: SrcControls
       },
       meta: {requiresAuth: true},
     }, {

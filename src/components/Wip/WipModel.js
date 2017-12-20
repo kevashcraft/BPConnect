@@ -14,13 +14,16 @@ exports.list = async (req) => {
           AND ticket_date_created <= $2)
         OR (ticket_date_scheduled >= $1
           AND ticket_date_scheduled <= $2))
-      AND (:ticket_id = 0
+      AND ($3 = 0
         OR wip_view.ticket_id = $3)
-      AND (:house_id = 0
+      AND ($4 = 0
         OR wip_view.house_id = $4)
     LIMIT 5000
   `
-  let bind = [req.drstart, req.drend, req.ticketId, req.houseId]
+  let bind = [
+    req.daterange[0], req.daterange[1],
+    req.ticketId, req.houseId
+  ]
 
   return await Model.query(sql, bind)
 }

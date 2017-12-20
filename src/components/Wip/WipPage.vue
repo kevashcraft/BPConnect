@@ -1,127 +1,85 @@
 <template>
   <div>
-    <div id="wip" class="page-container">
-      <div id="wip_table_container">
-        <table id="wip_table" class="ui celled table"></table>
-      </div>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
     </div>
-    <wip-checkin-modal></wip-checkin-modal>
-    <wip-start-modal></wip-start-modal>
-    <wip-walk-modal></wip-walk-modal>
+    <wip-checkin-modal ref="WipCheckinModal"></wip-checkin-modal>
+    <wip-start-modal ref="WipStartModal"></wip-start-modal>
+    <wip-walk-modal ref="WipWalkModal"></wip-walk-modal>
   </div>
 </template>
 
 <script>
+  import Page from '../Page/Page'
+  import WipColumns from './WipColumns'
+
   import WipCheckinModal from './WipCheckinModal.vue'
   import WipStartModal from './WipStartModal.vue'
   import WipWalkModal from './WipWalkModal.vue'
 
   export default {
+    mixins: [ Page ],
     components: {
       WipCheckinModal,
       WipStartModal,
       WipWalkModal
     },
     data () {
-      return {}
-    },
-    watch: {
-    },
-    mounted: function() {
-
-      BPC.active    = this;
-      this.controls = BPC.wip_controls;
-
-      this.init();
-
-      if (BPC.isLocalStorageAvailable) {
-        var daterange = localStorage.getItem('daterange');
-        if (daterange) {
-          daterange = JSON.parse(daterange);
-          this.controls.daterange = daterange;
-          this.update();
-          return;
+      return {
+        meta: {
+          name: 'WipPage',
+          title: 'Work in Progress'
         }
       }
-
-      setTimeout(function() {
-        $('.daterangepicker').click();
-      }, 1500);
     },
     methods: {
-      init: function () {
-        this.init_table();
+      init () {
+        this.initTable()
+        this.list()
       },
-      update: function() {
-        this.wip_table.clear();
-        this.wip_table.draw();
-        BPC.site_loading();
-        var data = {
-          daterange: this.controls.daterange,
-          filters  : this.controls.filters,
-        };
-        $.post(BPC.routes['wip.list'], data, function (data) {
-          setTimeout(function () {
-            BPC.site_loading(false);
-          }, 150);
-          this.wip = data.wip;
-          this.wip_table.rows.add(data.wip);
-          this.wip_table.draw();
-        }.bind(this), "json");
-
-        $('.daterangepicker').data('daterangepicker').setStartDate(
-          moment(this.controls.daterange[0])
-        );
-        $('.daterangepicker').data('daterangepicker').setEndDate(
-          moment(this.controls.daterange[1])
-        );
-      },
-      reload_table: function() {
-        this.wip_table.destroy();
-        $('#wip_table').remove();
-
-        var container = $('#wip_table_container');
-        container.append('<table id="wip_table" class="ui celled table"></table>');
-
-        this.init_table();
+      list () {
+        this.$root.req('Wip:list', this.filters).then(response => {
+          this.table.clear()
+          this.table.rows.add(response)
+          this.table.draw()
+        })
       },
 
-      init_table: function () {
-        var columns = $.extend(true, [], BPC.i.columns);
-
+      initTable () {
         var config = {
-          columns: columns,
+          stateSave: true,
+          colReorder: true,
+          responsive: true,
+          columns: WipColumns,
           paging: false,
-          dom: 't'
-        };
-
-        this.wip_table = $('#wip_table').DataTable(config);
-        if (this.wip) {
-          var rows = $.extend(true, [], this.wip);
-          this.wip_table.rows.add(rows);
-          this.wip_table.draw();
+          dom: 'Bt',
+          buttons: [ 'colvis' ]
         }
 
-        $('#wip_table').on('click', 'a[href="#start_work"]', function(event) {
-          var row = $(this).closest('tr');
-          var table = BPC.wip.wip_table;
-          var data = table.row(row).data();
-          BPC.wip.wip_start_modal.open(data);
-        });
+        this.table = $(this.$refs.table).DataTable(config)
+        if (this.wip) {
+          var rows = $.extend(true, [], this.wip)
+          this.table.rows.add(rows)
+          this.table.draw()
+        }
 
-        $('#wip_table').on('click', 'a[href="#checkin_work"]', function(event) {
-          var row = $(this).closest('tr');
-          var table = BPC.wip.wip_table;
-          var data = table.row(row).data();
-          BPC.wip.wip_checkin_modal.open(data);
-        });
+        $(this.$refs.table).on('click', 'a[href="#start_work"]', function(event) {
+          var row = $(event.currentTarget).closest('tr')
+          var data = this.table.row(row).data()
+          this.$refs.WipStartModal.open({row, data})
+        })
 
-        $('#wip_table').on('click', 'a[href="#walk_ticket"]', function(event) {
-          var row = $(this).closest('tr');
-          var table = BPC.wip.wip_table;
-          var data = table.row(row).data();
-          BPC.wip.wip_walk_modal.open(data);
-        });
+        $(this.$refs.table).on('click', 'a[href="#checkin_work"]', function(event) {
+          var row = $(event.currentTarget).closest('tr')
+          var data = this.table.row(row).data()
+          this.$refs.WipCheckinModal.open({row, data})
+        })
+
+        $(this.$refs.table).on('click', 'a[href="#walk_ticket"]', function(event) {
+          var row = $(event.currentTarget).closest('tr')
+          var data = this.table.row(row).data()
+          this.$refs.WipWalkModal.open({row, data})
+        })
       },
     },
   }

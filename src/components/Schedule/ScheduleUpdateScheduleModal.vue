@@ -1,11 +1,8 @@
 <template>
-
-  <div class="ui small modal" id="schedule_update_schedule_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Reschedule Ticket</div>
-    {% verbatim %}
-    <p class="padding30">Ticket has already been rescheduled {{ bumped_count }} times.</p>
-    {% endverbatim %}
+    <p class="padding30">Ticket has already been rescheduled {{ bumpedCount }} times.</p>
     <form class="ui form padding30">
       <div class="field">
         <label>Date Scheduled</label>
@@ -14,34 +11,34 @@
       <div class="field">
         <label>Email Builder</label>
         <div class="ui toggle checkbox">
-          <input type="checkbox" v-model="ticket.send_email">
+          <input type="checkbox" v-model="ticket.sendEmail">
           <label>Send Email</label>
         </div>
       </div>
-      <div v-show="ticket.send_email">
+      <div v-show="ticket.sendEmail">
         <div class="two fields">
           <div class="field">
             <label>To</label>
-            <input type="text" v-model="ticket.builder_name">
+            <input type="text" v-model="ticket.builderName">
           </div>
           <div class="field">
             <label>Email Address</label>
-            <input type="email" v-model="ticket.builder_email">
+            <input type="email" v-model="ticket.builderEmail">
           </div>
         </div>
         <div class="field">
           <label>Subject</label>
-          <input type="text" v-model="ticket.email_subject">
+          <input type="text" v-model="ticket.emailSubject">
         </div>
         <div class="field">
           <label>Message</label>
-          <textarea v-model="ticket.email_message"></textarea>
+          <textarea v-model="ticket.emailMessage"></textarea>
         </div>
       </div>
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="update">
+      <div class="ui green icon button" @click="submit">
         <span>Reschedule</span>
         <span v-show="ticket.emailBuilder"> & Email</span>
         <i class="checkmark icon"></i>
@@ -51,39 +48,41 @@
 </template>
 
 <script>
-export default {
-    data () {
-      return {
-        row: {},
-        ticket: 0,
-      }
-    },
-    methods: {
-      open: function(data, row) {
-        this.row  = row;
-        var ticket = JSON.parse(JSON.stringify(data));
-        ticket.send_email = true;
-        ticket.email_subject = 'Ticket has been rescheduled';
-        this.$set('ticket', ticket);
+import Modal from '../Modal/Modal'
 
-        $(this.$el).modal('show');
-        setTimeout(function () {
-          $(this.$el).modal('refresh');
-        }.bind(this), 500);
+export default {
+  mixins: [ Modal ],
+  data () {
+    return {
+      meta: {
+        name: 'ScheduleUpdateScheduleModal'
       },
-      update: function(event) {
-        var data = {
-          data: this.ticket,
-        };
-        var url = BPC.routes['schedule.update_schedule'];
-        $.post(url, data, function(data) {
-          BPC.overhang(data.message, data.success, 2);
-          if (data.success) {
-            $(this.$el).modal('hide');
-            BPC.schedule.schedule_table.row(this.row).data(data.ticket);
-          }
-        }.bind(this), 'json');
-      },
+      bumpedCount: 0,
+      row: {},
+      ticket: 0,
     }
+  },
+  methods: {
+    afterOpen ({data, row}) {
+      this.row  = row
+      var ticket = JSON.parse(JSON.stringify(data))
+      ticket.sendEmail = true
+      ticket.emailSubject = 'Ticket has been rescheduled'
+      this.ticket = ticket
+    },
+    submit (event) {
+      // var data = {
+      //   data: this.ticket,
+      // }
+      // var url = BPC.routes['schedule.updateSchedule']
+      // $.post(url, data, function(data) {
+      //   BPC.overhang(data.message, data.success, 2)
+      //   if (data.success) {
+      //     $(this.$el).modal('hide')
+      //     BPC.schedule.scheduleTable.row(this.row).data(data.ticket)
+      //   }
+      // }.bind(this), 'json')
+    },
   }
+}
 </script>

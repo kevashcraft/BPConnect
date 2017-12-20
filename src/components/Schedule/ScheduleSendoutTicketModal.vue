@@ -1,6 +1,5 @@
 <template>
-
-  <div class="ui small modal" id="schedule_sendout_ticket_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Send Out Ticket</div>
     <div class="ui icon message">
@@ -20,9 +19,15 @@
 </template>
 
 <script>
+  import Modal from '../Modal/Modal'
+
   export default {
+    mixins: [ Modal ],
     data () {
       return {
+        meta: {
+          name: 'ScheduleSendoutTicketModal',
+        },
         row: {},
         ticket: {},
       }
@@ -30,25 +35,23 @@
     ready: function() {
     },
     methods: {
-      open: function(data, row) {
-        this.row  = row;
-        var ticket = JSON.parse(JSON.stringify(data));
-        this.$set('ticket', ticket);
+      open ({data, row}) {
+        this.row = row
+        let ticket = JSON.parse(JSON.stringify(data))
 
-        $(this.$el).modal('show');
       },
-      update: function(event) {
-        var data = {
-          ticket_id: this.ticket.ticket_id,
-        };
-        var url = BPC.routes['schedule.sendout_ticket'];
-        $.post(url, data, function(data) {
-          BPC.overhang(data.message, data.success, 2);
-          if (data.success) {
-            $(this.$el).modal('hide');
-            BPC.schedule.schedule_table.row(this.row).data(data.ticket);
-          }
-        }.bind(this), 'json');
+      update () {
+        // var data = {
+        //   ticket_id: this.ticket.ticket_id,
+        // }
+        // var url = BPC.routes['schedule.sendout_ticket']
+        // $.post(url, data, function(data) {
+        //   BPC.overhang(data.message, data.success, 2)
+        //   if (data.success) {
+        //     $(this.$el).modal('hide')
+        //     BPC.schedule.schedule_table.row(this.row).data(data.ticket)
+        //   }
+        // }.bind(this), 'json')
       },
     }
   }

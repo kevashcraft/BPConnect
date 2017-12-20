@@ -7,7 +7,7 @@ import Orders from '../components/Orders/Orders'
 import Permits from '../components/Permits/Permits'
 import Reasons from '../components/Reasons/Reasons'
 import Schedule from '../components/Schedule/Schedule'
-import Sites from '../components/Sites/Sites'
+import Src from '../components/Src/Src'
 import Subdivisions from '../components/Subdivisions/Subdivisions'
 import Suppliers from '../components/Suppliers/Suppliers'
 import Tickets from '../components/Tickets/Tickets'
@@ -26,7 +26,7 @@ export default {
   Permits,
   Reasons,
   Schedule,
-  Sites,
+  Src,
   Subdivisions,
   Suppliers,
   Tickets,

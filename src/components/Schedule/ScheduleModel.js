@@ -20,7 +20,7 @@ exports.list = async (req) => {
     LIMIT 1000
   `
   let bind = [
-    req.drstart, req.drend,
+    req.daterange[0], req.daterange[1],
     req.ticketId, req.builderId,
     req.subdivisionId, req.houseId,
     req.plumberId, req.helperId

@@ -30,8 +30,8 @@ export default {
   data () {
     return {
       meta: {
-        page: 'Sites',
-        name: 'SiteReasonAddModal'
+        page: 'Src',
+        name: 'SrcReasonAddModal'
       },
       reason: {},
     }

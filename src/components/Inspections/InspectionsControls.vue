@@ -1,10 +1,10 @@
 <template>
-  <form id="inspections_controls" class="ui form" onsubmit="event.preventDefault()">
+  <form class="ui form" onsubmit="event.preventDefault()">
     <div class="item" data-step="1" data-intro="Select a date range to begin. Remeber, only inspections in this range will be visible." data-position="right">
       <div class="field padding-b15">
         <label>Dates</label>
         <div class="ui input daterangepicker-container">
-          <input type="text" class="ui daterangepicker" v-model="dr_string">
+          <input type="text" class="ui daterangepicker" v-model="drString">
         </div>
       </div>
     </div>
@@ -24,10 +24,8 @@
         </div>
       </div>
       <div>
-        <a href="#clear" v-show="search.length > 0" @click="clear_search">Clear</a>
+        <a href="#clear" v-show="search.length > 0" @click="clearSearch">Clear</a>
       </div>
-    </div>
-    <div class="item" data-step="3" data-intro="Select which columns you want to see and which you don't.">
     </div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="walkthrough">
@@ -39,57 +37,33 @@
 </template>
 
 <script>
+import Controls from '../Controls/Controls'
 import moment from 'moment'
 
 export default {
+  mixins: [ Controls ],
   data() {
     return {
-
+      meta: {
+        name: 'InspectionsControls'
+      },
       search    : '',
-      daterange : [],
-      dr_string : '',
-      filters   : {
-        'Tickets'      : {
-          value: 0,
-          slug: 'ticket_id',
-          category: 'Tickets',
-          name: 'Ticket',
-          description: '',
-        },
-        'Permits'     : {
-          value: 0,
-          slug: 'permit_id',
-          category: 'Permits',
-          name: 'Permits',
-          description: '',
-        },
-        'Inspections' : {
-          value: 0,
-          slug: 'inspection_id',
-          category: 'Inspections',
-          name: 'Inspection',
-          description: '',
-        },
-        'Inspectors' : {
-          value: 0,
-          slug: 'inspector_id',
-          category: 'Inspectors',
-          name: 'Inspector',
-          description: '',
-        },
-        'Houses' : {
-          value: 0,
-          slug: 'house_id',
-          category: 'Houses',
-          name: 'House',
-          description: '',
-        },
+      filtersTemplate : {
+        daterange : [
+          moment().format('YYYY-MM-DD'),
+          moment().add(30, 'days').format('YYYY-MM-DD')
+        ],
+        ticketId: 0,
+        permitId: 0,
+        inspectionId: 0,
+        inspectorId: 0,
+        houseId: 0,
       },
     }
   },
   mounted: function() {
     this.filtersBlank = JSON.stringify(this.filters);
-    // $('#inspections_controls .ui.ticket.search').search({
+    // $('#inspectionsControls .ui.ticket.search').search({
     //   type: 'category',
     //   apiSettings: {
     //     method: 'post',
@@ -104,30 +78,6 @@ export default {
     //   }.bind(this),
     // });
 
-    $('.daterangepicker').daterangepicker({
-      opens: 'right',
-      drops: 'down',
-      format: 'MM/DD/YY',
-      ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-          'Last Year': [moment().subtract(1, 'year').startOf('month'), moment()]
-      },
-    }, function(start, end, label) {
-      var daterange = [
-        start.format('YYYY-MM-DD'),
-        end.format('YYYY-MM-DD')
-      ];
-      this.daterange = daterange;
-      if (BPC.isLocalStorageAvailable) {
-        localStorage.setItem('daterange', JSON.stringify(daterange));
-      }
-      BPC.inspections.update();
-    }.bind(this));
   },
   methods: {
     resetFilters: function() {
@@ -146,13 +96,10 @@ export default {
       }.bind(this));
       return filters;
     },
-    clear_search: function() {
+    clearSearch: function() {
       this.$set('search', '');
       this.resetFilters();
       BPC.inspections.update();
-    },
-    walkthrough: function() {
-      introJs().start();
     },
   },
 }
