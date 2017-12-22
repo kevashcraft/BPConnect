@@ -11,7 +11,7 @@
       </div>
       <div class="two fields">
         <div class="field" v-show="!site.ready">
-          <div class="ui search">
+          <div ref="search" class="ui search">
             <label>Reason not Ready</label>
             <input type="text" class="prompt">
           </div>
@@ -23,7 +23,7 @@
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="submit">
+      <div class="ui green icon button" @click="update">
         Update Site
         <i class="checkmark icon"></i>
       </div>
@@ -49,16 +49,19 @@ export default {
   mounted () {
 
     $(this.$el).find('.ui.checkbox').checkbox()
-    // $('#siteUpdateModal .ui.search').search({
-    //   apiSettings: {
-    //     url: BPC.r.sites.reasonsSearch + '?query={query}',
-    //     method: 'post'
-    //   },
-    //   selectFirstResult: true,
-    //   onSelect: function (result, response) {
-    //     this.site.reasonId = result.id
-    //   }.bind(this),
-    // })
+    $(this.$refs.search).search({
+      apiSettings: {
+        responseAsync: (settings, callback) => {
+          let route = 'Reasons:search'
+          let data = { query: settings.urlData.query }
+          this.$root.req(route, data).then(callback)
+        }
+      },
+      selectFirstResult: true,
+      onSelect: (result, response) => {
+        this.site.reasonId = result.id
+      },
+    })
   },
   methods: {
     afterOpen (info) {
@@ -66,27 +69,28 @@ export default {
       this.site = {
         ticketId: info.data.ticketId,
         reasonId: null,
-        ready    : false,
+        ready: false,
       }
 
-      $('#siteUpdateModal .ui.search').search('set value', '')
+      $(this.$refs.search).search('set value', '')
     },
-    submit: function(event) {
-      // if (!this.site.ready && !this.site.reasonId) BPC.overhang('Please add a reason', false)
+    update: function(event) {
+      if (!this.site.ready && !this.site.reasonId) {
+        this.$root.noty('Please add a reason', 'warning')
+      }
 
-      // var data = {
-      //   site: this.site,
-      // }
-      // $.post(BPC.r.sites.update, data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.sites.sitesTable.row(this.row).data(data.site)
-      //   }
-      // }.bind(this), 'json')
+      this.$root.req('Src:update', this.site).then((response) => {
+        if (response) {
+          this.$root.noty('Site has been updated')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not update site', 'error')
+        }
+      })
     },
     reasonAddModal: function () {
-      // BPC.sites.reasonAddModal.open()
+      this.$store.dispatch('modalSave', 'SrcReasonAddModal')
     },
   }
 }

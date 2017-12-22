@@ -1,13 +1,13 @@
 export default {
   data () {
     return {
-      opened: false,
+      opened: false
     }
   },
   computed: {
     modal () {
       return this.$store.state.modal
-    },
+    }
   },
   mounted () {
     $(this.$el).modal({
@@ -27,13 +27,11 @@ export default {
         this.$store.commit('modalSet', this.meta.name)
       }
 
-      console.log("this.$store.state.modalStack", this.$store.state.modalStack)
       if (this.$store.state.modalStack.indexOf(this.meta.name) < 0) {
         if (this.afterOpen) {
           this.afterOpen(data)
         }
       }
-
     },
     close (data, outside) {
       this.opened = false
@@ -43,7 +41,7 @@ export default {
       }
 
       if (this.afterClose) this.afterClose(data)
-    },
+    }
   },
   watch: {
     modal (n, o) {
@@ -54,6 +52,6 @@ export default {
       if (o === this.meta.name && this.opened) {
         this.close({}, true)
       }
-    },
+    }
   }
 }

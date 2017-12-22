@@ -18,7 +18,7 @@
     </form>
     <div class="actions">
       <button class="ui black deny button left floated">Exit</button>
-      <button class="ui green button" @click="submit">Add</button>
+      <button class="ui green button" @click="create">Add</button>
     </div>
   </div>
 </template>
@@ -45,9 +45,15 @@ export default {
         phone    : '',
       }
     },
-    submit: function() {
+    create: function() {
       this.$root.req('Suppliers:create', this.supplier).then(response => {
-        this.close()
+        if (response) {
+          this.close()
+          this.$emit('update')
+          this.$root.noty(`Supplier ${response} has been added`)
+        } else {
+          this.$root.noty('Could not add the supplier', 'error')
+        }
       })
     },
   }

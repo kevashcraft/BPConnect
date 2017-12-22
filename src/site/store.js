@@ -1,4 +1,4 @@
-import Vue  from 'vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
 import persistedState from 'vuex-persistedstate'
 
@@ -13,7 +13,7 @@ export default new Vuex.Store({
     modalStack: [],
     pageTitle: '',
     workers: [],
-    ticketTypes: [],
+    ticketTypes: []
   },
   mutations: {
     builderSupervisorsSet (state, builderSupervisors) {
@@ -23,6 +23,7 @@ export default new Vuex.Store({
       state.filters = filters
     },
     modalSet (state, modal) {
+      console.log('state.modalStack', state.modalStack)
       state.modal = modal
     },
     modalStackPush (state, modal) {
@@ -31,7 +32,7 @@ export default new Vuex.Store({
       }
     },
     modalStackSet (state, stack) {
-      this.modalStack = stack
+      state.modalStack = stack
     },
     modalStackSplice (state, index) {
       state.modalStack.splice(index, 1)
@@ -44,10 +45,10 @@ export default new Vuex.Store({
     },
     workersSet (state, workers) {
       state.workers = workers
-    },
+    }
   },
   actions: {
-    modalClear ({ commit }) {
+    modalClear ({ commit, state }) {
       commit('modalSet', '')
       commit('modalStackSet', [])
     },
@@ -73,14 +74,13 @@ export default new Vuex.Store({
       commit('modalSet', modal)
     },
     modalSave ({ commit, state }, modal) {
-      console.log("modal", modal)
+      console.log('modal', modal)
       if (modal !== state.modal) {
         commit('modalStackPush', state.modal)
         commit('modalSet', modal)
       } else {
         console.log("you're trying to save the wrong modal")
       }
-
     }
   }
 })

@@ -13,7 +13,7 @@
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui blue button" @click="selectAll">Select All</div>
-      <div class="ui green icon button" @click="submit">
+      <div class="ui green icon button" @click="update">
         Parts Received
         <i class="checkmark icon"></i>
       </div>
@@ -25,6 +25,7 @@
 import Modal from '../Modal/Modal'
 
 export default {
+  mixins: [ Modal ],
   data () {
     return {
       meta: {
@@ -40,12 +41,12 @@ export default {
     afterOpen (obj) {
       this.row = obj.row
       this.orderId = obj.data.orderId
-      this.list()
+      this.retrieve()
     },
 
-    list () {
+    retrieve () {
       let data = {orderId: this.orderId}
-      this.$root.req('Orders:listParts', data).then(response => {
+      this.$root.req('Orders:retrieveParts', data).then(response => {
         this.parts = response
 
         setTimeout(() => {
@@ -56,8 +57,11 @@ export default {
         },250)
       })
     },
-    submit () {
-      this.$root.req('Orders:updateParts', this.parts).then(response => {
+    update () {
+      this.parts.forEach(part => { console.log('part.received', part.received)})
+      let parts = this.parts.filter(part => { return part.received === true || part.received === false })
+
+      this.$root.req('Orders:receiveParts', { parts }).then(response => {
         this.$emit('update', this.row)
       })
     },

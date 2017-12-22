@@ -117,9 +117,11 @@ exports.searchInspectors = async (req) => {
       inspectors.id,
       inspectors.name as title
     FROM inspectors
-    WHERE name ILIKE '%' || :query || '%'
+    WHERE inspectors.name ilike ANY(ARRAY[${req.queryString}])
+    ORDER BY similarity(inspectors.name, $1) DESC
+    LIMIT 10
   `
   let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

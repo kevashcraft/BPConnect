@@ -1,14 +1,11 @@
 import Vue from 'vue'
-
 import App from './App.vue'
 import data from './data'
 import methods from './methods'
 import mounted from './mounted'
 import router from './router'
 import store from './store'
-
-import * as imports from './imports'
-
+import './imports'
 
 new Vue({
   el: '#app',
@@ -17,5 +14,5 @@ new Vue({
   router,
   store,
   mounted,
-  render (h) { return h(App) },
+  render (h) { return h(App) }
 })

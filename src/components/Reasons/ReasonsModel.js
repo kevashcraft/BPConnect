@@ -9,7 +9,7 @@ exports.create = async (req) => {
   `
   let bind = [ req.reason, req.fault ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.search = async (req) => {
@@ -18,9 +18,11 @@ exports.search = async (req) => {
       reasons.id,
       reasons.reason as title
     FROM reasons
-    WHERE reason ILIKE '%' || :query || '%'
+    WHERE reasons.reason ilike ANY(ARRAY[${req.queryString}])
+    ORDER BY similarity(reasons.reason, $1) DESC
+    LIMIT 10
   `
-  let bind = [ req.query ]
+  let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

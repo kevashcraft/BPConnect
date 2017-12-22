@@ -3,7 +3,7 @@
     <i class="close icon"></i>
     <div class="header">Add a Ticket</div>
     <div class="content">
-      <form @submit="addTicket" class="ui form">
+      <form @submit="create" class="ui form">
         <!-- {# Type & Date #} -->
         <div v-show="step === 'typeDate'">
           <div class="ui icon message">
@@ -247,7 +247,7 @@
           <i class="arrow left icon"></i>
           <span>Back</span>
         </div>
-        <div class="ui green icon button" @click="addTicket">
+        <div class="ui green icon button" @click="create">
           <span>Add Ticket</span>
           <i class="checkmark icon"></i>
         </div>
@@ -525,7 +525,7 @@ export default {
         this.stepIndex = this.steps.indexOf(this.step)
       }
     },
-    addTicket () {
+    create () {
       var errors = []
       if (!this.ticket.ticketTypeId) {
         errors.push('Select Ticket Type')
@@ -550,13 +550,15 @@ export default {
         var data = {
           ticket: this.ticket,
         }
-        console.log("requesting ticket add!");
-        console.log("data",data);
+
         this.$root.req('Tickets:create', data).then((response) => {
-          // if (response.success) {
-          //   this.close()
-          //   BPC.tickets.update()
-          // }
+          if (response) {
+            this.close()
+            this.$emit('update')
+            this.$root.noty(`Ticket ${response} has been added`)
+          } else {
+            this.$root.noty('Could not add the ticket', 'error')
+          }
         })
       } else {
         this.errors = errors

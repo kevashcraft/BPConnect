@@ -1,6 +1,9 @@
 import '../../semantic/dist/semantic.js'
 import '../../semantic/dist/semantic.css'
 
+import 'noty/lib/noty.css'
+import 'noty/lib/themes/semanticui.css'
+
 import 'semantic-ui-daterangepicker'
 import 'semantic-ui-daterangepicker/daterangepicker.min.css'
 
@@ -27,5 +30,3 @@ import './styles/style.scss'
 // import 'datatables.net-responsive'
 // console.log("jquery",jquery);
 // dtr( window, jquery );
-
-

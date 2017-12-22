@@ -5,9 +5,9 @@
     <form class="ui form padding30">
       <div class="two fields">
         <div class="field">
-          <div class="ui search">
+          <div ref="suppliersSearch" class="ui search">
             <label>Supplier</label>
-            <input type="text" class="prompt" v-model="search">
+            <input type="text" class="prompt">
           </div>
         </div>
         <div class="field">
@@ -36,7 +36,7 @@
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui blue button" @click="selectAll">Select All</div>
-      <div class="ui green icon button" @click="submit">
+      <div class="ui green icon button" @click="create">
         Parts Ordered
         <i class="checkmark icon"></i>
       </div>
@@ -55,26 +55,32 @@ export default {
         page: 'Orders',
         name: 'OrderPartsModal'
       },
-      search: '',
       row: {},
-      order: {},
+      order: {
+        ticketId: 0,
+        number: '',
+        total: '',
+        parts: [],
+        ordered: '',
+      },
       parts: [],
     }
   },
   mounted () {
 
-    // $(this.$el).modal({allowMultiple: true})
-    // $('#orderPartsModal .ui.search').search({
-    //   apiSettings: {
-    //     url: BPC.r.orders.suppliersSearch + '?query={query}',
-    //     method: 'post'
-    //   },
-    //   selectFirstResult: true,
-    //   onSelect  (result, response) {
-    //     console.log("result",result)
-    //     this.order.supplierId = result.id
-    //   }.bind(this),
-    // })
+    $(this.$refs.suppliersSearch).search({
+      apiSettings: {
+        responseAsync: (settings, callback) => {
+          let route = 'Suppliers:search'
+          let data = { query: settings.urlData.query }
+          this.$root.req(route, data).then(callback)
+        }
+      },
+      selectFirstResult: true,
+      onSelect: (result, response) => {
+        this.order.supplierId = result.id
+      },
+    })
   },
   methods: {
     afterOpen (obj) {
@@ -92,8 +98,7 @@ export default {
       this.list()
     },
     list () {
-      let data = {orderId: this.orderId}
-      this.$root.req('Orders:listParts', data).then(response => {
+      this.$root.req('Tickets:retrieveParts', this.order).then(response => {
         this.parts = response
 
         setTimeout(() => {
@@ -104,9 +109,16 @@ export default {
         },250)
       })
     },
-    submit () {
-      this.$root.req('Orders:createParts', this.parts).then(response => {
-        this.$emit('update', this.row)
+    create () {
+      this.order.parts = this.parts.filter(part => { return part.ordered })
+      this.$root.req('Orders:create', this.order).then(response => {
+        if (response) {
+          this.$root.noty('Order has been added')
+          this.$emit('update', this.row)
+          this.close()
+        } else {
+          this.$root.noty('Could not order parts', 'error')
+        }
       })
     },
     selectAll () {

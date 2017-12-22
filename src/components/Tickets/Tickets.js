@@ -1,8 +1,10 @@
 import * as BuildersModel from '../Builders/BuildersModel'
 import * as BuilderSupervisorsModel from '../BuilderSupervisors/BuilderSupervisorsModel'
+import * as HousesModel from '../Houses/HousesModel'
 import * as SubdivisionsModel from '../Subdivisions/SubdivisionsModel'
 import * as TicketsModel from './TicketsModel'
 import * as TicketTypesModel from '../TicketTypes/TicketTypesModel'
+import * as PermitsModel from '../Permits/PermitsModel'
 
 exports.hello = () => { return 'whoa!!' }
 
@@ -15,7 +17,7 @@ exports.create = async (req) => {
 
   if (ticket.builderSupervisorId === -1) {
     ticket.builderSupervisor.builderId = ticket.builderId
-    ticket.builderSupervisorsId = await BuildersSupervisorsModel.create(ticket.builderSupervisor)
+    ticket.builderSupervisorsId = await BuilderSupervisorsModel.create(ticket.builderSupervisor)
   }
 
   if (ticket.subdivisionId === -1) {
@@ -35,38 +37,35 @@ exports.create = async (req) => {
 
   let ticketId = await TicketsModel.create(ticket)
 
-  if (ticketType.needsPermit) {
+  console.log('ticketType', ticketType)
+  if (ticketType.needspermit) {
     let permit = { houseId: ticket.houseId }
     let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
-    if (!permitCountForHouse) {
-      PermitsModel.create(permit)
+    console.log('permitCountForHouse', permitCountForHouse)
+    if (permitCountForHouse == 0) {
+      console.log('permit', permit)
+      let permitId = await PermitsModel.create(permit)
     }
   }
+
+  return ticketId
 }
 
-exports.search = async (req) => {
-  let query = req.body.query
-  let results = TicketsModel.search(query)
-  // need to sort
-  // array[catefory] = { name, results}
-
-}
+// exports.search = async (req) => {
+//   let query = req.body.query
+//   let results = TicketsModel.search(query)
+//   // need to sort
+//   // array[catefory] = { name, results}
+// }
 
 exports.list = async (req) => {
-
-  return await TicketsModel.list(req)
+  return TicketsModel.list(req)
 }
 
 exports.retrieve = async (req) => {
-  let ticketId = req.body.ticketId
-  let ticket = TicketsModel.retrieve(ticketId)
+  return TicketsModel.retrieve({id: req.id})
 }
 
-exports.details = async (req) => {
-  let ticketId = req.body.ticketId
-  let ticket = {}
-
-  ticket.permits = TicketsExtModel.retrievePermits(ticketId)
-  ticket.orders = TicketsExtModel.retrieveOrders(ticketId)
-  ticket.details = TicketsExtModel.retrieveDetails(ticketId)
+exports.retrieveParts = async (req) => {
+  return TicketsModel.retrieveParts(req)
 }

@@ -4,7 +4,7 @@ CREATE TABLE suppliers (
     created timestamp DEFAULT current_timestamp NOT NULL,
     name varchar(64) NOT NULL,
     address varchar(256),
-    zip_id int REFERENCES zips(id),
+    zipcode_id int REFERENCES zips(id),
     phone varchar(32),
     fax varchar(32),
     email varchar(32),
@@ -29,7 +29,7 @@ CREATE VIEW orders_view AS
     orders.order_number,
     orders.total as total_cost,
     orders.created as date_created,
-    coalesce(orders.ordered, '<a href="#place_order">Place Order</a>') as date_prdered,
+    coalesce(orders.ordered, '<a href="#place_order">Place Order</a>') as date_ordered,
 
     orders.created as date_created,
 SELECT

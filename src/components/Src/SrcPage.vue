@@ -1,7 +1,7 @@
 <template>
   <div>
     <table ref="table" class="ui celled responsive table"></table>
-    <src-update-modal ref="SrcUpdateModal"></src-update-modal>
+    <src-update-modal ref="SrcUpdateModal" @update="list"></src-update-modal>
     <src-reason-add-modal ref="SrcReasonAddModal"></src-reason-add-modal>
   </div>
 </template>
@@ -57,7 +57,7 @@
           this.table.draw()
         }
 
-        $(this.$refs.table).on('click', 'a[href="#src_ready"]', (event) => {
+        $(this.$refs.table).on('click', 'a[href="#site_ready"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
           this.$refs.SrcUpdateModal.open({data, row})

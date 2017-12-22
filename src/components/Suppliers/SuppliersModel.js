@@ -9,18 +9,22 @@ exports.create = async (req) => {
   `
   let bind = [req.name, req.address, req.phone]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
   let sql = `
     SELECT
       suppliers.id,
-      suppliers.name as title
+      suppliers.name as title,
+      coalesce(locations.citystate, '') as description
     FROM suppliers
-    WHERE name ILIKE '%' || $1 || '%'
+    LEFT JOIN locations ON locations.zipcode_id = suppliers.zipcode_id
+    WHERE suppliers.name ilike ANY(ARRAY[${req.queryString}])
+    ORDER BY similarity(suppliers.name, $1) DESC
+    LIMIT 10
   `
-  let bind = [ req.query ]
+  let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

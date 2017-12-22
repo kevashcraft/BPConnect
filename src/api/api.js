@@ -1,16 +1,13 @@
 import { Server } from 'http'
 import IO from 'socket.io'
 
-import postgres from './postgres'
 import router from './router'
 import upload from './upload'
 
 let http = Server()
 let io = IO(http)
 
-
 io.on('connection', (socket) => {
-
   upload(socket)
 
   socket.on('request', async (request, callback) => {
@@ -20,12 +17,11 @@ io.on('connection', (socket) => {
 
     let data = request.data
 
-    console.log("request received for ", request.route);
+    console.log('request received for ', request.route)
     let response = await router[controller][method](data)
 
     callback(response)
   })
-
 
   // socket.on('request', async (requests) => {
   //   // console.log("request", requests);
@@ -48,5 +44,5 @@ io.on('connection', (socket) => {
 })
 
 http.listen('3001', () => {
-  console.log("listening on 3001");
+  console.log('listening on 3001')
 })

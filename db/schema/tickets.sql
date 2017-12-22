@@ -87,7 +87,7 @@ CREATE TABLE ticket_parts (
   received timestamp,
   installed timestamp,
   destroyed timestamp,
-  valid boolean DEFAULT true NOT NULL,
+  deleted boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
 );
 

@@ -7,7 +7,7 @@ exports.create = async (req) => {
     RETURNING id
   `
   let bind = [req.name, req.phone]
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
@@ -24,5 +24,5 @@ exports.search = async (req) => {
   `
   let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

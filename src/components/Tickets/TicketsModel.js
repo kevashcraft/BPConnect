@@ -19,8 +19,7 @@ exports.create = async (req) => {
     req.needspo
   ]
 
-  return await Model.query(sql, bind, true, true)
-
+  return Model.query(sql, bind, true, true)
 }
 
 exports.list = async (req) => {
@@ -49,7 +48,7 @@ exports.list = async (req) => {
     req.subdivisionId, req.houseId
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {
@@ -59,7 +58,20 @@ exports.retrieve = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind, true)
+  return Model.query(sql, bind, true)
+}
+
+exports.retrieveParts = async (req) => {
+  let sql = `
+    SELECT ticket_parts.*, false as ordered
+    FROM ticket_parts
+    WHERE ticket_id = $1
+      AND order_id IS NULL
+      AND NOT deleted
+  `
+  let bind = [ req.ticketId ]
+
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
@@ -125,7 +137,7 @@ exports.search = async (req) => {
 
   let bind = [ req.query ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.update = async (id, fields) => {

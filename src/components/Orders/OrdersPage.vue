@@ -1,8 +1,8 @@
 <template>
   <div>
     <table ref="table" class="ui celled responsive table"></table>
-    <order-parts-modal ref="OrderPartsModal" @update="updateRow"></order-parts-modal>
-    <order-parts-received-modal ref="OrderPartsReceivedModal" @update="updateRow"></order-parts-received-modal>
+    <order-parts-modal ref="OrderPartsModal" @update="list"></order-parts-modal>
+    <order-parts-received-modal ref="OrderPartsReceivedModal" @update="list"></order-parts-received-modal>
     <order-supplier-add-modal ref="OrderSupplierAddModal"></order-supplier-add-modal>
   </div>
 </template>
@@ -71,6 +71,7 @@
         $(this.$refs.table).on('click', 'a[href="#parts_received"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
+          console.log('data', data)
           this.$refs.OrderPartsReceivedModal.open({row, data})
         })
       },

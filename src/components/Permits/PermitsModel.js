@@ -8,7 +8,7 @@ exports.create = async (req) => {
   `
   let bind = [req.houseId]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.countForHouseId = async (req) => {
@@ -20,7 +20,7 @@ exports.countForHouseId = async (req) => {
   `
   let bind = [req.id]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.list = async (req) => {
@@ -50,7 +50,7 @@ exports.list = async (req) => {
     req.inspectorId, req.houseId
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {
@@ -60,7 +60,7 @@ exports.retrieve = async (req) => {
   `
   let bind = [req.id]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.search = async (query) => {
@@ -114,16 +114,17 @@ exports.search = async (query) => {
   `
   let bind = [query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
-exports.update = async (fields) => {
+exports.update = async (id, fields) => {
   let update = Model.updateFields(fields)
 
   let sql = `
-    UPDATE tickets SET ${update.set}
-    WHERE id = $1
+    UPDATE permits SET ${update.set}
+    WHERE id = $${update.count + 1}
   `
+  update.bind.push(id)
 
   Model.run(sql, update.bind)
 }

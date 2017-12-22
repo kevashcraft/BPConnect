@@ -44,6 +44,7 @@
     "moment": "^2.19.4",
     "momentjs": "^2.0.0",
     "node-sass": "^4.7.2",
+    "noty": "^3.2.0-beta",
     "npm-watch": "^0.3.0",
     "overhang": "^1.0.5",
     "pg": "^7.4.0",

@@ -17,7 +17,7 @@ exports.list = async (req) => {
     req.ticketId, req.subdivisionId, req.houseId
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {
@@ -27,7 +27,7 @@ exports.retrieve = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
@@ -71,13 +71,17 @@ exports.search = async (req) => {
   `
   let bind = [ req.query ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
-exports.update = async (req) => {
+exports.update = async (id, fields) => {
+  let update = Model.updateFields(fields)
+
   let sql = `
-    UPDATE tickets SET ready = $1
-    WHERE id = $2
+    UPDATE tickets SET ${update.set}
+    WHERE id = $${update.count + 1}
   `
-  let bind = [req.ready, req.ticketId]
+  update.bind.push(id)
+
+  Model.run(sql, update.bind)
 }

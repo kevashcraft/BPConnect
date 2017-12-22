@@ -14,6 +14,15 @@ exports.createWorker = async (req) => {
   return await Model.query(sql, bind)
 }
 
+exports.details = async (req) => {
+  let ticketId = req.body.ticketId
+  let ticket = {}
+
+  ticket.permits = TicketsExtModel.retrievePermits(ticketId)
+  ticket.orders = TicketsExtModel.retrieveOrders(ticketId)
+  ticket.details = TicketsExtModel.retrieveDetails(ticketId)
+}
+
 exports.listWorkers = async (req) => {
   let sql = `
     SELECT
@@ -53,7 +62,7 @@ exports.listTasks = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 /* PARTS PARTS PARTS PARTS */
@@ -69,16 +78,17 @@ exports.createPart = async (req) => {
     req.payout, req.description
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
-exports.updatePart = async (req) => {
-  let update = Model.updateFields(req)
+exports.updatePart = async (id, fields) => {
+  let update = Model.updateFields(fields)
 
   let sql = `
     UPDATE ticket_parts SET ${update.set}
-    WHERE id = $1
+    WHERE id = $${update.count + 1}
   `
+  update.bind.push(id)
 
   Model.run(sql, update.bind)
 }
@@ -99,7 +109,7 @@ exports.listPermits = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(db, sql, id)
+  return await Model.query(sql, bind)
 }
 
 /* ORDERS ORDERS ORDERS ORDERS */
@@ -218,5 +228,3 @@ exports.listRooms = async(req) => {
 
   return await Model.query(sql, bind)
 }
-
-

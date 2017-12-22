@@ -1,38 +1,39 @@
 import * as OrdersModel from './OrdersModel'
 import * as TicketsExtModel from '../Tickets/TicketsExtModel'
 
-exports.create = async (req, res) => {
-  let order = req.body.order
-  let parts = req.body.parts
+exports.create = async (req) => {
+  let orderId = await OrdersModel.create(req)
+  let fields = { order_id: orderId, ordered: { safe: 'NOW()' } }
 
-  let orderId = await OrdersModel.create(order, req.db)
-  let fields = { order_id: orderId, ordered: order.ordered }
-  parts.forEach(async part => {
-    await TicketsExtModel.updatePart(part.id, fields, req.db)
+  req.parts.forEach(async part => {
+    await TicketsExtModel.updatePart(part.id, fields)
   })
+
+  return orderId
 }
 
 exports.list = async (req) => {
-
-  return await OrdersModel.list(req)
+  return OrdersModel.list(req)
 }
 
-exports.retrieve = async (req, res) => {
+exports.retrieve = async (req) => {
   let orderId = req.body.orderId
-  return await OrdersModel.retrieve(orderId, req.db)
+  return OrdersModel.retrieve(orderId, req.db)
 }
 
-exports.search = async (req, res) => {
+exports.retrieveParts = async (req) => {
+  return OrdersModel.retrieveParts(req)
+}
+
+exports.search = async (req) => {
   let query = req.body.query
 
-  return await OrdersModel.search(query, req.db)
+  return OrdersModel.search(query, req.db)
 }
 
-exports.receiveParts = async (req, res) => {
-  let parts = req.body.parts
-
-  parts.forEach(async part => {
-    let fields = { received: part.received }
-    await TicketsExtModel.updatePart(part.id, fields, req.db)
+exports.receiveParts = async (req) => {
+  req.parts.forEach(async part => {
+    let fields = { received: { safe: part.received ? 'current_timestamp' : 'NULL' } }
+    await TicketsExtModel.updatePart(part.id, fields)
   })
 }

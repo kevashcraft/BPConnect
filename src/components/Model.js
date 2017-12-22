@@ -21,7 +21,7 @@ let convertRows = (rows) => {
   return rows
 }
 
-exports.query = async (sql, bind, astr = false, asv = false) =>{
+exports.query = async (sql, bind, astr = false, asv = false) => {
   try {
     let results = await db.query(sql, bind)
 
@@ -39,8 +39,8 @@ exports.query = async (sql, bind, astr = false, asv = false) =>{
     }
 
     return ret
-  } catch(e) {
-    console.log("Could not run query", sql, bind, e);
+  } catch (e) {
+    console.log('Could not run query', sql, bind, e)
     return false
   }
 }
@@ -48,12 +48,13 @@ exports.query = async (sql, bind, astr = false, asv = false) =>{
 exports.run = async (sql, bind) => {
   try {
     db.query(sql, bind)
-  } catch(e) {
-    console.log("Could not run query", sql, data, e);
+  } catch (e) {
+    console.log('Could not run query', sql, bind, e)
   }
 }
 
 exports.updateFields = (fields) => {
+  let count = 0
   let bind = []
   let set = Object
     .keys(fields)
@@ -61,6 +62,7 @@ exports.updateFields = (fields) => {
       if (typeof fields[field] === 'object') {
         return field + ' = ' + fields[field].safe
       } else {
+        count++
         bind.push(fields[field])
         return field + ' = $' + (index + 1)
       }
@@ -68,12 +70,12 @@ exports.updateFields = (fields) => {
     .join(',')
 
   return {
+    count,
     bind,
     set
   }
 }
 
 exports.cc = (str) => {
-  let cc = myString.replace(/_([a-z])/g, (g) => { return g[1].toUpperCase(); });
+  let cc = myString.replace(/_([a-z])/g, (g) => { return g[1].toUpperCase() })
 }
-

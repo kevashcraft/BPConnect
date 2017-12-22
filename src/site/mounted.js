@@ -2,7 +2,6 @@ export default function () {
   this.$store.dispatch('modalClear')
 
   this.req('TicketTypes:list').then(ticketTypes => {
-    console.log("ticketTypes",ticketTypes);
     this.$store.commit('ticketTypesSet', ticketTypes)
   })
 

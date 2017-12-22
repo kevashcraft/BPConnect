@@ -19,7 +19,6 @@ exports.fail = async (req) => {
 }
 
 exports.list = async (req) => {
-
   return await InspectionsModel.list(req)
 }
 
@@ -28,5 +27,11 @@ exports.search = async (req) => {
 }
 
 exports.searchInspectors = async (req) => {
-  return await InspectionsModel.searchInspectors(query, req.db)
+  req.queryString = "'%" + req.query.replace(' ', "%', '%") + "%'"
+  let results = await InspectionsModel.searchInspectors(req)
+
+  return {
+    success: true,
+    results
+  }
 }

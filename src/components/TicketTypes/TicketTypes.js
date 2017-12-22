@@ -5,5 +5,5 @@ exports.list = async (req) => {
 }
 
 exports.retrieve = async (req) => {
-  return TicketsModel.retrieve(req)
+  return TicketTypes.retrieve(req)
 }

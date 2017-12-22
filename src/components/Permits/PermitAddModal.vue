@@ -4,7 +4,7 @@
     <div class="header">Add a Permit</div>
     <form class="ui form padding30">
       <div class="field fluid">
-        <div class="ui search">
+        <div ref="search" class="ui search">
           <label>Inspection Authority</label>
           <input type="text" class="prompt">
         </div>
@@ -26,7 +26,7 @@
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="submit">
+      <div class="ui green icon button" @click="update">
         Add Permit
         <i class="checkmark icon"></i>
       </div>
@@ -51,43 +51,44 @@
           ends: moment().add('days', 60).format('YYYY-MM-DD'),
         },
         wip: {
-          ticket_id : 0,
+          ticketId : 0,
         },
       }
     },
     mounted: function() {
       this.permitTemplate = JSON.stringify(this.permit)
-      // $('#permit_add_modal .ui.search').search({
-      //   apiSettings: {
-      //     url: BPC.routes['permits.inspectors_search'] + '?query={query}',
-      //     method: 'post'
-      //   },
-      //   selectFirstResult: true,
-      //   onSelect: function (result, response) {
-      //     this.permit.inspector_id = result.id;
-      //   }.bind(this),
-      // });
+      $(this.$refs.search).search({
+        apiSettings: {
+          responseAsync: (settings, callback) => {
+            let route = 'Inspections:searchInspectors'
+            let data = { query: settings.urlData.query }
+            this.$root.req(route, data).then(callback)
+          }
+        },
+        selectFirstResult: true,
+        onSelect: (result, response) => {
+          this.permit.inspectorId = result.id
+        },
+      })
     },
     methods: {
-      afterOpen: function(data) {
-        console.log("opening")
+      afterOpen: function({data, row}) {
         this.permit = JSON.parse(this.permitTemplate)
+        this.permit.permitId = data.permitId
       },
-      submit: function(event) {
-        // if (!this.permit.inspector_id) BPC.overhang('Please select an inspector', false);
-        // if (!this.permit.starts) BPC.overhang('Please add a start date', false);
-        // if (!this.permit.ends) BPC.overhang('Please add an end date', false);
-        // var data = {
-        //   data: this.permit,
-        // };
-        // var url = BPC.routes['permits.add'];
-        // $.post(url, data, function(data) {
-        //   BPC.overhang(data.message, data.success, 2);
-        //   if (data.success) {
-        //     $(this.$el).modal('hide');
-        //     BPC.permits.permits_table.row(this.row).data(data.inspection);
-        //   }
-        // }.bind(this), 'json');
+      update: function(event) {
+        if (!this.permit.inspectorId) this.$root.noty('Please select an inspector', 'warning')
+        if (!this.permit.starts) this.$root.noty('Please add a start date', 'warning')
+        if (!this.permit.ends) this.$root.noty('Please add an end date', 'warning')
+        this.$root.req('Permits:update', this.permit).then((response) => {
+          if (response) {
+            this.$root.noty(`Created permit ${response}`)
+            this.close()
+            this.$emit('update')
+          } else {
+            this.$root.noty('Could not create permit', 'error')
+          }
+        })
       },
     }
   }

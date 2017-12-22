@@ -12,7 +12,7 @@ exports.create = async (req) => {
     req.total, req.ordered
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.list = async (req) => {
@@ -36,7 +36,7 @@ exports.list = async (req) => {
     req.orderId, req.ticketId, req.supplierId
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {
@@ -46,7 +46,18 @@ exports.retrieve = async (req) => {
   `
   let bind = [req.id]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
+}
+
+exports.retrieveParts = async (req) => {
+  let sql = `
+    SELECT ticket_parts.*, false as retrieved
+    FROM ticket_parts
+    WHERE order_id = $1
+  `
+  let bind = [ req.orderId ]
+
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
@@ -100,5 +111,5 @@ exports.search = async (req) => {
   `
   let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
