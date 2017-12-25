@@ -2,19 +2,19 @@
   <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Reschedule Ticket</div>
-    <p class="padding30">Ticket has already been rescheduled {{ bumpedCount }} times.</p>
+    <p class="padding30">Ticket has already been rescheduled {{ ticket.bumpedCount }} times.</p>
     <form class="ui form padding30">
       <div class="field">
         <label>Date Scheduled</label>
-        <input type="date" v-model="ticket.date">
+        <input type="date" v-model="ticket.ticketDateScheduled">
       </div>
-      <div class="field">
+<!--       <div class="field">
         <label>Email Builder</label>
         <div class="ui toggle checkbox">
           <input type="checkbox" v-model="ticket.sendEmail">
           <label>Send Email</label>
         </div>
-      </div>
+      </div> -->
       <div v-show="ticket.sendEmail">
         <div class="two fields">
           <div class="field">
@@ -57,31 +57,27 @@ export default {
       meta: {
         name: 'ScheduleUpdateScheduleModal'
       },
-      bumpedCount: 0,
-      row: {},
-      ticket: 0,
+      ticket: {},
     }
   },
   methods: {
-    afterOpen ({data, row}) {
-      this.row  = row
-      var ticket = JSON.parse(JSON.stringify(data))
-      ticket.sendEmail = true
-      ticket.emailSubject = 'Ticket has been rescheduled'
+    afterOpen (ticket) {
+      // var ticket = data
+      // ticket.sendEmail = false
+      // ticket.emailSubject = 'Ticket has been rescheduled'
+      ticket.ticketDateScheduled = moment(ticket.ticketDateScheduled).format('YYYY-MM-DD')
       this.ticket = ticket
     },
     submit (event) {
-      // var data = {
-      //   data: this.ticket,
-      // }
-      // var url = BPC.routes['schedule.updateSchedule']
-      // $.post(url, data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.schedule.scheduleTable.row(this.row).data(data.ticket)
-      //   }
-      // }.bind(this), 'json')
+      this.$root.req('Schedule:updateScheduled', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Ticket has been reschedueld')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not reschedule ticket', 'error')
+        }
+      })
     },
   }
 }

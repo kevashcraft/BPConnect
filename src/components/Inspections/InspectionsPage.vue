@@ -3,9 +3,9 @@
     <div class="page-container">
       <table ref="table" class="ui celled table"></table>
     </div>
-    <inspection-fail-modal ref="InspectionFailModal"></inspection-fail-modal>
-    <inspection-pass-modal ref="InspectionPassModal"></inspection-pass-modal>
-    <inspection-schedule-modal ref="InspectionScheduleModal"></inspection-schedule-modal>
+    <inspection-fail-modal ref="InspectionFailModal" @update="list"></inspection-fail-modal>
+    <inspection-pass-modal ref="InspectionPassModal" @update="list"></inspection-pass-modal>
+    <inspection-schedule-modal ref="InspectionScheduleModal" @update="list"></inspection-schedule-modal>
   </div>
 </template>
 
@@ -30,23 +30,6 @@
           title: 'Inspections'
         }
       }
-    },
-    mounted () {
-      // this.init()
-
-      // if (BPC.isLocalStorageAvailable) {
-      //   var daterange = localStorage.getItem('daterange')
-      //   if (daterange) {
-      //     daterange = JSON.parse(daterange)
-      //     this.controls.daterange = daterange
-      //     this.update()
-      //     return
-      //   }
-      // }
-
-      // setTimeout(function() {
-      //   $('.daterangepicker').click()
-      // }, 1500)
     },
     methods: {
       init: function () {
@@ -79,20 +62,23 @@
           this.table.draw()
         }
 
-        $(this.$refs.table).on('click', 'a[href="#schedule_inspection"]', function(event) {
+        this.table.buttons().containers()
+                    .appendTo($('.InspectionsColumnsButton'))
+
+        $(this.$refs.table).on('click', 'a[href="#schedule_inspection"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.InspectionScheduleModal.open({row, data})
+          this.$refs.InspectionScheduleModal.open(data)
         })
-        $(this.$refs.table).on('click', 'a[href="#pass_inspection"]', function(event) {
+        $(this.$refs.table).on('click', 'a[href="#pass_inspection"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.InspectionPassModal.open({ref, data})
+          this.$refs.InspectionPassModal.open(data)
         })
-        $(this.$refs.table).on('click', 'a[href="#fail_inspection"]', function(event) {
+        $(this.$refs.table).on('click', 'a[href="#fail_inspection"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.InspectionFailModal.open({ref, data})
+          this.$refs.InspectionFailModal.open(data)
         })
       },
     }

@@ -24,29 +24,23 @@ export default {
       meta: {
         name: 'WipStartModal'
       },
-      row: {},
-      wip: {},
+      ticket: {},
     }
   },
   methods: {
-    afterOpen: function({data, row}) {
-      this.row  = row
-      this.$set('wip', {
-        ticket_id: data.ticket_id,
-        // starts: moment().format('YYYY-MM-DD'),
-      })
+    afterOpen (ticket) {
+      this.ticket = ticket
     },
-    update: function(event) {
-      // var data = {
-      //   data: this.wip,
-      // }
-      // $.post(BPC.routes['wip.start'], data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.wip.update()
-      //   }
-      // }.bind(this), 'json')
+    update (event) {
+      this.$root.req('Wip:updateStarted', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Ticket work has been started')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not start ticket work', 'error')
+        }
+      })
     },
   },
 }

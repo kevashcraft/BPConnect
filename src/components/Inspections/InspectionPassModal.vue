@@ -14,7 +14,7 @@
           <span v-show="ticket.inspectorPhone"> ({{ ticket.inspectorPhone }})</span>
         </div>
       </div>
-      <div>
+      <div v-show="ticket.houseAddress">
         <span>House Address</span>
         <span>{{ ticket.houseAddress }}</span>
       </div>
@@ -49,24 +49,20 @@ export default {
     }
   },
   methods: {
-    afterOpen ({row, data}) {
-      this.ticket = {
-        inspectionId: data.inspectionId,
-        inspectionDatePassed: moment().format('YYYY-MM-DD'),
-      }
+    afterOpen (ticket) {
+      ticket.inspectionDatePassed = moment().format('YYYY-MM-DD'),
+      this.ticket = ticket
     },
     update () {
-      // var data = {
-      //   data: this.ticket,
-      // }
-      // var url = BPC.routes['inspections.pass']
-      // $.post(url, data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.inspections.inspectionsTable.row(this.row).data(data.inspection)
-      //   }
-      // }.bind(this), 'json')
+      this.$root.req('Inspections:updatePassed', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Inspection has been passed')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not pass inspection', 'error')
+        }
+      })
     },
   },
 }

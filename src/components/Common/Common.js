@@ -1,12 +1,9 @@
-import * as WorkersModel from './WorkersModel'
+import CommonModel from '../Common/CommonModel'
 
-exports.list = async (req) => {
-  return WorkersModel.list()
-}
-
-exports.search = async (req) => {
-  req.queryString = "'%" + req.query.replace(' ', "%', '%") + "%'"
-  let results = await WorkersModel.search(req)
+exports.searchCategories = async (req, categories) => {
+  req.categories = "'" + categories.join("','") + "'"
+  req.queryArray = "'%" + req.query.replace(' ', "%', '%").toLowerCase() + "%'"
+  let results = await CommonModel.searchCategories(req)
 
   if (results.length && results[0].category) {
     let categories = [...new Set(results.map(result => result.category))]

@@ -9,24 +9,25 @@
       </div>
     </div>
     <div class="item" data-step="2" data-intro="Search for specific permits by id, builder, subdivision or type.">
-      <div class="ui category search ticket">
-        <div class="ui icon input">
-          <i class="search icon"></i>
-          <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
+      <div class="field padding-b15">
+        <label>Search</label>
+        <div ref="search" class="ui category search ticket">
+          <div class="ui icon input">
+            <i class="search icon"></i>
+            <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
+          </div>
+          <div class="results"></div>
         </div>
-        <div class="results"></div>
       </div>
-<!--       <div>
-        <div class="pointer" v-for="filter in filters" v-show="filter.value !== 0" @click="filterRemove" :data-filter="filter.category">
+      <div>
+        <div class="pointer padding5" v-for="(filter, key) in filters" v-if="key !== 'daterange'" v-show="filter.value !== 0" @click="filters[key].value = 0">
           <i class="remove circle icon"></i>
-          <span>{{ filter.name }}</span>
-          <span>{{ filter.description }}</span>
+          <strong>{{ filter.name }}</strong>
+          <span style="display: inline-block">{{ filter.description }}</span>
         </div>
-      </div> -->
-<!--       <div>
-        <a href="#clear" v-show="search.length > 0" @click="clearSearch">Clear</a>
-      </div> -->
+      </div>
     </div>
+    <div class="item PermitsColumnsButton"></div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="walkthrough">
         <i class="street view icon"></i>
@@ -44,51 +45,10 @@ export default {
   data () {
     return {
       meta: {
+        page: 'Permits',
         name: 'PermitsControls'
       },
     }
   },
-  mounted: function() {
-
-    // $('.ui.permits.search').search({
-    //   type: 'category',
-    //   apiSettings: {
-    //     method: 'post',
-    //     url: BPC.r.permits.search + '?q={query}',
-    //   },
-    //   selectFirstResult: true,
-    //   onSelect: function (result, response) {
-    //     this.resetFilters();
-    //     switch (result.category) {
-    //       case 'Permits':
-    //         this.filters.permitId = result.id;
-    //         break;
-    //       case 'Tickets':
-    //         this.filters.ticketId = result.id;
-    //         break;
-    //       case 'Inspectors':
-    //         this.filters.inspectorId = result.id;
-    //         break;
-    //     }
-    //     BPC.permits.update();
-    //   }.bind(this),
-    // });
-  },
-  methods: {
-    resetFilters: function() {
-      this.filters = {
-        permitId    : 0,
-        inspectorId : 0,
-        ticketId    : 0,
-        houseId     : 0,
-      };
-    },
-    clear: function() {
-      this.$set('search', '');
-      this.resetFilters();
-      // BPC.permits.update();
-    },
-  },
 }
-
 </script>

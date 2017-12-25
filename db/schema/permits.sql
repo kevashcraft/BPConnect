@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS inspections CASCADE;
 CREATE TABLE inspections (
     id serial NOT NULL,
     created timestamp DEFAULT current_timestamp NOT NULL,
-    scheduled timestamp,
+    scheduled date,
     permit_id int REFERENCES permits(id) NOT NULL,
     ticket_id int REFERENCES tickets(id) NOT NULL,
     passed timestamp,

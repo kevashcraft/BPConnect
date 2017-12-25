@@ -14,51 +14,25 @@ exports.list = async (req) => {
   `
   let bind = []
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
   let sql = `
-    SELECT * FROM (
-      SELECT
-        'Plumbers' as category,
-        similarity(users.fname || ' ' || users.lname, :query) as ord1,
-        0 as ord2,
-        users.id,
-        'plumber' as type,
-        users.fname || ' ' || users.lname as title
-      FROM workers
-      JOIN users
-        ON users.id = workers.user_id
-      WHERE workers.type = 'plumber'
-        AND (
-          users.fname ILIKE ANY $query
-          OR users.lname ILIKE ANY $query
-        )
-      UNION
-      SELECT
-        'Helpers' as category,
-        similarity(users.fname || ' ' || users.lname, :query) as ord1,
-        1 as ord2,
-        users.id,
-        'helper' as type,
-        users.fname || ' ' || users.lname as title
-      FROM workers
-      JOIN users
-        ON users.id = workers.user_id
-      WHERE (workers.type = 'plumber'
-        OR workers.type = 'helper')
-        AND (
-          users.fname ILIKE ANY $query
-          OR users.lname ILIKE ANY $query
-        )
-    ) search
-    ORDER BY ord1 DESC, ord2 ASC
+    SELECT
+      users.id,
+      initcap(workers.type::text) as category,
+      workers.type,
+      users.fname || ' ' || users.lname as title
+    FROM users
+    JOIN workers ON workers.user_id = users.id
+    WHERE users.fname || ' ' || users.lname ilike ANY(ARRAY[${req.queryString}])
+    ORDER BY similarity(users.fname || ' ' || users.lname, $1) DESC
     LIMIT 10
   `
   let bind = [ req.query ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.update = async (req) => {
@@ -70,6 +44,5 @@ exports.update = async (req) => {
   `
   let bind = [req.scheduled, req.ticketId]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
-

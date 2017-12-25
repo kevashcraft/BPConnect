@@ -1,29 +1,14 @@
+import * as Common from '../Common/Common'
 import InspectionsModel from './InspectionsModel'
-
-exports.schedule = async (req) => {
-  let inspectionId = req.body.inspectionId
-  let fields = { scheduled: req.body.scheduled }
-  return await InspectionsModel.update(inspectionId, fields)
-}
-
-exports.pass = async (req) => {
-  let inspectionId = req.body.inspectionId
-  let fields = { passed: req.body.passed }
-  return await InspectionsModel.update(inspectionId, fields)
-}
-
-exports.fail = async (req) => {
-  let inspectionId = req.body.inspectionId
-  let fields = { failed: req.body.failed }
-  return await InspectionsModel.update(inspectionId, fields)
-}
+import moment from 'moment'
 
 exports.list = async (req) => {
-  return await InspectionsModel.list(req)
+  return InspectionsModel.list(req)
 }
 
 exports.search = async (req) => {
-  return await InspectionsModel.search(query, req.db)
+  let categories = ['Tickets', 'Builders', 'Subdivisions', 'Lots', 'Orders']
+  return Common.searchCategories(req, categories)
 }
 
 exports.searchInspectors = async (req) => {
@@ -34,4 +19,25 @@ exports.searchInspectors = async (req) => {
     success: true,
     results
   }
+}
+
+exports.updateFailed = async (req) => {
+  let fields = { failed: { bind: moment(req.inspectionDateFailed) } }
+  await InspectionsModel.update(req.inspectionId, fields)
+
+  return true
+}
+
+exports.updatePassed = async (req) => {
+  let fields = { passed: { bind: moment(req.inspectionDatePassed) } }
+  await InspectionsModel.update(req.inspectionId, fields)
+
+  return true
+}
+
+exports.updateScheduled = async (req) => {
+  let fields = { scheduled: { bind: moment(req.inspectionDateScheduled) } }
+  await InspectionsModel.update(req.inspectionId, fields)
+
+  return true
 }

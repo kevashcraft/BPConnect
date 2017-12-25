@@ -1,3 +1,4 @@
+import * as Common from '../Common/Common'
 import * as BuildersModel from '../Builders/BuildersModel'
 import * as BuilderSupervisorsModel from '../BuilderSupervisors/BuilderSupervisorsModel'
 import * as HousesModel from '../Houses/HousesModel'
@@ -37,26 +38,22 @@ exports.create = async (req) => {
 
   let ticketId = await TicketsModel.create(ticket)
 
-  console.log('ticketType', ticketType)
   if (ticketType.needspermit) {
-    let permit = { houseId: ticket.houseId }
-    let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
-    console.log('permitCountForHouse', permitCountForHouse)
-    if (permitCountForHouse == 0) {
-      console.log('permit', permit)
-      let permitId = await PermitsModel.create(permit)
-    }
+    // let permit = { houseId: ticket.houseId }
+    // let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
+    // console.log('permitCountForHouse', permitCountForHouse)
+    // if (permitCountForHouse == 0) {
+    //   // let permitId = await PermitsModel.create(permit)
+    // }
   }
 
   return ticketId
 }
 
-// exports.search = async (req) => {
-//   let query = req.body.query
-//   let results = TicketsModel.search(query)
-//   // need to sort
-//   // array[catefory] = { name, results}
-// }
+exports.search = async (req) => {
+  let categories = ['Tickets', 'Builders', 'Subdivisions', 'Lots', 'Orders']
+  return Common.searchCategories(req, categories)
+}
 
 exports.list = async (req) => {
   return TicketsModel.list(req)

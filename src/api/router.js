@@ -10,9 +10,11 @@ import Schedule from '../components/Schedule/Schedule'
 import Src from '../components/Src/Src'
 import Subdivisions from '../components/Subdivisions/Subdivisions'
 import Suppliers from '../components/Suppliers/Suppliers'
+import Support from '../components/Support/Support'
 import Tickets from '../components/Tickets/Tickets'
 import TicketsExt from '../components/Tickets/TicketsExt'
 import TicketTypes from '../components/TicketTypes/TicketTypes'
+import TicketWorkers from '../components/TicketWorkers/TicketWorkers'
 import Wip from '../components/Wip/Wip'
 import Workers from '../components/Workers/Workers'
 
@@ -29,9 +31,11 @@ export default {
   Src,
   Subdivisions,
   Suppliers,
+  Support,
   Tickets,
   TicketsExt,
   TicketTypes,
+  TicketWorkers,
   Wip,
-  Workers,
+  Workers
 }

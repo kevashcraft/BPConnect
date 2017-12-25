@@ -1,3 +1,4 @@
+import * as Common from '../Common/Common'
 import * as SrcModel from './SrcModel'
 
 exports.list = async (req) => {
@@ -10,8 +11,8 @@ exports.retrieve = async (req) => {
 }
 
 exports.search = async (req) => {
-  let query = req.body.query
-  return SrcModel.search(query, req.db)
+  let categories = ['Tickets', 'Builders', 'Subdivisions', 'Lots', 'Orders']
+  return Common.searchCategories(req, categories)
 }
 
 exports.update = async (req) => {

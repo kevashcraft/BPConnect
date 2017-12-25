@@ -2,3 +2,4 @@
 node_modules
 semantic
 /uploads
+/src/api/keys.js

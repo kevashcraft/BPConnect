@@ -9,24 +9,25 @@
       </div>
     </div>
     <div class="item" data-step="2" data-intro="Search for specific orders by id, builder, subdivision or type.">
-      <div class="ui category search ticket">
-        <div class="ui icon input">
-          <i class="search icon"></i>
-          <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
+      <div class="field padding-b15">
+        <label>Search</label>
+        <div ref="search" class="ui category search ticket">
+          <div class="ui icon input">
+            <i class="search icon"></i>
+            <input class="prompt" type="text" :placeholder="searchPlaceholder" v-model="search" v-cloak>
+          </div>
+          <div class="results"></div>
         </div>
-        <div class="results"></div>
       </div>
       <div>
-        <div class="pointer" v-for="filter in filters" v-show="filter.value !== 0" @click="filterRemove" :data-filter="filter.category">
+        <div class="pointer padding5" v-for="(filter, key) in filters" v-if="key !== 'daterange'" v-show="filter.value !== 0" @click="filters[key].value = 0">
           <i class="remove circle icon"></i>
-          <span>{{ filter.name }}</span>
-          <span>{{ filter.description }}</span>
+          <strong>{{ filter.name }}</strong>
+          <span style="display: inline-block">{{ filter.description }}</span>
         </div>
-      </div>
-      <div>
-        <a href="#clear" v-show="search.length > 0" @click="clear_search">Clear</a>
       </div>
     </div>
+    <div class="item OrderColumnsButton"></div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="walkthrough">
         <i class="street view icon"></i>
@@ -44,50 +45,10 @@ export default {
   data () {
     return {
       meta: {
+        page: 'Orders',
         name: 'OrdersControls'
       },
     }
-  },
-  mounted: function() {
-
-    // $('#orders_controls .ui.ticket.search').search({
-    //   type: 'category',
-    //   apiSettings: {
-    //     method: 'post',
-    //     url: BPC.routes['orders.search'] + '?q={query}',
-    //   },
-    //   selectFirstResult: true,
-    //   onSelect: function (result, response) {
-    //     this.search = ''
-    //     this.filters[result.category].description = result.title
-    //     this.filters[result.category].value = result.id
-    //     BPC.orders.update()
-    //   }.bind(this),
-    // })
-
-  },
-  methods: {
-    resetFilters: function() {
-      this.filters = JSON.parse(this.filtersBlank)
-    },
-    filterRemove: function (event) {
-      var name = $(event.target).closest('[data-filter]').data('filter')
-      this.filters[name].value = 0
-      BPC.orders.update()
-    },
-    filtersValues: function () {
-      var filters = {}
-      Object.keys(this.filters).forEach(function(key) {
-        var filter = this.filters[key]
-        filters[filter.slug] = filter.value
-      }.bind(this))
-      return filters
-    },
-    clear_search: function() {
-      this.$set('search', '')
-      this.resetFilters()
-      BPC.orders.update()
-    },
   },
 }
 </script>

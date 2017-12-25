@@ -1,3 +1,4 @@
+import * as Common from '../Common/Common'
 import * as OrdersModel from './OrdersModel'
 import * as TicketsExtModel from '../Tickets/TicketsExtModel'
 
@@ -26,9 +27,8 @@ exports.retrieveParts = async (req) => {
 }
 
 exports.search = async (req) => {
-  let query = req.body.query
-
-  return OrdersModel.search(query, req.db)
+  let categories = ['Tickets', 'Builders', 'Subdivisions', 'Lots', 'Orders']
+  return Common.searchCategories(req, categories)
 }
 
 exports.receiveParts = async (req) => {

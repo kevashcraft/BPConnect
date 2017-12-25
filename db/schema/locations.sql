@@ -51,4 +51,9 @@ JOIN counties ON
   counties.id = cities.county_id
 JOIN states ON
   states.id = cities.state_id
+GROUP BY
+  zipcodes.id,
+  cities.id,
+  counties.id,
+  states.id
 ;

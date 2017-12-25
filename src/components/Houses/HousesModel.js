@@ -8,7 +8,18 @@ exports.create = async (req) => {
   `
   let bind = [req.subdivisionId, req.lot, req.address]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
+}
+
+exports.retrievePermits = async (req) => {
+  let sql = `
+    SELECT * FROM permits
+    WHERE house_id = $1
+    ORDER BY created DESC
+  `
+  let bind = [ req.houseId ]
+
+  return Model.query(sql, bind)
 }
 
 exports.search = async (req) => {
@@ -45,5 +56,5 @@ exports.search = async (req) => {
   `
   let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

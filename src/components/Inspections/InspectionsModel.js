@@ -8,7 +8,7 @@ exports.create = async (rea, db) => {
   `
   let bind = [rea.ticketId, rea.permitId]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.list = async (req, db) => {
@@ -39,12 +39,12 @@ exports.list = async (req, db) => {
   `
   let bind = [
     req.daterange[0], req.daterange[1],
-    req.ticketId, req.permitId,
-    req.inspectionId, req.inspectorId,
-    req.houseId
+    req.ticketId.value, req.permitId.value,
+    req.inspectionId.value, req.inspectorId.value,
+    req.houseId.value
   ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.retrieve = async (req) => {
@@ -55,60 +55,6 @@ exports.retrieve = async (req) => {
   let bind = [req.id]
 
   return Model.query(sql, bind)
-}
-
-exports.search = async (query, db) => {
-  let sql = `
-    SELECT * FROM (
-      SELECT
-        'Permits' as category,
-        similarity(permits.name, :query) as ord1,
-        0 as ord2,
-        permits.id,
-        permits.name as title,
-        'From ' || inspectors.name as description
-      FROM permits
-      JOIN inspectors
-        ON inspectors.id = permits.inspector_id
-      WHERE permits.name ILIKE ANY $query
-      UNION
-      SELECT
-        'Tickets' as category,
-        similarity(orders_view.ticket_id::text, :query) as ord1,
-        1 as ord2,
-        orders_view.ticket_id,
-        '#' || orders_view.ticket_id::text || ' lot ' || houses.lot as title,
-        subdivisions.name || 'By ' || builders.name as description
-      FROM orders_view
-      JOIN tickets
-        ON tickets.id = orders_view.ticket_id
-      JOIN houses
-        ON houses.id = tickets.house_id
-      JOIN subdivisions
-        ON subdivisions.id = houses.subdivision_id
-      JOIN builders
-        ON builders.id = subdivisions.builder_id
-      WHERE orders_view.ticket_id::text ILIKE ANY $query
-        OR builders.name ILIKE ANY $query
-        OR houses.lot ILIKE ANY $query
-        OR houses.address ILIKE ANY $query
-      UNION ALL
-      SELECT
-        'Inspectors' as category,
-        similarity(inspectors.name, :query) as ord1,
-        2 as ord2,
-        inspectors.id,
-        inspectors.name as title,
-        '' as description
-      FROM inspectors
-      WHERE inspectors.name ILIKE ANY $query
-    ) search
-    ORDER BY ord1 DESC, ord2 ASC
-    LIMIT 10
-  `
-  let bind = [req.query]
-
-  return await Model.query(sql, bind)
 }
 
 exports.searchInspectors = async (req) => {
@@ -124,4 +70,16 @@ exports.searchInspectors = async (req) => {
   let bind = [req.query]
 
   return Model.query(sql, bind)
+}
+
+exports.update = async (id, fields) => {
+  let update = Model.updateFields(fields)
+
+  let sql = `
+    UPDATE inspections SET ${update.set}
+    WHERE id = $${update.count + 1}
+  `
+  update.bind.push(id)
+
+  Model.run(sql, update.bind)
 }

@@ -57,6 +57,9 @@
           this.table.draw()
         }
 
+        this.table.buttons().containers()
+                    .appendTo($('.SrcColumnsButton'))
+
         $(this.$refs.table).on('click', 'a[href="#site_ready"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

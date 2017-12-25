@@ -3,7 +3,7 @@
     <i class="close icon"></i>
     <div class="header">Walk Ticket</div>
     <div class="content">
-      <form class="ui form">
+<!--       <form class="ui form">
         <button class="ui blue button" v-show="!wip.punch_id" @click.prevent="createPunch">Create Punch List</button>
       </form>
       <div v-show="wip.punch_id">
@@ -20,8 +20,7 @@
               <button class="ui orange button">Add</button>
             </div>
           </div>
-        </form>
-      </div>
+        </form> -->
     </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
@@ -43,32 +42,27 @@ export default {
       meta: {
         name: 'WipWalkModal'
       },
-      row: {},
-      wip: {},
-      tasks: [],
-      taskNew: '',
+      ticket: {},
+      // row: {},
+      // wip: {},
+      // tasks: [],
+      // taskNew: '',
     }
   },
   methods: {
-    afterOpen ({row, data}) {
-      this.tasks = []
-      this.wip = {}
-
-      // if (this.wip.punch_id) {
-      //   this.tasksGet();
-      // }
+    afterOpen (ticket) {
+      this.ticket = ticket
     },
     update: function(event) {
-      // var data = {
-      //   data: this.wip,
-      // };
-      // $.post(BPC.routes['wip.walk'], data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2);
-      //   if (data.success) {
-      //     $(this.$el).modal('hide');
-      //     BPC.wip.update();
-      //   }
-      // }.bind(this), 'json');
+      this.$root.req('Wip:updateWalked', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Ticket work has been confirmed')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not confirm ticket work', 'error')
+        }
+      })
     },
     createPunch () {
       // var url = BPC.routes['tickets.create_punch'];

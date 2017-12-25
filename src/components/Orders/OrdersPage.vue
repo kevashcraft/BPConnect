@@ -62,6 +62,9 @@
           this.table.draw()
         }
 
+        this.table.buttons().containers()
+                    .appendTo($('.OrderColumnsButton'))
+
         $(this.$refs.table).on('click', 'a[href="#order_parts"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

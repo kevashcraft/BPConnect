@@ -59,11 +59,18 @@
         </div>
         <div class="controls">
           <router-view name="controls"></router-view>
+          <div class="item">
+            <button class="ui labeled blue icon button" @click="support">
+              <i class="street view icon"></i>
+              Support
+            </button>
+          </div>
         </div>
       </div>
       <div class="pusher">
         <router-view name="page"></router-view>
       </div>
+      <support-modal></support-modal>
     <!-- </div> -->
 <!--     <div v-else>
       <login-page></login-page>
@@ -72,6 +79,7 @@
 </template>
 
 <script>
+  import SupportModal from '../components/Support/SupportModal.vue'
   export default {
     data () {
       return {}
@@ -80,6 +88,7 @@
       pageTitle () { return this.$store.state.pageTitle },
     },
     components: {
+      SupportModal
     },
     mounted () {
       $(document).ready(() => {
@@ -89,5 +98,10 @@
       //   var state = window.innerWidth > 800 ? 'show' : 'hide';
       // //   $('.ui.sidebar').sidebar(state);
     },
+    methods: {
+      support () {
+        this.$store.dispatch('modalSave', 'SupportModal')
+      }
+    }
   }
 </script>

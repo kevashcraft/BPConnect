@@ -25,6 +25,10 @@ body > .grid {
 .padding15 { padding: 15px; }
 .padding30 { padding: 30px !important; }
 .padding45 { padding: 45px; }
+.padding-b5 { padding-bottom: 5px; }
+.padding-b15 { padding-bottom: 15px; }
+.padding-b30 { padding-bottom: 30px !important; }
+.padding-b45 { padding-bottom: 45px; }
 .h100p { height: 100%; }
 .maxw450 { max-width: 450px; }
 .maxw300 { max-width: 300px; }
@@ -39,6 +43,9 @@ body > .grid {
 
 .w300 { width: 300px }
 
+.pointer { cursor: pointer; }
+
+
 /* MAIN SIDEBAR MENU */
 
 /* fixes dropdown submenu */
@@ -52,6 +59,7 @@ body > .grid {
 }
 .ui.main.menu .page.dropdown .item:hover i { color: $hover-highlight-red; }
 
+// .ui.main.menu.sidebar { overflow-y: auto !important; }
 .ui.main.menu.sidebar a,
 .ui.main.menu.sidebar label {
   color: $hover-highlight-red;

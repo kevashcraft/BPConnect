@@ -1,13 +1,12 @@
 <template>
-
-  <div class="ui small modal" id="wip_checkin_modal">
+  <div class="ui small modal">
     <i class="close icon"></i>
     <div class="header">Checkin Work</div>
     <form class="ui form padding30">
     </form>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="checkin">
+      <div class="ui green icon button" @click="update">
         Checkin Ticket
         <i class="external share icon"></i>
       </div>
@@ -16,40 +15,32 @@
 </template>
 
 <script>
+import Modal from '../Modal/Modal'
+
 export default {
+  mixins: [ Modal ],
   data () {
     return {
-      row: {},
-      wip: {},
+      meta: {
+        name: 'WipCheckinModal'
+      },
+      ticket: {},
     }
   },
-  mounted: function() {
-
-    $(this.$el).modal({
-      closeable: false
-    });
-  },
   methods: {
-    open: function(data, row) {
-      this.row  = row;
-      this.$set('wip', {
-        ticket_id: data.ticket_id,
-        // starts: moment().format('YYYY-MM-DD'),
-      });
-
-      $(this.$el).modal('show');
+    afterOpen (ticket) {
+      this.ticket = ticket
     },
-    checkin: function(event) {
-      var data = {
-        data: this.wip,
-      };
-      $.post(BPC.routes['wip.checkin'], data, function(data) {
-        BPC.overhang(data.message, data.success, 2);
-        if (data.success) {
-          $(this.$el).modal('hide');
-          BPC.wip.update();
+    update () {
+      this.$root.req('Wip:updateCompleted', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Ticket work has been completed')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not complete ticket work', 'error')
         }
-      }.bind(this), 'json');
+      })
     },
   },
 }

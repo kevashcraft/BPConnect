@@ -1,25 +1,32 @@
+import * as Common from '../Common/Common'
 import * as ScheduleModel from './ScheduleModel'
+import * as TicketsModel from '../Tickets/TicketsModel'
 
 exports.list = async (req) => {
-
-  return await ScheduleModel.list(req)
+  return ScheduleModel.list(req)
 }
 
 exports.retrieve = async (req) => {
   let ticketId = req.body.ticketId
-  return await ScheduleModel.retrieve(ticketId, req.db)
+  return ScheduleModel.retrieve(ticketId, req.db)
 }
 
 exports.search = async (req) => {
-  let query = req.body.query
-  return await ScheduleModel.search(query, req.db)
+  let categories = ['Tickets', 'Builders', 'Subdivisions', 'Lots', 'Orders']
+  return Common.searchCategories(req, categories)
 }
 
-exports.update = async (req) => {
+exports.updateScheduled = async (req) => {
   let fields = {
-    ticketId: req.body.ticketId,
-    scheduled: req.body.scheduled
+    scheduled: req.ticketDateScheduled,
+    bumped: { safe: 'bumped + 1' }
   }
+  await TicketsModel.update(req.ticketId, fields)
+  return true
+}
 
-  return ScheduleModel.update(fields, req.db)
+exports.updateSentout = async (req) => {
+  let fields = { sentout: { safe: 'current_timestamp' } }
+  await TicketsModel.update(req.ticketId, fields)
+  return true
 }

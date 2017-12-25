@@ -14,7 +14,7 @@
           <span v-show="ticket.inspectorPhone"> ({{ ticket.inspectorPhone }})</span>
         </div>
       </div>
-      <div>
+      <div v-show="!ticket.houseAddress">
         <span>House Address</span>
         <span>{{ ticket.houseAddress }}</span>
       </div>
@@ -49,25 +49,23 @@ export default {
     }
   },
   methods: {
-    afterOpen ({row, data}) {
-      this.ticket = {
-        inspectionId: data.inspectionId,
-        inspectionDateScheduled: moment().format('YYYY-MM-DD'),
+    afterOpen (ticket) {
+      if (!ticket.inspectionDateScheduled) {
+        ticket.inspectionDateScheduled = moment().format('YYYY-MM-DD')
       }
 
+      this.ticket = ticket
     },
     update (event) {
-      // var data = {
-      //   data: this.ticket,
-      // }
-      // var url = BPC.routes['inspections.schedule']
-      // $.post(url, data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.inspections.inspectionsTable.row(this.row).data(data.inspection)
-      //   }
-      // }.bind(this), 'json')
+      this.$root.req('Inspections:updateScheduled', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Inspection has been scheduled')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not schedule inspection', 'error')
+        }
+      })
     },
   },
 }

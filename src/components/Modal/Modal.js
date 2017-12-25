@@ -20,7 +20,16 @@ export default {
     })
   },
   methods: {
+    beforeOpen (callback, data) {
+      callback(data)
+      console.log('beforeOpen')
+    },
     open (data) {
+      console.log('open')
+      this.beforeOpen(this.openActual, data)
+    },
+    openActual (data) {
+      console.log('actual!')
       this.opened = true
       $(this.$el).modal('show')
       if (this.modal !== this.meta.name) {
@@ -29,9 +38,19 @@ export default {
 
       if (this.$store.state.modalStack.indexOf(this.meta.name) < 0) {
         if (this.afterOpen) {
+          try {
+            data = JSON.parse(JSON.stringify(data))
+          } catch (e) {
+            console.log('Could not parse json')
+          }
+
           this.afterOpen(data)
         }
       }
+
+      setTimeout(() => {
+        $(this.$el).modal('refresh')
+      }, 15)
     },
     close (data, outside) {
       this.opened = false
@@ -45,6 +64,7 @@ export default {
   },
   watch: {
     modal (n, o) {
+      console.log('this.meta.name', this.meta.name)
       if (n === this.meta.name && !this.opened) {
         this.open()
       }

@@ -10,18 +10,61 @@ export default {
           moment().format('YYYY-MM-DD'),
           moment().add(30, 'days').format('YYYY-MM-DD')
         ],
-        ticketId: 0,
-        orderId: 0,
-        supplierId: 0,
-        permitId: 0,
-        inspectionId: 0,
-        inspectorId: 0,
-        houseId: 0,
-
-        builderId: 0,
-        subdivisionId: 0,
-        plumberId: 0,
-        helperId: 0
+        ticketId: {
+          name: 'Ticket',
+          value: 0,
+          description: null
+        },
+        orderId: {
+          name: 'Order',
+          value: 0,
+          description: null
+        },
+        supplierId: {
+          name: 'Supplier',
+          value: 0,
+          description: null
+        },
+        permitId: {
+          name: 'Permit',
+          value: 0,
+          description: null
+        },
+        inspectionId: {
+          name: 'Inspection',
+          value: 0,
+          description: null
+        },
+        inspectorId: {
+          name: 'Inspector',
+          value: 0,
+          description: null
+        },
+        houseId: {
+          name: 'House',
+          value: 0,
+          description: null
+        },
+        builderId: {
+          name: 'Builder',
+          value: 0,
+          description: null
+        },
+        subdivisionId: {
+          name: 'Subdivision',
+          value: 0,
+          description: null
+        },
+        plumberId: {
+          name: 'Plumber',
+          value: 0,
+          description: null
+        },
+        helperId: {
+          name: 'Helper',
+          value: 0,
+          description: null
+        }
       }
     }
   },
@@ -40,6 +83,29 @@ export default {
     if (!this.filters.daterange) {
       this.$store.commit('filtersSet', this.filtersTemplate)
     }
+
+    $(this.$refs.search).search({
+      type: 'category',
+      apiSettings: {
+        responseAsync: (settings, callback) => {
+          let route = this.meta.page + ':search'
+          let data = { query: settings.urlData.query }
+          this.$root.req(route, data).then(callback)
+        }
+      },
+      selectFirstResult: true,
+      onSelect: (result, response) => {
+        this.search = ''
+        this.$store.commit('filterSet', {
+          key: result.filter,
+          filter: {
+            value: result.id,
+            description: result.title,
+            name: this.filters[result.filter].name
+          }
+        })
+      }
+    })
 
     $('.daterangepicker').daterangepicker({
       opens: 'right',

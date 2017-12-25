@@ -48,30 +48,21 @@ export default {
       ticket: {},
     }
   },
-  mounted: function() {
-
-    $(this.$el).modal({closeable: false})
-  },
   methods: {
-    afterOpen ({row, data}) {
-      this.ticket = {
-        inspectionId: data.inspectionId,
-        inspectionDateFailed: moment().format('YYYY-MM-DD'),
-      }
-
+    afterOpen (ticket) {
+      ticket.inspectionDateFailed = moment().format('YYYY-MM-DD'),
+      this.ticket = ticket
     },
     update (event) {
-      // var data = {
-      //   data: this.ticket,
-      // }
-      // var url = BPC.routes['inspections.fail']
-      // $.post(url, data, function(data) {
-      //   BPC.overhang(data.message, data.success, 2)
-      //   if (data.success) {
-      //     $(this.$el).modal('hide')
-      //     BPC.inspections.update()
-      //   }
-      // }.bind(this), 'json')
+      this.$root.req('Inspections:updateFailed', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Inspection has been failed')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not fail inspection', 'error')
+        }
+      })
     },
   },
 }

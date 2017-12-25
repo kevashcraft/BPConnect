@@ -35,23 +35,19 @@
     ready: function() {
     },
     methods: {
-      open ({data, row}) {
-        this.row = row
-        let ticket = JSON.parse(JSON.stringify(data))
-
+      afterOpen (ticket) {
+        this.ticket = ticket
       },
       update () {
-        // var data = {
-        //   ticket_id: this.ticket.ticket_id,
-        // }
-        // var url = BPC.routes['schedule.sendout_ticket']
-        // $.post(url, data, function(data) {
-        //   BPC.overhang(data.message, data.success, 2)
-        //   if (data.success) {
-        //     $(this.$el).modal('hide')
-        //     BPC.schedule.schedule_table.row(this.row).data(data.ticket)
-        //   }
-        // }.bind(this), 'json')
+        this.$root.req('Schedule:updateSentout', this.ticket).then((response) => {
+          if (response) {
+            this.$root.noty('Ticket has been sent out')
+            this.$emit('update')
+            this.close()
+          } else {
+            this.$root.noty('Could not send out ticket', 'error')
+          }
+        })
       },
     }
   }

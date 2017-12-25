@@ -44,9 +44,10 @@ exports.list = async (req) => {
   `
   let bind = [
     req.daterange[0], req.daterange[1],
-    req.ticketId, req.builderId,
-    req.subdivisionId, req.houseId
+    req.ticketId.value, req.builderId.value,
+    req.subdivisionId.value, req.houseId.value
   ]
+  console.log('bind', bind)
 
   return Model.query(sql, bind)
 }
@@ -70,72 +71,6 @@ exports.retrieveParts = async (req) => {
       AND NOT deleted
   `
   let bind = [ req.ticketId ]
-
-  return Model.query(sql, bind)
-}
-
-exports.search = async (req) => {
-  let sql = `
-    SELECT * FROM (
-      SELECT
-        'Tickets' as category,
-        similarity(tickets.id::text, :query) as ord1,
-        0 as ord2,
-        tickets.id,
-        tickets.id::text as title,
-        subdivisions.name || ' lot ' || houses.lot as description
-      FROM tickets
-      JOIN houses
-        ON houses.id = tickets.house_id
-      JOIN subdivisions
-        ON subdivisions.id = houses.subdivision_id
-      WHERE tickets.id::text ILIKE ANY $query
-      UNION
-      SELECT
-        'Builders' as category,
-        similarity(builders.name, :query) as ord1,
-        1 as ord2,
-        builders.id,
-        builders.name as title,
-        ''::text as description
-      FROM builders
-      WHERE builders.name ILIKE ANY $query
-      UNION
-      SELECT
-        'Subdivisions' as category,
-        similarity(builders.name || ' ' || subdivisions.name, :query) as ord1,
-        2 as ord2,
-        subdivisions.id,
-        subdivisions.name as title,
-        'By ' || builders.name as description
-      FROM subdivisions
-      JOIN builders
-        ON builders.id = subdivisions.builder_id
-      WHERE subdivisions.name ILIKE ANY $query
-        OR builders.name ILIKE ANY $query
-      UNION ALL
-      SELECT
-        'Lots' as category,
-        similarity(builders.name || ' ' || subdivisions.name || ' ' || houses.lot, :query) as ord1,
-        3 as ord2,
-        houses.id,
-        subdivisions.name || ' lot ' || houses.lot as title,
-        'By ' || builders.name as description
-      FROM houses
-      JOIN subdivisions
-        ON subdivisions.id = houses.subdivision_id
-      JOIN builders
-        ON builders.id = subdivisions.builder_id
-      WHERE builders.name ILIKE ANY $query
-        OR subdivisions.name ILIKE ANY $query
-        OR houses.lot ILIKE ANY $query
-        OR houses.address ILIKE ANY $query
-    ) search
-    ORDER BY ord1 DESC, ord2 ASC
-    LIMIT 10
-  `
-
-  let bind = [ req.query ]
 
   return Model.query(sql, bind)
 }

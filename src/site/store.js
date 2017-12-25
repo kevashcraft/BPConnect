@@ -22,6 +22,9 @@ export default new Vuex.Store({
     filtersSet (state, filters) {
       state.filters = filters
     },
+    filterSet (state, obj) {
+      state.filters[obj.key] = obj.filter
+    },
     modalSet (state, modal) {
       console.log('state.modalStack', state.modalStack)
       state.modal = modal
@@ -76,7 +79,9 @@ export default new Vuex.Store({
     modalSave ({ commit, state }, modal) {
       console.log('modal', modal)
       if (modal !== state.modal) {
-        commit('modalStackPush', state.modal)
+        if (state.modal.length) {
+          commit('modalStackPush', state.modal)
+        }
         commit('modalSet', modal)
       } else {
         console.log("you're trying to save the wrong modal")

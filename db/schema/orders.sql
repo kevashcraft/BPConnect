@@ -18,6 +18,7 @@ CREATE TABLE orders (
     created timestamp DEFAULT current_timestamp NOT NULL,
     ordered date,
     supplier_id int REFERENCES suppliers(id) NOT NULL,
+    ticket_id int REFERENCES tickets(id),
     total decimal(12,3),
     name varchar(128),
     PRIMARY KEY (id)

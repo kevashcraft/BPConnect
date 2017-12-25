@@ -1,6 +1,7 @@
 import Model from '../Model'
 
 exports.list = async (req) => {
+  console.log('req', req)
   let sql = `
     SELECT * FROM wip_view
     WHERE
@@ -22,40 +23,8 @@ exports.list = async (req) => {
   `
   let bind = [
     req.daterange[0], req.daterange[1],
-    req.ticketId, req.houseId
+    req.ticketId.value, req.houseId.value
   ]
 
-  return await Model.query(sql, bind)
-}
-
-exports.search = async (req) => {
-  let sql = `
-    SELECT * FROM (
-      SELECT
-        'Tickets' as category,
-        similarity(orders_view.ticket_id::text, :query) as ord1,
-        1 as ord2,
-        orders_view.ticket_id,
-        '#' || orders_view.ticket_id::text || ' lot ' || houses.lot as title,
-        subdivisions.name || 'By ' || builders.name as description
-      FROM orders_view
-      JOIN tickets
-        ON tickets.id = orders_view.ticket_id
-      JOIN houses
-        ON houses.id = tickets.house_id
-      JOIN subdivisions
-        ON subdivisions.id = houses.subdivision_id
-      JOIN builders
-        ON builders.id = subdivisions.builder_id
-      WHERE orders_view.ticket_id::text ILIKE ANY $query
-        OR builders.name ILIKE ANY $query
-        OR houses.lot ILIKE ANY $query
-        OR houses.address ILIKE ANY $query
-    ) search
-    ORDER BY ord1 DESC, ord2 ASC
-    LIMIT 10
-  `
-  let bind = [ req.query ]
-
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

@@ -60,7 +60,15 @@ exports.updateFields = (fields) => {
     .keys(fields)
     .map((field, index) => {
       if (typeof fields[field] === 'object') {
-        return field + ' = ' + fields[field].safe
+        let key = Object.keys(fields[field])[0]
+        if (key === 'safe') {
+          return field + ' = ' + fields[field].safe
+        }
+        if (key === 'bind') {
+          count++
+          bind.push(fields[field].bind)
+          return field + ' = $' + (index + 1)
+        }
       } else {
         count++
         bind.push(fields[field])

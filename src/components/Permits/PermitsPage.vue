@@ -53,6 +53,9 @@
           this.table.draw()
         }
 
+        this.table.buttons().containers()
+                    .appendTo($('.PermitsColumnsButton'))
+
         $(this.$refs.table).on('click', 'a[href="#permit_add"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

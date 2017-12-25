@@ -15,6 +15,8 @@
   import TicketImportDataModal from './TicketImportDataModal.vue'
   import TicketWorkModal from './TicketWorkModal.vue'
 
+  import html2canvas from 'html2canvas'
+
   export default {
     components: {
       TicketAddModal,
@@ -56,7 +58,7 @@
           columns: TicketColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -66,12 +68,18 @@
           this.table.draw()
         }
 
-        // $('#ticketsTable').on('click', '.ticketId', function(event) {
-        //   var row = $(this).closest('tr')
-        //   var table = BPC.tickets.ticketsTable
-        //   var data = table.row(row).data()
-        //   BPC.ticket.open(data)
-        // })
+        this.table.buttons().containers()
+                    .appendTo($('.TicketColumnsButton'))
+
+        // $('.TicketColumnsButton').empty()
+        // var canvas = document.createElement('canvas')
+        // canvas.width = '1200px'
+        // canvas.height = '800px'
+
+        $('.TicketColumnsButton .dt-buttons.ui.basic').removeClass('basic').on('click',() => {
+            $('.TicketColumnsButton .dt-button-collection.vertical').removeClass('vertical').removeClass('basic').addClass('horizontal').css('width', '80vw').css('overflow-x', 'auto')
+        })
+
         $(this.$refs.table).on('click', 'a[href="#import_data"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

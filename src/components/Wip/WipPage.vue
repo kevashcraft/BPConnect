@@ -3,9 +3,9 @@
     <div class="page-container">
       <table ref="table" class="ui celled table"></table>
     </div>
-    <wip-checkin-modal ref="WipCheckinModal"></wip-checkin-modal>
-    <wip-start-modal ref="WipStartModal"></wip-start-modal>
-    <wip-walk-modal ref="WipWalkModal"></wip-walk-modal>
+    <wip-checkin-modal ref="WipCheckinModal" @update="list"></wip-checkin-modal>
+    <wip-start-modal ref="WipStartModal" @update="list"></wip-start-modal>
+    <wip-walk-modal ref="WipWalkModal" @update="list"></wip-walk-modal>
   </div>
 </template>
 
@@ -63,22 +63,25 @@
           this.table.draw()
         }
 
-        $(this.$refs.table).on('click', 'a[href="#start_work"]', function(event) {
+        this.table.buttons().containers()
+                    .appendTo($('.WipColumnsButton'))
+
+        $(this.$refs.table).on('click', 'a[href="#start_work"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.WipStartModal.open({row, data})
+          this.$refs.WipStartModal.open(data)
         })
 
-        $(this.$refs.table).on('click', 'a[href="#checkin_work"]', function(event) {
+        $(this.$refs.table).on('click', 'a[href="#checkin_work"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.WipCheckinModal.open({row, data})
+          this.$refs.WipCheckinModal.open(data)
         })
 
-        $(this.$refs.table).on('click', 'a[href="#walk_ticket"]', function(event) {
+        $(this.$refs.table).on('click', 'a[href="#walk_ticket"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
-          this.$refs.WipWalkModal.open({row, data})
+          this.$refs.WipWalkModal.open(data)
         })
       },
     },
