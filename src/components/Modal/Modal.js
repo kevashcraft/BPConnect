@@ -48,9 +48,7 @@ export default {
         }
       }
 
-      setTimeout(() => {
-        $(this.$el).modal('refresh')
-      }, 15)
+      this.refresh()
     },
     close (data, outside) {
       this.opened = false
@@ -60,6 +58,11 @@ export default {
       }
 
       if (this.afterClose) this.afterClose(data)
+    },
+    refresh () {
+      setTimeout(() => {
+        $(this.$el).modal('refresh')
+      }, 15)
     }
   },
   watch: {

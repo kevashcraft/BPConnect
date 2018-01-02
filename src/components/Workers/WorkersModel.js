@@ -28,7 +28,7 @@ exports.search = async (req) => {
     JOIN workers ON workers.user_id = users.id
     WHERE users.fname || ' ' || users.lname ilike ANY(ARRAY[${req.queryString}])
     ORDER BY similarity(users.fname || ' ' || users.lname, $1) DESC
-    LIMIT 10
+    LIMIT 5
   `
   let bind = [ req.query ]
 

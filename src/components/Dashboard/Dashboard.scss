@@ -1,0 +1,50 @@
+@import '../../site/styles/colors';
+
+#dashboard {
+
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+
+    a {
+      height: 165px;
+      width: 200px;
+      margin: 15px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      color: black;
+      transition: color .2s ease;
+      &:hover {
+        color: $hover-highlight-red;
+      }
+
+      i {
+        font-size: 36px;
+        font-weight: bold;
+      }
+      span {
+        display: block;
+        text-align: center;
+        font-size: 21px;
+      }
+    }
+  }
+}
+
+.quick-panel {
+  max-width: 800px;
+  margin: 1vh auto 0;
+}
+
+.quick-panel .row .segment {
+  color: black;
+  height: 165px;
+  margin: 15px;
+}
+.quick-panel .row .column .icon { font-size: 32px; }
+
+.quick-panel .row .column a {
+}
+.quick-panel .row .segment:hover {  }

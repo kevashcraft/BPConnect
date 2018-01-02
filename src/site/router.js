@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import HomePage  from '../components/Home/HomePage.vue'
+import HomePage from '../components/Home/HomePage.vue'
 import LoginPage from '../components/Login/LoginPage.vue'
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 import InspectionsPage from '../components/Inspections/InspectionsPage.vue'
@@ -22,7 +22,8 @@ import WipControls from '../components/Wip/WipControls.vue'
 Vue.use(Router)
 
 let router = new Router({
-  routes: [{
+  routes: [
+    {
       path: '/',
       component: HomePage
     }, {
@@ -31,67 +32,71 @@ let router = new Router({
     }, {
       path: '/dashboard',
       components: {
-        page: Dashboard,
+        page: Dashboard
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/inspections',
       components: {
         page: InspectionsPage,
         controls: InspectionsControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/orders',
       components: {
         page: OrdersPage,
         controls: OrdersControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/permits',
       components: {
         page: PermitsPage,
         controls: PermitsControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/schedule',
       components: {
         page: SchedulePage,
         controls: ScheduleControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/site-ready-checklist',
       components: {
         page: SrcPage,
         controls: SrcControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/tickets',
       components: {
         page: TicketsPage,
         controls: TicketsControls
       },
-      meta: {requiresAuth: true},
+      meta: {requiresAuth: true}
     }, {
       path: '/work-in-progress',
       components: {
         page: WipPage,
         controls: WipControls
       },
-      meta: {requiresAuth: true},
-  }],
-  mode: 'history',
+      meta: {requiresAuth: true}
+    }],
+  mode: 'history'
 })
 
 router.beforeEach((to, from, next) => {
+  if (to.path === '/') {
+    next({path: '/dashboard'})
+  }
+  console.log('to', to)
   // if (to.matched.some(record => record.meta.requiresAuth) && !S.authed) {
   //   next({path: '/login', query: { redirect: to.fullPath }})
   // } else {
-    next()
+  next()
   // }
 })
 

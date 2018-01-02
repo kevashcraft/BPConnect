@@ -1,7 +1,7 @@
 <template>
   <div>
     <table ref="table" class="ui celled responsive table"></table>
-    <ticket-import-data-modal ref="TicketImportDataModal"></ticket-import-data-modal>
+    <ticket-import-data-modal ref="TicketImportDataModal" @update="list"></ticket-import-data-modal>
     <ticket-work-modal ref="TicketWorkModal"></ticket-work-modal>
     <ticket-add-modal ref="TicketAddModal" @update="list"></ticket-add-modal>
   </div>

@@ -54,12 +54,20 @@
 </template>
 
 <script>
+  import Page from '../Page/Page'
+
+  import './Dashboard.scss'
   import DashboardRolloutModal from './DashboardRolloutModal.vue'
 
   export default {
     data () {
-      return {}
+      return {
+        meta: {
+          title: 'Dashboard'
+        },
+      }
     },
+    mixins: [ Page ],
     methods: {
       openRollOut () {
         console.log("here");

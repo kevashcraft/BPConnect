@@ -1,7 +1,7 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import path              from 'path'
-import webpack           from 'webpack'
+import path from 'path'
+import webpack from 'webpack'
 
 module.exports = {
   entry: './src/site/index.js',
@@ -27,7 +27,7 @@ module.exports = {
           'style-loader',
           'css-loader',
           'sass-loader'
-        ],
+        ]
       }, {
         test: /\.(jpe?g|gif|ttf|woff|woff2|eot)$/i,
         use: 'file-loader?name=[path][name].[ext]'
@@ -49,7 +49,7 @@ module.exports = {
       'window.jQuery': 'jquery',
       jquery: 'jquery',
       'window.jquery': 'jquery',
-      'window.$': 'jquery',
+      'window.$': 'jquery'
     }),
     new HtmlWebpackPlugin({
       template: './src/site/index.html'
@@ -61,8 +61,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      'jquery': require.resolve('jquery'),
+      'jquery': require.resolve('jquery')
     }
   }
 }
-

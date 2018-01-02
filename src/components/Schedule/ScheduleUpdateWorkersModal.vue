@@ -58,6 +58,7 @@ export default {
           let data = { query: settings.urlData.query }
           this.$root.req(route, data).then((response) => {
             callback(response)
+            this.refresh()
           })
         }
       },

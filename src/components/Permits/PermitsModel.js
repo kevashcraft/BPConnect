@@ -20,7 +20,7 @@ exports.countForHouseId = async (req) => {
   `
   let bind = [req.id]
 
-  return Model.query(sql, bind, true, true)
+  return parseInt(Model.query(sql, bind, true, true))
 }
 
 exports.list = async (req) => {

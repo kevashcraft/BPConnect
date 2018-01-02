@@ -2,13 +2,14 @@ import Model from '../Model'
 
 exports.create = async (req) => {
   let sql = `
-    INSERT INTO subdivisions (builder_id, name, zip_id)
+    INSERT INTO subdivisions (builder_id, name, zipcode_id)
     VALUES ($1, $2, $3)
     RETURNING id
   `
-  let bind = [subdivision.builderId, subdivision.name, subdivision.zipId]
+  let bind = [req.builderId, req.name, req.zipcodeId]
+  console.log('bind', bind)
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.search = async (req) => {

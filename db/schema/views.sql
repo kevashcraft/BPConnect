@@ -147,8 +147,8 @@ CREATE VIEW inspections_view AS
   FROM tickets_master_view
   RIGHT JOIN permits
     ON tickets_master_view.house_id = permits.house_id
-  RIGHT JOIN inspections
-    ON inspections.permit_id = permits.id
+  JOIN inspections ON inspections.permit_id = permits.id
+      AND inspections.ticket_id = tickets_master_view.ticket_id
   LEFT JOIN inspectors
     ON inspectors.id = permits.inspector_id
   WHERE tickets_master_view.ticket_needspermit;
@@ -169,11 +169,12 @@ CREATE VIEW orders_view AS
     total_parts.item_count,
     '<a href="#parts_received">' || ((coalesce(received_parts.received_count::numeric, 0) / total_parts.item_count::numeric) * 100)::int || '%</a>' as received_percent
   FROM tickets_master_view
-  LEFT JOIN (
+  JOIN (
       SELECT ticket_id, order_id, count(*) as item_count
       FROM ticket_parts
       GROUP BY ticket_id, order_id
     ) total_parts ON total_parts.ticket_id = tickets_master_view.ticket_id
+    AND total_parts.item_count > 0
   LEFT JOIN (
     SELECT order_id, count(*) as received_count
     FROM ticket_parts
@@ -219,7 +220,7 @@ CREATE VIEW schedule_view AS
       ELSE '<a href="#update_schedule">Schedule</a>'
     END  as ticket_date_scheduled_html,
     CASE WHEN tickets_master_view.ticket_date_sentout IS NOT NULL
-      THEN tickets_master_view.ticket_date_sentout_formatted || '<a href="#update_schedule"><i class="edit icon"></i></a>'
+      THEN tickets_master_view.ticket_date_sentout_formatted
       ELSE '<a href="#sendout_ticket">Send Out</a>'
     END  as ticket_date_sentout_html,
     CASE WHEN tickets_master_view.plumber_name IS NOT NULL

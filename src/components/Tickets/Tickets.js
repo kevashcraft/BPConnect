@@ -13,22 +13,35 @@ exports.create = async (req) => {
   let ticket = req.ticket
 
   if (ticket.builderId === -1) {
-    ticket.builderId = await BuildersModel.create(ticket.builder)
+    let builder = {name: ticket.builderName, phone: ticket.builderPhone}
+    ticket.builderId = await BuildersModel.create(builder)
   }
 
   if (ticket.builderSupervisorId === -1) {
-    ticket.builderSupervisor.builderId = ticket.builderId
-    ticket.builderSupervisorsId = await BuilderSupervisorsModel.create(ticket.builderSupervisor)
+    let builderSupervisor = {
+      builderId: ticket.builderId,
+      name: ticket.builderSupervisorName,
+      phone: ticket.builderSupervisorPhone
+    }
+    ticket.builderSupervisorId = await BuilderSupervisorsModel.create(builderSupervisor)
   }
 
   if (ticket.subdivisionId === -1) {
-    ticket.subdivision.builderId = ticket.builderId
-    ticket.subdivisionsId = await SubdivisionsModel.create(ticket.subdivision)
+    let subdivision = {
+      builderId: ticket.builderId,
+      zipcodeId: ticket.zipcodeId,
+      name: ticket.subdivisionName
+    }
+    ticket.subdivisionId = await SubdivisionsModel.create(subdivision)
   }
 
   if (ticket.houseId === -1) {
-    ticket.house.subdivisionId = ticket.subdivisionId
-    ticket.housesId = await HousesModel.create(ticket.house)
+    let house = {
+      subdivisionId: ticket.subdivisionId,
+      lot: ticket.houseLot,
+      address: ticket.houseAddress
+    }
+    ticket.houseId = await HousesModel.create(house)
   }
 
   let ticketType = await TicketTypesModel.retrieve({ id: ticket.ticketTypeId })
@@ -39,12 +52,11 @@ exports.create = async (req) => {
   let ticketId = await TicketsModel.create(ticket)
 
   if (ticketType.needspermit) {
-    // let permit = { houseId: ticket.houseId }
-    // let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
-    // console.log('permitCountForHouse', permitCountForHouse)
-    // if (permitCountForHouse == 0) {
-    //   // let permitId = await PermitsModel.create(permit)
-    // }
+    let permit = { houseId: ticket.houseId }
+    let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
+    if (permitCountForHouse === 0) {
+      let permitId = await PermitsModel.create(permit)
+    }
   }
 
   return ticketId

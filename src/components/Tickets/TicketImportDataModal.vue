@@ -81,7 +81,8 @@ export default {
       });
       uploader.on('complete', (fileInfo) => {
         uploader.destroy()
-        console.log('Upload Complete', fileInfo);
+        this.emit('update')
+        this.close()
       });
       uploader.on('error', (err) => {
         console.log('Error!', err);

@@ -9,7 +9,7 @@ exports.create = async (req) => {
   `
   let bind = [req.name, req.address, req.phone]
 
-  return Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.search = async (req) => {

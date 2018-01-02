@@ -8,7 +8,7 @@ exports.create = async (req) => {
   `
   let bind = [req.subdivisionId, req.lot, req.address]
 
-  return Model.query(sql, bind)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.retrievePermits = async (req) => {

@@ -74,8 +74,8 @@
               </div>
             </div>
             <div class="three wide field align-all">
-              <div class="ui button pop-up refresh" v-show="ticket.builderId !== -1" @click="ticket.builderId = -1" data-title="Add a New Builder" data-content="Add a new builder instead of searching for one">Add</div>
-              <div class="ui button pop-up refresh" v-show="ticket.builderId === -1" @click="ticket.builderId = 0" data-title="Search for Existing Builder" data-content="Switch to searching for a builder instead of adding one ">Search</div>
+              <div class="ui button pop-up refresh" v-show="ticket.builderId !== -1" @click="ticket.builderId = -1; ticket.builderSupervisorId = -1" data-title="Add a New Builder" data-content="Add a new builder instead of searching for one">Add</div>
+              <div class="ui button pop-up refresh" v-show="ticket.builderId === -1" @click="ticket.builderId = 0; ticket.builderSupervisorId = 0" data-title="Search for Existing Builder" data-content="Switch to searching for a builder instead of adding one ">Search</div>
             </div>
           </div>
           <div class="field" v-show="ticket.builderId === -1">
@@ -343,12 +343,7 @@ export default {
         }
       },
       onSelect: (value) => {
-        this.ticket.zipId = value.zipId
-        // if (value.builderId === -1) {
-        //   this.ticket.city = ''
-        // } else {
-        //   this.ticket.city = value.builderName
-        // }
+        this.ticket.zipcodeId = value.id
       }
     })
 

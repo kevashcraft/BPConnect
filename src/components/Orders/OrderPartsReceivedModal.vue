@@ -63,6 +63,7 @@ export default {
 
       this.$root.req('Orders:receiveParts', { parts }).then(response => {
         this.$emit('update', this.row)
+        this.close()
       })
     },
     selectAll () {
