@@ -3,10 +3,10 @@ import WipModel from './WipModel'
 import HousesModel from '../Houses/HousesModel'
 import InspectionsModel from '../Inspections/InspectionsModel'
 import TicketsModel from '../Tickets/TicketsModel'
+import TicketsExtModel from '../Tickets/TicketsExtModel'
 
 exports.list = async (req) => {
   let ret = await WipModel.list(req)
-  console.log('ret', ret)
   return ret
 }
 
@@ -28,24 +28,43 @@ exports.updateCompleted = async (req) => {
   let fields = { completed: { safe: 'current_timestamp' } }
   await TicketsModel.update(ticketId, fields)
 
-  console.log('req', req)
-  console.log('req.ticketNeedspermit', req.ticketNeedspermit)
-  if (req.ticketNeedspermit) {
-    let permits = await HousesModel.retrievePermits({houseId: req.houseId})
-    console.log('permit', permits)
-    let inspection = { ticketId, permitId: permits[0].id }
-    let inspectionId = await InspectionsModel.create(inspection)
-    console.log('inspectionId', inspectionId)
+  req.parts.forEach(async part => {
+    let fields = { installed: { safe: 'current_timestamp' } }
+    await TicketsExtModel.updatePart(part.id, fields)
+  })
 
-    return inspectionId
-  }
+  req.tasks.forEach(async task => {
+    let fields = { completed: { safe: 'current_timestamp' } }
+    await TicketsExtModel.updateTask(task.id, fields)
+  })
 
-  return true
+  // if (req.ticketNeedspermit) {
+  //   let permits = await HousesModel.retrievePermits({houseId: req.houseId})
+  //   console.log('permit', permits)
+  //   let inspection = { ticketId, permitId: permits[0].id }
+  //   let inspectionId = await InspectionsModel.create(inspection)
+  //   console.log('inspectionId', inspectionId)
+
+  //   return inspectionId
+  // }
+
+  // return true
 }
 
 exports.updateWalked = async (req) => {
   let ticketId = req.ticketId
   let fields = { walked: { safe: 'current_timestamp' } }
   await TicketsModel.update(ticketId, fields)
+
+  req.parts.forEach(async part => {
+    let fields = { walked: { safe: 'current_timestamp' } }
+    await TicketsExtModel.updatePart(part.id, fields)
+  })
+
+  req.tasks.forEach(async task => {
+    let fields = { walked: { safe: 'current_timestamp' } }
+    await TicketsExtModel.updateTask(task.id, fields)
+  })
+
   return true
 }

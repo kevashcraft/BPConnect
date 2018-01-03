@@ -154,6 +154,8 @@ exports.dataImport = async (req) => {
 
   let ticketId = req.data.ticketId
   let ticket = await TicketsModel.retrieve({ id: ticketId })
+  console.log('ticketId', ticketId)
+  console.log('ticket', ticket)
 
   TicketsModel.update(ticketId, { imported: { safe: 'NOW()' } })
 
@@ -189,7 +191,7 @@ exports.print = async (req, res) => {
 
 exports.listWorkers = async (req, res) => {
   let ticketId = req.body.ticketId
-  return await TicketsExtModel.listWorkers(ticketId)
+  return TicketsExtModel.listWorkers(ticketId)
 }
 
 exports.updateWorkers = async (req, res) => {

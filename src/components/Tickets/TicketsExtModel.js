@@ -82,6 +82,18 @@ exports.retrieveTasks = async (req) => {
   return Model.query(sql, bind)
 }
 
+exports.updateTask = async (id, fields) => {
+  let update = Model.updateFields(fields)
+
+  let sql = `
+    UPDATE ticket_tasks SET ${update.set}
+    WHERE id = $${update.count + 1}
+  `
+  update.bind.push(id)
+
+  Model.run(sql, update.bind)
+}
+
 /*
   ____   _    ____ _____ ____
  |  _ \ / \  |  _ \_   _/ ___|

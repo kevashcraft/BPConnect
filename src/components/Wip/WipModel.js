@@ -1,7 +1,6 @@
 import Model from '../Model'
 
 exports.list = async (req) => {
-  console.log('req', req)
   let sql = `
     SELECT * FROM wip_view
     WHERE

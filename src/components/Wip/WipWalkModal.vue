@@ -133,7 +133,6 @@ export default {
       this.refresh()
     },
     taskRemove (index) {
-      console.log('index', index)
       this.ticket.tasks[index].deleted = true
       this.ticket.tasks.splice(index, 1, this.ticket.tasks[index])
     },
