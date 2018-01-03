@@ -1,9 +1,12 @@
 <template>
   <div>
-    <table ref="table" class="ui celled responsive table"></table>
-    <ticket-import-data-modal ref="TicketImportDataModal" @update="list"></ticket-import-data-modal>
-    <ticket-work-modal ref="TicketWorkModal"></ticket-work-modal>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
+    </div>
     <ticket-add-modal ref="TicketAddModal" @update="list"></ticket-add-modal>
+    <ticket-import-data-modal ref="TicketImportDataModal" @update="list"></ticket-import-data-modal>
+    <ticket-tasks-modal ref="TicketTasksModal" @update="list"></ticket-tasks-modal>
+    <ticket-work-modal ref="TicketWorkModal"></ticket-work-modal>
   </div>
 </template>
 
@@ -13,6 +16,7 @@
 
   import TicketAddModal from './TicketAddModal.vue'
   import TicketImportDataModal from './TicketImportDataModal.vue'
+  import TicketTasksModal from './TicketTasksModal.vue'
   import TicketWorkModal from './TicketWorkModal.vue'
 
   import html2canvas from 'html2canvas'
@@ -21,11 +25,13 @@
     components: {
       TicketAddModal,
       TicketImportDataModal,
-      TicketWorkModal
+      TicketTasksModal,
+      TicketWorkModal,
     },
     data () {
       return {
         meta: {
+          name: 'TicketsPage',
           title: 'Tickets'
         },
         tickets: [],
@@ -49,8 +55,6 @@
       },
 
       initTable () {
-        // var columns = $.extend(true, [], BPC.i.columns)
-
         var config = {
           stateSave: true,
           colReorder: true,
@@ -68,17 +72,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.TicketColumnsButton'))
-
-        // $('.TicketColumnsButton').empty()
-        // var canvas = document.createElement('canvas')
-        // canvas.width = '1200px'
-        // canvas.height = '800px'
-
-        $('.TicketColumnsButton .dt-buttons.ui.basic').removeClass('basic').on('click',() => {
-            $('.TicketColumnsButton .dt-button-collection.vertical').removeClass('vertical').removeClass('basic').addClass('horizontal').css('width', '80vw').css('overflow-x', 'auto')
-        })
+        this.moveColumnsButton('TicketColumnsButton')
 
         $(this.$refs.table).on('click', 'a[href="#import_data"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
@@ -89,6 +83,11 @@
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
           this.$refs.TicketWorkModal.open({row, data})
+        })
+        $(this.$refs.table).on('click', 'a[href="#tasks"]', (event) => {
+          var row = $(event.currentTarget).closest('tr')
+          var data = this.table.row(row).data()
+          this.$refs.TicketTasksModal.open(data)
         })
       },
       // reloadTable () {

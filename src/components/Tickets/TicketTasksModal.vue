@@ -1,40 +1,42 @@
 <template>
   <div class="ui small modal">
     <i class="close icon"></i>
-    <div class="header">Walk {{ ticket.subdivisionName }} - {{ ticket.houseLot }}</div>
+    <div class="header">Ticket Tasks - {{ ticket.subdivisionName }}: {{ ticket.houseLot }} - {{ ticket.ticketType }}</div>
     <div class="content">
       <div class="ui icon message">
         <i class="check circle yellow icon"></i>
         <div class="content">
-          <div class="header">Confirm Parts & Tasks</div>
-          <p>Confirm the parts have been installed and the tasks completed.</p>
+          <div class="header">Add/Remove Tasks</div>
+          <p>Add new tasks or remove old ones.</p>
         </div>
       </div>
-      <form class="ui form padding30" v-show="ticket.parts.length" ref="parts">
-        <div class="ui dividing header">Parts</div>
-        <div v-for="part in ticket.parts" class="padding5">
-          <div class="ui slider checkbox part">
-            <input type="checkbox" v-model="part.walked">
-            <label>{{ part.description }}</label>
+      <div class="ui list padding30">
+        <div class="ui dividing header">Ticket Tasks</div>
+        <div v-show="!ticket.tasks.length">This ticket has no tasks</div>
+        <div v-for="task, index in ticket.tasks" class="item" v-show="!task.deleted">
+          <i class="plus icon"></i>
+          <div class="header">
+            <span>{{ task.task }}
+              <button class="ui icon button" @click.prevent="taskRemove(index)">
+                <i class="delete icon"></i>
+              </button>
+            </span>
           </div>
         </div>
-        <div><button class="ui button" @click.prevent="partsToggle">Toggle All Parts</button></div>
-      </form>
-      <form class="ui form padding30" v-show="ticket.tasks.length" ref="tasks">
-        <div class="ui dividing header">Tasks</div>
-        <div v-for="task in ticket.tasks" class="padding5">
-          <div class="ui slider checkbox task">
-            <input type="checkbox" v-model="task.walked">
-            <label>{{ task.task }}</label>
-          </div>
+      </div>
+      <form class="ui form padding30" ref="newtask">
+        <div class="ui dividing header">Add a New Task</div>
+        <div class="field">
+          <label>Task</label>
+          <input type="text" v-model="newtask" placeholder="New Task">
         </div>
-        <div><button class="ui button" @click.prevent="tasksToggle">Toggle All Tasks</button></div>
+        <button @click.prevent="newtaskAdd" class="ui button">Add</button>
       </form>
     </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui green icon button" @click="update">
-        Walk Ticket
+        Update Ticket
         <i class="thumbs up icon"></i>
       </div>
     </div>
@@ -49,46 +51,67 @@ export default {
   data () {
     return {
       meta: {
-        name: 'WipWalkModal'
+        name: 'TicketTasksModal'
       },
       ticket: {
-        parts: [],
         tasks: []
       },
-      taskNew: '',
+      newtask: '',
     }
   },
   methods: {
     afterOpen (ticket) {
-      ticket.parts = []
       ticket.tasks = []
       this.ticket = ticket
       this.retrieve()
     },
     retrieve () {
-      this.$root.req('TicketsExt:retrieveParts', this.ticket).then((response) => {
-        this.$set(this.ticket, 'parts', response)
-        setTimeout(() => {
-          $('.ui.checkbox').checkbox()
-        },100)
-      })
       this.$root.req('TicketsExt:retrieveTasks', this.ticket).then((response) => {
         this.$set(this.ticket, 'tasks', response)
-        setTimeout(() => {
-          $('.ui.checkbox').checkbox()
-        },100)
+        console.log('response', response)
       })
     },
     update (event) {
-      this.$root.req('Wip:updateWalked', this.ticket).then((response) => {
-        if (response) {
-          this.$root.noty('Ticket work has been confirmed')
-          this.$emit('update')
-          this.close()
-        } else {
-          this.$root.noty('Could not confirm ticket work', 'error')
-        }
-      })
+      let toDelete = this.ticket.tasks.filter(task => { return task.deleted && !task.new })
+      let toCreate = this.ticket.tasks.filter(task => { return task.new && !task.deleted })
+      let awaiting = toDelete.length + toCreate.length
+
+      let completed = () => {
+        this.$root.noty('Ticket tasks have been updated')
+        this.$emit('update')
+        this.close()
+      }
+
+      if (awaiting) {
+        toDelete.forEach(task => {
+          this.$root.req('TicketsExt:deleteTask', task).then((response) => {
+            if (--awaiting === 0) completed()
+          })
+        })
+
+        toCreate.forEach(task => {
+          this.$root.req('TicketsExt:createTask', task).then((response) => {
+            if (--awaiting === 0) completed()
+          })
+        })
+      } else {
+        completed()
+      }
+
+    },
+    newtaskAdd () {
+      let task = {
+        ticketId: this.ticket.ticketId,
+        task: this.newtask,
+        new: true
+      }
+      this.ticket.tasks.push(task)
+      this.newtask = ''
+      this.refresh()
+    },
+    taskRemove (index) {
+      this.ticket.tasks[index].deleted = true
+      this.ticket.tasks.splice(index, 1, this.ticket.tasks[index])
     },
     partsToggle () {
       let value = this.ticket.parts.some(part => {return part.walked}) ? 'uncheck' : 'check'

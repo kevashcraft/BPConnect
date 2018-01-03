@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="item TicketColumnsButton"></div>
+    <div class="item TicketsColumnsButton"></div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="$store.dispatch('modalOpen', 'TicketAddModal')">
         <i class="add square icon"></i>

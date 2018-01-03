@@ -1,6 +1,8 @@
 <template>
   <div>
-    <table ref="table" class="ui celled responsive table"></table>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
+    </div>
     <permit-add-modal ref="PermitAddModal" @update="list"></permit-add-modal>
   </div>
 </template>
@@ -18,6 +20,7 @@
     data () {
       return {
         meta: {
+          name: 'PermitsPage',
           title: 'Permits'
         }
       }
@@ -43,7 +46,7 @@
           columns: PermitsColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -53,8 +56,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.PermitsColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#permit_add"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

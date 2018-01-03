@@ -188,7 +188,6 @@ CREATE VIEW orders_view AS
     ON suppliers.id = orders.supplier_id;
 
 
-
 DROP VIEW IF EXISTS permits_view;
 CREATE VIEW permits_view AS
   SELECT DISTINCT ON (permits.id)
@@ -215,20 +214,24 @@ DROP VIEW IF EXISTS schedule_view CASCADE;
 CREATE VIEW schedule_view AS
   SELECT DISTINCT ON (tickets_master_view.ticket_id)
     tickets_master_view.*,
-    CASE WHEN tickets_master_view.ticket_date_scheduled IS NOT NULL
+    CASE
+      WHEN tickets_master_view.ticket_date_scheduled IS NOT NULL
       THEN tickets_master_view.ticket_date_scheduled_formatted || '<a href="#update_schedule"><i class="edit icon"></i></a>'
       ELSE '<a href="#update_schedule">Schedule</a>'
-    END  as ticket_date_scheduled_html,
-    CASE WHEN tickets_master_view.ticket_date_sentout IS NOT NULL
-      THEN tickets_master_view.ticket_date_sentout_formatted
+    END as ticket_date_scheduled_html,
+    CASE
+      WHEN tickets_master_view.ticket_date_sentout IS NOT NULL
+        THEN tickets_master_view.ticket_date_sentout_formatted
       ELSE '<a href="#sendout_ticket">Send Out</a>'
-    END  as ticket_date_sentout_html,
-    CASE WHEN tickets_master_view.plumber_name IS NOT NULL
-      THEN tickets_master_view.plumber_name || '<a href="#update_workers"><i class="edit icon"></i></a>'
+    END as ticket_date_sentout_html,
+    CASE
+      WHEN tickets_master_view.plumber_name IS NOT NULL
+        THEN tickets_master_view.plumber_name || '<a href="#update_workers"><i class="edit icon"></i></a>'
       ELSE '<a href="#update_workers">Add Plumber</a>'
     END as plumber_name_html,
-    CASE WHEN tickets_master_view.helper_name IS NOT NULL
-      THEN tickets_master_view.helper_name || '<a href="#update_workers"><i class="edit icon"></i></a>'
+    CASE
+      WHEN tickets_master_view.helper_name IS NOT NULL
+        THEN tickets_master_view.helper_name || '<a href="#update_workers"><i class="edit icon"></i></a>'
       ELSE '<a href="#update_workers">Add Helper</a>'
     END as helper_name_html
   FROM tickets_master_view;
@@ -255,6 +258,7 @@ CREATE VIEW tickets_view AS
         THEN '<a href="#import_data">Import</a>'
       ELSE tickets_master_view.ticket_date_imported_formatted
     END as ticket_date_imported_html,
+    '<a href="#tasks">Tasks</a>' as ticket_tasks,
     '<a href="/tickets/print/' || tickets_master_view.ticket_id || '" target="_blank">Print</a>' as print_ticket_html
   FROM tickets_master_view;
 
@@ -262,16 +266,21 @@ DROP VIEW IF EXISTS wip_view;
 CREATE VIEW wip_view AS
   SELECT
     tickets_master_view.*,
-    CASE WHEN tickets_master_view.ticket_date_started IS NULL
-      THEN '<a href="#start_work">Start Work</a>'
+    CASE
+      WHEN tickets_master_view.ticket_date_started IS NULL
+        THEN '<a href="#start_work">Start Work</a>'
       ELSE tickets_master_view.ticket_date_started_formatted
     END as ticket_date_started_html,
-    CASE WHEN tickets_master_view.ticket_date_completed IS NULL
-      THEN '<a href="#checkin_work">Checkin</a>'
+    CASE
+      WHEN tickets_master_view.ticket_date_completed IS NULL
+        AND tickets_master_view.ticket_date_started IS NOT NULL
+        THEN '<a href="#checkin_work">Checkin</a>'
       ELSE tickets_master_view.ticket_date_completed_formatted
     END as ticket_date_completed_html,
-    CASE WHEN tickets_master_view.ticket_date_walked IS NULL
-      THEN '<a href="#walk_ticket">Walk Ticket</a>'
+    CASE
+      WHEN tickets_master_view.ticket_date_walked IS NULL
+        AND tickets_master_view.ticket_date_completed IS NOT NULL
+        THEN '<a href="#walk_ticket">Walk Ticket</a>'
       ELSE tickets_master_view.ticket_date_walked_formatted
     END as ticket_date_walked_html
   FROM tickets_master_view
@@ -403,3 +412,4 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     helper.id
   ORDER BY tickets.id
 ;
+

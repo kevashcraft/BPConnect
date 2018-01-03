@@ -86,6 +86,7 @@ CREATE TABLE ticket_parts (
   ordered timestamp,
   received timestamp,
   installed timestamp,
+  walked timestamp,
   destroyed timestamp,
   deleted boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
@@ -96,9 +97,10 @@ CREATE TABLE ticket_tasks (
   id serial NOT NULL,
   created timestamp DEFAULT current_timestamp NOT NULL,
   ticket_id int REFERENCES tickets(id) NOT NULL,
-  completed timestamp,
   task varchar(2056),
-  valid boolean DEFAULT true NOT NULL,
+  completed timestamp,
+  walked timestamp,
+  deleted boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
 );
 

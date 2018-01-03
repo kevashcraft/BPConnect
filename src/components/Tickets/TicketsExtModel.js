@@ -11,7 +11,7 @@ exports.createWorker = async (req) => {
   `
   let bind = [req.ticketId, req.userId, req.type]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 exports.details = async (req) => {
@@ -35,12 +35,19 @@ exports.listWorkers = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
-/* TASKS TASKS TASKS TASKS */
+/*
+  _____  _    ____  _  ______
+ |_   _|/ \  / ___|| |/ / ___|
+   | | / _ \ \___ \| ' /\___ \
+   | |/ ___ \ ___) | . \ ___) |
+   |_/_/   \_\____/|_|\_\____/
 
-exports.createTask = async (task, db) => {
+*/
+
+exports.createTask = async (req) => {
   let sql = `
     INSERT INTO ticket_tasks (ticket_id, task)
     VALUES ($1, $2)
@@ -48,24 +55,41 @@ exports.createTask = async (task, db) => {
   `
   let bind = [req.ticketId, req.task]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
-exports.listTasks = async (req) => {
+exports.deleteTask = async (req) => {
   let sql = `
-    SELECT
-      ticket_tasks.id as task_id,
-      ticket_tasks.task
-    FROM ticket_tasks
-    WHERE valid
-      AND ticket_id = $1
+    UPDATE ticket_tasks
+    SET deleted = true
+    WHERE id = $1
   `
-  let bind = [ req.id ]
+  let bind = [req.id]
 
   return Model.query(sql, bind)
 }
 
-/* PARTS PARTS PARTS PARTS */
+exports.retrieveTasks = async (req) => {
+  let sql = `
+    SELECT
+      ticket_tasks.*
+    FROM ticket_tasks
+    WHERE ticket_id = $1
+      AND NOT deleted
+  `
+  let bind = [ req.ticketId ]
+
+  return Model.query(sql, bind)
+}
+
+/*
+  ____   _    ____ _____ ____
+ |  _ \ / \  |  _ \_   _/ ___|
+ | |_) / _ \ | |_) || | \___ \
+ |  __/ ___ \|  _ < | |  ___) |
+ |_| /_/   \_\_| \_\|_| |____/
+
+*/
 
 exports.createPart = async (req) => {
   let sql = `
@@ -77,6 +101,19 @@ exports.createPart = async (req) => {
     req.ticketId, req.roomId, req.qty,
     req.payout, req.description
   ]
+
+  return Model.query(sql, bind)
+}
+
+exports.retrieveParts = async (req) => {
+  let sql = `
+    SELECT
+      ticket_parts.*
+    FROM ticket_parts
+    WHERE ticket_id = $1
+      AND NOT deleted
+  `
+  let bind = [ req.ticketId ]
 
   return Model.query(sql, bind)
 }
@@ -109,7 +146,7 @@ exports.listPermits = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }
 
 /* ORDERS ORDERS ORDERS ORDERS */
@@ -140,7 +177,7 @@ exports.listOrders = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(db, sql, id)
+  return Model.query(db, sql, id)
 }
 
 /* TICKETS TICKETS TICKETS TICKETS */
@@ -153,7 +190,7 @@ exports.retrieveDetails = async (req) => {
 
   let bind = [ req.id ]
 
-  return await Model.query(db, sql, id)
+  return Model.query(db, sql, id)
 }
 
 /* WORK WORK WORK WORK */
@@ -167,7 +204,7 @@ exports.deleteWorkTask = async (req) => {
 
   let bind = [ req.id ]
 
-  return await Model.run(db, sql, id)
+  return Model.run(db, sql, id)
 }
 
 exports.listWorkParts = async (req) => {
@@ -181,7 +218,7 @@ exports.listWorkParts = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(db, sql, id)
+  return Model.query(db, sql, id)
 }
 
 exports.listWorkTasks = async (req) => {
@@ -195,7 +232,7 @@ exports.listWorkTasks = async (req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(db, sql, id)
+  return Model.query(db, sql, id)
 }
 
 /* ROOMS ROOMS ROOMS ROOMS */
@@ -226,5 +263,5 @@ exports.listRooms = async(req) => {
   `
   let bind = [ req.id ]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

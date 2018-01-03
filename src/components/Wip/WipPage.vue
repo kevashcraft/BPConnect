@@ -53,7 +53,7 @@
           columns: WipColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -63,8 +63,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.WipColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#start_work"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

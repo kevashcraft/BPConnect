@@ -1,6 +1,8 @@
 <template>
   <div>
-    <table ref="table" class="ui celled responsive table"></table>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
+    </div>
     <src-update-modal ref="SrcUpdateModal" @update="list"></src-update-modal>
     <src-reason-add-modal ref="SrcReasonAddModal"></src-reason-add-modal>
   </div>
@@ -21,7 +23,8 @@
     data () {
       return {
         meta: {
-          title: 'Src Ready Checklist'
+          name: 'SrcPage',
+          title: 'Site Ready Checklist'
         },
         src: [],
       }
@@ -47,7 +50,7 @@
           columns: SrcColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -57,8 +60,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.SrcColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#site_ready"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

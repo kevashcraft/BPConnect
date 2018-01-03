@@ -52,7 +52,7 @@
           columns: InspectionsColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -62,8 +62,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.InspectionsColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#schedule_inspection"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

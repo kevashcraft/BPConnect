@@ -1,6 +1,8 @@
 <template>
   <div>
-    <table ref="table" class="ui celled responsive table"></table>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
+    </div>
     <order-parts-modal ref="OrderPartsModal" @update="list"></order-parts-modal>
     <order-parts-received-modal ref="OrderPartsReceivedModal" @update="list"></order-parts-received-modal>
     <order-supplier-add-modal ref="OrderSupplierAddModal"></order-supplier-add-modal>
@@ -26,6 +28,7 @@
     data () {
       return {
         meta: {
+          name: 'OrdersPage',
           title: 'Orders'
         },
         orders: [],
@@ -52,7 +55,7 @@
           columns: OrderColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -62,8 +65,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.OrderColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#order_parts"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

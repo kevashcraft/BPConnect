@@ -1,9 +1,9 @@
 import XLSX from 'xlsx'
 
-import TicketsModel     from './TicketsModel'
-import TicketsExtModel  from './TicketsExtModel'
+import TicketsModel from './TicketsModel'
+import TicketsExtModel from './TicketsExtModel'
 import TicketTypesModel from '../TicketTypes/TicketTypesModel'
-import HousesExtModel   from '../Houses/HousesExtModel'
+import HousesExtModel from '../Houses/HousesExtModel'
 
 exports.punchCreate = async (req, res) => {
   let ticketId = req.body.ticketId
@@ -23,20 +23,46 @@ exports.punchCreate = async (req, res) => {
   TicketsExtModel.createWorkers(workers)
 }
 
-exports.taskCreate = async (req, res) => {
-  await TicketsExtModel.taskCreate(req.body.ticketTask)
+/*
+  _____  _    ____  _  ______
+ |_   _|/ \  / ___|| |/ / ___|
+   | | / _ \ \___ \| ' /\___ \
+   | |/ ___ \ ___) | . \ ___) |
+   |_/_/   \_\____/|_|\_\____/
+
+*/
+
+exports.createTask = async (req) => {
+  await TicketsExtModel.createTask(req)
 }
 
-exports.tasksRetrieve = async (req, res) => {
-  await TicketsExtModel.tasksRetrieve(req.body.ticketId)
+exports.deleteTask = async (req) => {
+  await TicketsExtModel.deleteTask(req)
+}
+
+exports.retrieveTasks = async (req) => {
+  return TicketsExtModel.retrieveTasks(req)
+}
+
+/*
+  ____   _    ____ _____ ____
+ |  _ \ / \  |  _ \_   _/ ___|
+ | |_) / _ \ | |_) || | \___ \
+ |  __/ ___ \|  _ < | |  ___) |
+ |_| /_/   \_\_| \_\|_| |____/
+
+*/
+
+exports.retrieveParts = async (req) => {
+  return TicketsExtModel.retrieveParts(req)
 }
 
 exports.dataImport = async (req) => {
   let workbook = XLSX.readFile(req.filepath) /* need filename */
   let sheetNames = workbook.SheetNames
 
-  let csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetNames[0]], {FS:':::::', RS:'|||||'})
-  let rows = csv.split("|||||").map(row => row.split(':::::'))
+  let csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetNames[0]], {FS: ':::::', RS: '|||||'})
+  let rows = csv.split('|||||').map(row => row.split(':::::'))
   // rows.map
   // console.log("workbook.Sheets[sheetNames[0]]",workbook.Sheets[sheetNames[0]]);
 
@@ -57,15 +83,15 @@ exports.dataImport = async (req) => {
       return
     }
 
-    if (!row[0] || !row[0].length || row[0] === "0") {
+    if (!row[0] || !row[0].length || row[0] === '0') {
       expectRoom = true
     }
 
-    if (!row[3] || !row[3].length || row[3] === "0") {
+    if (!row[3] || !row[3].length || row[3] === '0') {
       return
     }
 
-    if (row[0] && row[0].length && row[0] !== "0" && !row[0].match(/left|right/i)) {
+    if (row[0] && row[0].length && row[0] !== '0' && !row[0].match(/left|right/i)) {
       if (expectRoom) {
         expectRoom = false
         if (room) {
@@ -120,7 +146,6 @@ exports.dataImport = async (req) => {
       await TicketsExtModel.createPart(part)
     })
   })
-
 }
 
 exports.deleteWorkTask = async (req, res) => {
@@ -162,4 +187,3 @@ exports.sendoutTicket = async (req, res) => {
   let fields = { sentout: 'NOW()' }
   await TicketsModel.update(ticketId, fields)
 }
-

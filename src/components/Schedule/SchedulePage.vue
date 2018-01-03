@@ -1,6 +1,8 @@
 <template>
   <div>
-    <table ref="table" class="ui celled responsive table"></table>
+    <div class="page-container">
+      <table ref="table" class="ui celled table"></table>
+    </div>
     <schedule-update-workers-modal ref="ScheduleUpdateWorkersModal" @update="list"></schedule-update-workers-modal>
     <schedule-update-schedule-modal ref="ScheduleUpdateScheduleModal" @update="list"></schedule-update-schedule-modal>
     <schedule-sendout-ticket-modal ref="ScheduleSendoutTicketModal" @update="list"></schedule-sendout-ticket-modal>
@@ -50,7 +52,7 @@
           columns: ScheduleColumns,
           paging: false,
           dom: 'Bt',
-          buttons: [ 'colvis' ]
+          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
         }
 
         this.table = $(this.$refs.table).DataTable(config)
@@ -60,8 +62,7 @@
           this.table.draw()
         }
 
-        this.table.buttons().containers()
-                    .appendTo($('.ScheduleColumnsButton'))
+        this.moveColumnsButton()
 
         $(this.$refs.table).on('click', 'a[href="#update_workers"]', (event) => {
           var row = $(event.currentTarget).closest('tr')

@@ -81,7 +81,7 @@ export default {
       });
       uploader.on('complete', (fileInfo) => {
         uploader.destroy()
-        this.emit('update')
+        this.$emit('update')
         this.close()
       });
       uploader.on('error', (err) => {
