@@ -5,7 +5,6 @@ exports.create = async (req) => {
     INSERT INTO ticket_workers (ticket_id, user_id, type)
     VALUES ($1, $2, $3)
   `
-
   let bind = [req.ticketId, req.userId, req.type]
 
   return Model.run(sql, bind)

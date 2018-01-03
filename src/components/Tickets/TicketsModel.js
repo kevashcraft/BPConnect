@@ -77,10 +77,11 @@ exports.retrieveParts = async (req) => {
 
 exports.update = async (id, fields) => {
   let update = Model.updateFields(fields)
+  console.log('update', update)
 
   let sql = `
-    UPDATE tickets SET ${update.set}::timestamp
-    WHERE id = $1
+    UPDATE tickets SET ${update.set}
+    WHERE id = $${update.count + 1}
   `
   update.bind.push(id)
 

@@ -22,19 +22,36 @@
       </form>
       <form class="ui form padding30" v-show="ticket.tasks.length" ref="tasks">
         <div class="ui dividing header">Tasks</div>
-        <div v-for="task in ticket.tasks" class="padding5">
-          <div class="ui slider checkbox task">
-            <input type="checkbox" v-model="task.walked">
-            <label>{{ task.task }}</label>
+        <div v-for="task, index in ticket.tasks" class="padding5" v-show="!task.deleted">
+          <div class="ui slider task" :class="{checkbox : !task.new}">
+            <input type="checkbox" v-model="task.walked" v-show="!task.new">
+            <label>
+              {{ task.task }}
+              <button class="ui icon button" @click.prevent="taskRemove(index)" v-show="task.new">
+                <i class="delete icon"></i>
+              </button>
+            </label>
           </div>
         </div>
         <div><button class="ui button" @click.prevent="tasksToggle">Toggle All Tasks</button></div>
       </form>
+      <form class="ui form padding30" ref="newtask">
+        <div class="ui dividing header">Add a New Task</div>
+        <div class="field">
+          <label>Task</label>
+          <input type="text" v-model="newtask" placeholder="New Task">
+        </div>
+        <button @click.prevent="newtaskAdd" class="ui button">Add</button>
+      </form>
     </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
-      <div class="ui green icon button" @click="update">
-        Walk Ticket
+      <div class="ui green icon button" @click="update" v-show="isComplete">
+        Ticket is Complete
+        <i class="thumbs up icon"></i>
+      </div>
+      <div class="ui red icon button" @click="createPunch" v-show="!isComplete">
+        Create Punch
         <i class="thumbs up icon"></i>
       </div>
     </div>
@@ -55,7 +72,14 @@ export default {
         parts: [],
         tasks: []
       },
-      taskNew: '',
+      newtask: '',
+    }
+  },
+  computed: {
+    isComplete () {
+      let partsComplete = this.ticket.parts.every(part => { return part.walked })
+      let tasksComplete = this.ticket.tasks.every(task => { return task.walked || task.deleted })
+      return partsComplete && tasksComplete
     }
   },
   methods: {
@@ -98,56 +122,31 @@ export default {
       let value = this.ticket.tasks.some(task => {return task.walked}) ? 'uncheck' : 'check'
       $(this.$refs.tasks).find('.ui.checkbox').checkbox(value)
     },
+    newtaskAdd () {
+      let task = {
+        ticketId: this.ticket.ticketId,
+        task: this.newtask,
+        new: true
+      }
+      this.ticket.tasks.push(task)
+      this.newtask = ''
+      this.refresh()
+    },
+    taskRemove (index) {
+      console.log('index', index)
+      this.ticket.tasks[index].deleted = true
+      this.ticket.tasks.splice(index, 1, this.ticket.tasks[index])
+    },
     createPunch () {
-      // var url = BPC.routes['tickets.createPunch'];
-      // var data = {
-      //   data: {
-      //     ticketId: this.wip.ticketId,
-      //   }
-      // };
-      // $.post(url, data, function (data) {
-      //   if (data.success) {
-      //     BPC.overhang(data.message, data.success);
-      //     this.$set('punchList', []);
-      //     this.$set('wip.punchId', data.punchId);
-      //   }
-      //   BPC.overhang(data.message, data.success);
-      // }.bind(this), 'json');
-    },
-    createTask () {
-      // var url = BPC.routes['tickets.taskAdd'];
-      // var data = {
-      //   data: {
-      //     ticketId: this.wip.punchId,
-      //     task: this.taskNew,
-      //   },
-      // };
-      // $.post(url, data, function (data) {
-      //   if (data.success) {
-      //     this.$set('taskNew', '');
-      //     this.tasksGet();
-      //   }
-      //   BPC.overhang(data.message, data.success);
-      // }.bind(this), 'json');
-    },
-    listTasks () {
-      // var data = {
-      //   ticketId: this.wip.punchId,
-      // }
-      // var url = BPC.routes['tickets.tasksGet'];
-      // $.post(url, data, function (data) {
-      //   this.$set('tasks', data.tasks);
-      // }.bind(this), 'json');
-    },
-    deleteTask (taskId) {
-      // console.log("taskId",taskId);
-      // var data = {
-      //   taskId: taskId,
-      // }
-      // var url = BPC.routes['tickets.taskRemove'];
-      // $.post(url, data, function (data) {
-      //   this.tasksGet();
-      // }.bind(this), 'json');
+      this.$root.req('TicketsExt:createPunch', this.ticket).then((response) => {
+        if (response) {
+          this.$root.noty('Punch list has been created')
+          this.$emit('update')
+          this.close()
+        } else {
+          this.$root.noty('Could not create punch list', 'error')
+        }
+      })
     }
   },
 }

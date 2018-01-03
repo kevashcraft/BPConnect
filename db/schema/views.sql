@@ -6,6 +6,7 @@ CREATE VIEW tickets_master_view AS
     tickets.child_id,
     tickets.punch_id,
     ticket_types.type as ticket_type,
+    ticket_types.id as ticket_type_id,
     tickets.house_id,
     tickets.bp_supervisor_id,
     tickets.builder_supervisor_id,

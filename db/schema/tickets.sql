@@ -7,6 +7,7 @@ CREATE TABLE ticket_types (
   needspo boolean DEFAULT false NOT NULL,
   needsepo boolean DEFAULT false NOT NULL,
   needsimport boolean DEFAULT false NOT NULL,
+  punch_id int,
   details varchar(32),
   payout decimal(9,2),
   PRIMARY KEY (id)

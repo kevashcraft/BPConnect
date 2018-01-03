@@ -1,29 +1,53 @@
 import XLSX from 'xlsx'
+import moment from 'moment'
 
 import TicketsModel from './TicketsModel'
 import TicketsExtModel from './TicketsExtModel'
 import TicketTypesModel from '../TicketTypes/TicketTypesModel'
+import TicketWorkersModel from '../TicketWorkers/TicketWorkersModel'
 import HousesExtModel from '../Houses/HousesExtModel'
 
-exports.punchCreate = async (req, res) => {
-  let ticketId = req.body.ticketId
-  let ticket = await TicketsModel.retrieve(ticketId)
-  let ticketType = await TicketTypesModel.retrieve(ticket.ticketTypeId)
+/*
 
-  ticket.ticketTypeId = ticketType.punchTypeId
+  ____                   _       _     _     _
+ |  _ \ _   _ _ __   ___| |__   | |   (_)___| |_ ___
+ | |_) | | | | '_ \ / __| '_ \  | |   | / __| __/ __|
+ |  __/| |_| | | | | (__| | | | | |___| \__ \ |_\__ \
+ |_|    \__,_|_| |_|\___|_| |_| |_____|_|___/\__|___/
 
-  let punchId = await TicketsModel.create(ticket)
+*/
 
-  TicketsModel.update(ticket.id, { punch_id: punchId })
+exports.createPunch = async (req) => {
+  console.log('req', req)
+  console.log('req.ticketTypeId', req.ticketTypeId)
+  let ticketType = await TicketTypesModel.retrieve({ id: req.ticketTypeId })
+  console.log('ticketType', ticketType)
 
-  let workers = await TicketsExtModel.retrieveWorkers(ticket.id)
-  workers.forEach((e, i, a) => {
-    workers[i].ticketId = punchId
+  let ticket = {
+    ticketTypeId: ticketType.punchId,
+    houseId: req.houseId,
+    ticketDate: moment(),
+    supervisorId: req.bpSupervisorId,
+    builderSupervisorId: req.builderSupervisorId,
+    needspermit: false,
+    needspo: false
+  }
+
+  let ticketId = await TicketsModel.create(ticket)
+
+  TicketsModel.update(req.ticketId, { punch_id: ticketId })
+
+  let workers = await TicketWorkersModel.retrieve({ticketId: req.ticketId})
+  workers.forEach(async worker => {
+    worker.ticketId = ticketId
+    await TicketWorkersModel.create(worker)
   })
-  TicketsExtModel.createWorkers(workers)
+
+  return ticketId
 }
 
 /*
+
   _____  _    ____  _  ______
  |_   _|/ \  / ___|| |/ / ___|
    | | / _ \ \___ \| ' /\___ \
