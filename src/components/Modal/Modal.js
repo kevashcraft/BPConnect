@@ -22,14 +22,11 @@ export default {
   methods: {
     beforeOpen (callback, data) {
       callback(data)
-      console.log('beforeOpen')
     },
     open (data) {
-      console.log('open')
       this.beforeOpen(this.openActual, data)
     },
     openActual (data) {
-      console.log('actual!')
       this.opened = true
       $(this.$el).modal('show')
       if (this.modal !== this.meta.name) {

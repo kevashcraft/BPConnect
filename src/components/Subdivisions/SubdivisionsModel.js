@@ -12,6 +12,20 @@ exports.create = async (req) => {
   return Model.query(sql, bind, true, true)
 }
 
+exports.list = async (req) => {
+  let sql = `
+    SELECT
+      subdivisions.id,
+      subdivisions.name,
+      builders.name as builder
+    FROM subdivisions
+    JOIN builders ON builders.id = subdivisions.builder_id
+  `
+  let bind = []
+
+  return Model.query(sql, bind)
+}
+
 exports.search = async (req) => {
   let sql = `
     SELECT
@@ -32,5 +46,17 @@ exports.search = async (req) => {
   `
   let bind = [req.query]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
+}
+
+exports.update = async (id, fields) => {
+  let update = Model.updateFields(fields)
+
+  let sql = `
+    UPDATE subdivisions SET ${update.set}
+    WHERE id = $${update.count + 1}
+  `
+  update.bind.push(id)
+
+  Model.run(sql, update.bind)
 }

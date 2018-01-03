@@ -10,6 +10,15 @@ exports.create = async (req) => {
   return Model.query(sql, bind, true, true)
 }
 
+exports.list = async (req) => {
+  let sql = `
+    SELECT * FROM builders
+  `
+  let bind = []
+
+  return Model.query(sql, bind)
+}
+
 exports.search = async (req) => {
   let sql = `
     SELECT

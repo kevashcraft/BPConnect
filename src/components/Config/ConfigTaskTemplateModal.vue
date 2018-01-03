@@ -4,7 +4,7 @@
     <div class="header">
       <span v-show="taskTemplate.isnew">Add New</span>
       <span v-show="!taskTemplate.isnew">Update</span>
-      <span>Work  Template</span>
+      <span>Work Template</span>
     </div>
     <div class="content">
       <form class="ui form" @submit="update">
@@ -18,9 +18,7 @@
             <i class="dropdown icon"></i>
             <div class="default text">Ticket Type</div>
             <div class="menu">
-              {% for type in common.ticketTypes %}
-              <div class="item" data-value="{{ type.id }}">{{ type.type }}</div>
-              {% endfor %}
+              <div class="item" :data-value="type.id">{{ type.type }}</div>
             </div>
           </div>
         </div>
@@ -97,6 +95,7 @@
           cityId        : '',
           countyId      : '',
         },
+        type: {},
         updating: false,
         isnew: false,
       }

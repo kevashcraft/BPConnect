@@ -3,6 +3,9 @@ import Router from 'vue-router'
 
 import HomePage from '../components/Home/HomePage.vue'
 import LoginPage from '../components/Login/LoginPage.vue'
+
+import ConfigPage from '../components/Config/ConfigPage.vue'
+import ConfigControls from '../components/Config/ConfigControls.vue'
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 import InspectionsPage from '../components/Inspections/InspectionsPage.vue'
 import InspectionsControls from '../components/Inspections/InspectionsControls.vue'
@@ -33,6 +36,13 @@ let router = new Router({
       path: '/dashboard',
       components: {
         page: Dashboard
+      },
+      meta: {requiresAuth: true}
+    }, {
+      path: '/config',
+      components: {
+        page: ConfigPage,
+        controls: ConfigControls
       },
       meta: {requiresAuth: true}
     }, {
@@ -92,7 +102,6 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/') {
     next({path: '/dashboard'})
   }
-  console.log('to', to)
   // if (to.matched.some(record => record.meta.requiresAuth) && !S.authed) {
   //   next({path: '/login', query: { redirect: to.fullPath }})
   // } else {

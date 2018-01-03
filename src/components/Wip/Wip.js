@@ -38,17 +38,7 @@ exports.updateCompleted = async (req) => {
     await TicketsExtModel.updateTask(task.id, fields)
   })
 
-  // if (req.ticketNeedspermit) {
-  //   let permits = await HousesModel.retrievePermits({houseId: req.houseId})
-  //   console.log('permit', permits)
-  //   let inspection = { ticketId, permitId: permits[0].id }
-  //   let inspectionId = await InspectionsModel.create(inspection)
-  //   console.log('inspectionId', inspectionId)
-
-  //   return inspectionId
-  // }
-
-  // return true
+  return true
 }
 
 exports.updateWalked = async (req) => {

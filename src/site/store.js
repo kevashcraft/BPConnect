@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     builderSupervisors: {},
     filters: {},
+    config: {},
     modal: '',
     modalStack: [],
     pageTitle: '',
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     builderSupervisorsSet (state, builderSupervisors) {
       state.builderSupervisors = builderSupervisors
     },
+    configSet (state, config) {
+      state.config = config
+    },
     filtersSet (state, filters) {
       state.filters = filters
     },
@@ -26,7 +30,6 @@ export default new Vuex.Store({
       state.filters[obj.key] = obj.filter
     },
     modalSet (state, modal) {
-      console.log('state.modalStack', state.modalStack)
       state.modal = modal
     },
     modalStackPush (state, modal) {
@@ -63,7 +66,6 @@ export default new Vuex.Store({
       commit('modalSet', modal)
     },
     modalNext ({ commit, state }) {
-      // commit('modalEmpty')
       let modal = ''
 
       if (state.modalStack.length) {
@@ -77,7 +79,6 @@ export default new Vuex.Store({
       commit('modalSet', modal)
     },
     modalSave ({ commit, state }, modal) {
-      console.log('modal', modal)
       if (modal !== state.modal) {
         if (state.modal.length) {
           commit('modalStackPush', state.modal)

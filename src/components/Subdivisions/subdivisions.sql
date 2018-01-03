@@ -5,8 +5,6 @@ CREATE TABLE subdivisions (
     builder_id int REFERENCES builders(id) NOT NULL,
     name varchar(64) NOT NULL,
     zipcode_id int REFERENCES zipcodes (id),
-    active BOOLEAN DEFAULT true NOT NULL,
+    deleted BOOLEAN DEFAULT false NOT NULL,
     PRIMARY KEY (id)
 );
-
-ALTER TABLE subdivisions RENAME COLUMN zip_id TO zipcode_id;
