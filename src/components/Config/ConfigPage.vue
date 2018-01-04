@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
-    </div>
+    <div class="page-container"></div>
     <config-user-modal ref="ConfigUserModal"></config-user-modal>
     <config-subdivision-modal ref="ConfigSubdivisionModal" @update="list"></config-subdivision-modal>
     <config-task-template-modal ref="ConfigTaskTemplateModal"></config-task-template-modal>
@@ -32,10 +30,13 @@
     mounted () {
       this.$store.commit('pageTitleSet', this.meta.title)
     },
-    computed: mapState(['config']),
+    computed: mapState(['config', 'configDeleted']),
     watch: {
       config () {
         this.tableInit()
+      },
+      configDeleted () {
+        this.list()
       },
     },
     methods: {
@@ -43,6 +44,8 @@
         if (this.table) {
           this.table.destroy()
         }
+        $(this.$el).find('.page-container').empty()
+          .append('<table class="ui celled table"></table>')
 
         var config = {
           responsive: true,
@@ -51,9 +54,9 @@
           dom: 't',
         }
 
-        this.table = $(this.$refs.table).DataTable(config)
+        this.table = $(this.$el).find('.page-container table').DataTable(config)
 
-        $(this.$refs.table).on('click', 'tr', (event) => {
+        $(this.$el).find('.page-container table').on('click', 'tr', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
           this.$refs[this.config.modal].open(data)
@@ -62,7 +65,7 @@
         this.list()
       },
       list () {
-        this.$root.req(this.config.list).then(response => {
+        this.$root.req(this.config.list, { deleted: this.configDeleted }).then(response => {
           this.table.clear()
           this.table.rows.add(response)
           this.table.draw()

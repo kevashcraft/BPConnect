@@ -10,6 +10,7 @@ export default new Vuex.Store({
     builderSupervisors: {},
     filters: {},
     config: {},
+    configDeleted: false,
     modal: '',
     modalStack: [],
     pageTitle: '',
@@ -22,6 +23,9 @@ export default new Vuex.Store({
     },
     configSet (state, config) {
       state.config = config
+    },
+    configDeletedSet (state, configDeleted) {
+      state.configDeleted = configDeleted
     },
     filtersSet (state, filters) {
       state.filters = filters

@@ -1,18 +1,25 @@
 <template>
-  <div class="item">
-    <div class="segment">
-      <div class="ui fluid selection dropdown" ref="dropdown">
-        <input type="hidden">
-        <i class="dropdown icon"></i>
-        <div class="default text">Select List</div>
-        <div class="menu">
-          <div class="item" v-for="c in configs" :data-value="c.value">{{ c.title }}</div>
+  <div>
+    <div class="item">
+      <div class="segment">
+        <div class="ui fluid selection dropdown" ref="dropdown">
+          <input type="hidden">
+          <i class="dropdown icon"></i>
+          <div class="default text">Select List</div>
+          <div class="menu">
+            <div class="item" v-for="c in configs" :data-value="c.value">{{ c.title }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="segment">
+        <div class="ui toggle checkbox">
+          <input type="checkbox" v-model="configDeleted" @change="configDeletedSet">
+          <label>Show Deleted</label>
         </div>
       </div>
     </div>
-    <br>
-    <div class="segment">
-      <div class="ui fluid button" @click="createOpen">Add New</div>
+    <div class="item">
+      <div class="ui fluid green button" @click="createOpen">Add New {{ config.title }}</div>
     </div>
   </div>
 </template>
@@ -27,6 +34,7 @@ export default {
         name: 'ConfigControls',
       },
       selected: '',
+      configDeleted: false,
       configs: [
         {
           value: 'builders',
@@ -77,10 +85,16 @@ export default {
     if (this.config) {
       $(this.$refs.dropdown).dropdown('set selected', this.config.value)
     }
+    this.configDeleted = this.$store.state.configDeleted
+    $(this.$el).find('.ui.toggle.checkbox').checkbox()
   },
   methods: {
     createOpen () {
       this.$store.dispatch('modalOpen', this.config.modal)
+    },
+    configDeletedSet () {
+      console.log('this.configDeleted', this.configDeleted)
+      this.$store.commit('configDeletedSet', this.configDeleted)
     }
   }
 }

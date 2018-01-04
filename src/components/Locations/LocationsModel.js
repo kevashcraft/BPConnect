@@ -14,7 +14,7 @@ exports.search = async (req) => {
   let sql = `
     SELECT
       zipcode_id as id,
-      city as title,
+      citystate as title,
       location as description
     FROM locations
     WHERE locations.location ilike ANY(ARRAY[${req.queryString}])

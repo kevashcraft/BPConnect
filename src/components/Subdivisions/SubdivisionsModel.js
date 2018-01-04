@@ -16,12 +16,20 @@ exports.list = async (req) => {
   let sql = `
     SELECT
       subdivisions.id,
+      subdivisions.id as subdivision_id,
+      subdivisions.created,
       subdivisions.name,
-      builders.name as builder
+      subdivisions.deleted,
+      subdivisions.builder_id,
+      subdivisions.zipcode_id,
+      builders.name as builder,
+      locations.citystate
     FROM subdivisions
     JOIN builders ON builders.id = subdivisions.builder_id
+    JOIN locations ON locations.zipcode_id = subdivisions.zipcode_id
+    WHERE subdivisions.deleted = $1
   `
-  let bind = []
+  let bind = [req.deleted]
 
   return Model.query(sql, bind)
 }
@@ -41,6 +49,7 @@ exports.search = async (req) => {
     JOIN locations ON locations.zipcode_id = subdivisions.zipcode_id
     JOIN builders ON builders.id = subdivisions.builder_id
     WHERE subdivisions.name ilike ANY(ARRAY[${req.queryString}])
+      AND NOT subdivisions.deleted
     ORDER BY similarity(subdivisions.name || ' ' || builders.name, $1) DESC
     LIMIT 10
   `

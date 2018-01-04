@@ -1,7 +1,8 @@
 import * as BuildersModel from './BuildersModel'
 
 exports.list = async (req) => {
-  return BuildersModel.list()
+  req.deleted = !!req.deleted
+  return BuildersModel.list(req)
 }
 
 exports.search = async (req) => {

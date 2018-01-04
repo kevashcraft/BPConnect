@@ -4,7 +4,7 @@ CREATE TABLE builders (
     created timestamp DEFAULT current_timestamp NOT NULL,
     name varchar(64) NOT NULL,
     address varchar(256),
-    zip_id int REFERENCES zips(id),
+    zipcode_id int REFERENCES zips(id),
     phone varchar(32),
     fax varchar(32),
     email varchar(32),
