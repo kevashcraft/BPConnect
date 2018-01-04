@@ -60,9 +60,9 @@
         <div class="controls">
           <router-view name="controls"></router-view>
           <div class="item">
-            <button class="ui labeled blue icon button" @click="support">
+            <button class="ui labeled red icon button" @click="support">
               <i class="street view icon"></i>
-              Support
+              Get Help
             </button>
           </div>
         </div>

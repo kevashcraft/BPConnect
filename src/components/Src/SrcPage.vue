@@ -24,50 +24,19 @@
       return {
         meta: {
           name: 'SrcPage',
-          title: 'Site Ready Checklist'
+          title: 'Site Ready Checklist',
+          list: 'Src:list',
+          columns: SrcColumns
         },
-        src: [],
       }
     },
     methods: {
-      init () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Src:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-
-      initTable () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: SrcColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.src) {
-          var rows = $.extend(true, [], this.src)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton()
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#site_ready"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
           this.$refs.SrcUpdateModal.open({data, row})
         })
-
       },
     },
   }

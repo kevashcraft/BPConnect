@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="segment">
-        <div class="ui toggle checkbox">
-          <input type="checkbox" v-model="configDeleted" @change="configDeletedSet">
-          <label>Show Deleted</label>
+        <div class="padding5">
+          <div class="ui toggle checkbox" id="deletedCheckbox">
+            <input type="checkbox" v-model="configDeleted" @change="configDeletedSet">
+            <label>Show Deleted</label>
+          </div>
         </div>
       </div>
     </div>
@@ -23,6 +25,15 @@
     </div>
   </div>
 </template>
+
+<style>
+  #deletedCheckbox label {
+    color: white !important;
+  }
+  #deletedCheckbox input:checked ~ label {
+    color: white !important;
+  }
+</style>
 
 <script>
 import { mapState } from 'vuex'

@@ -32,48 +32,15 @@
       return {
         meta: {
           name: 'TicketsPage',
-          title: 'Tickets'
+          title: 'Tickets',
+          list: 'Tickets:list',
+          columns: TicketColumns
         },
-        tickets: [],
       }
     },
     mixins: [ Page ],
     methods: {
-      init () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Tickets:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-      ticketHide () {
-        $('#ticket').removeClass('show')
-      },
-
-      initTable () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: TicketColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.tickets) {
-          var rows = $.extend(true, [], this.tickets)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton('TicketColumnsButton')
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#import_data"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
@@ -92,23 +59,16 @@
         $(this.$refs.table).on('click', 'a[href="#print"]', (event) => {
           this.$root.noty('Creating PDF..')
           let row = $(event.currentTarget).closest('tr')
+          if (row.hasClass('child')) {
+            row = row.prev('.parent')
+          }
           let data = this.table.row(row).data()
           let req = { ticketId: data.ticketId }
           this.$root.req('TicketPdf:create', req).then(response => {
             window.open(response, '_blank')
           })
-
         })
       },
-      // reloadTable () {
-      //   this.ticketsTable.destroy()
-      //   $('#ticketsTable').remove()
-
-      //   var container = $('#ticketsTableContainer')
-      //   container.append('<table id="ticketsTable" class="ui celled responsive table"></table>')
-
-      //   this.initTable()
-      // },
     },
   }
 </script>

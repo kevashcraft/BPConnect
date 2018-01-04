@@ -29,44 +29,14 @@
       return {
         meta: {
           name: 'OrdersPage',
-          title: 'Orders'
+          title: 'Orders',
+          list: 'Orders:list',
+          columns: OrderColumns
         },
-        orders: [],
       }
     },
-
     methods: {
-      init () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Orders:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-      initTable () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: OrderColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.orders) {
-          var rows = $.extend(true, [], this.orders)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton()
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#order_parts"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
@@ -78,13 +48,6 @@
           var data = this.table.row(row).data()
           console.log('data', data)
           this.$refs.OrderPartsReceivedModal.open({row, data})
-        })
-      },
-
-      updateRow (row) {
-        var data = this.table.row(row).data()
-        this.$root.req('Orders:retrieve', { id: data.orderId }).then(response => {
-          this.table.row(row).data(response)
         })
       },
     },

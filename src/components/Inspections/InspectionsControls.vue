@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="item InspectionsColumnsButton"></div>
+    <div class="item InspectionsPageColumnsButton"></div>
     <div class="item">
       <button class="ui labeled blue icon button" @click="walkthrough">
         <i class="street view icon"></i>

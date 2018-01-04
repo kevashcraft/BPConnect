@@ -10,9 +10,6 @@ exports.create = async (req) => {
   let roomsAll = await TicketsExtModel.retrieveRooms({id: req.ticketId})
   let tasks = await TicketsExtModel.retrieveTasks(req)
 
-  console.log('roomsAll', roomsAll)
-  console.log('tasks', tasks)
-
   let roomsObj = {}
   roomsAll.forEach(part => {
     if (!roomsObj[part.roomName]) {
@@ -30,7 +27,6 @@ exports.create = async (req) => {
     })
   })
 
-  console.log('ticket', ticket)
   let superPhone = ticket.builderSupervisorPhone ? ` (${ticket.builderSupervisorPhone})` : ''
   let createdDate = moment().format('MM/DD/YY')
   let html = `

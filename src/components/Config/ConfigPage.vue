@@ -59,6 +59,7 @@
         var config = {
           responsive: true,
           columns: this.config.columns,
+          fixedHeader: true,
           paging: false,
           dom: 't',
         }

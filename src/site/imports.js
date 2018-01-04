@@ -25,6 +25,9 @@ import 'datatables.net-buttons-se/css/buttons.semanticui.min.css'
 
 import 'datatables.net-colreorder'
 
+import 'datatables.net-fixedheader'
+import 'datatables.net-fixedheader-se/css/fixedHeader.semanticui.min.css'
+
 import './styles/style.scss'
 
 // import 'datatables.net-responsive'

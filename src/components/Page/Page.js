@@ -4,7 +4,10 @@ export default {
   computed: mapState([ 'filters' ]),
   mounted () {
     this.$store.commit('pageTitleSet', this.meta.title)
-    this.init()
+    this.initTable()
+    this.moveColumnsButton()
+    this.list()
+    this.initTableListeners()
   },
   watch: {
     filters: {
@@ -15,8 +18,30 @@ export default {
     }
   },
   methods: {
+    initTable () {
+      var config = {
+        stateSave: true,
+        colReorder: true,
+        responsive: true,
+        columns: this.meta.columns,
+        fixedHeader: true,
+        paging: false,
+        dom: 'Bt',
+        buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
+      }
+
+      this.table = $(this.$refs.table).DataTable(config)
+    },
+    list () {
+      this.$root.req(this.meta.list, this.filters).then(response => {
+        this.table.clear()
+        this.table.rows.add(response)
+        this.table.draw()
+        this.table.columns.adjust().responsive.recalc()
+      })
+    },
     moveColumnsButton () {
-      let className = this.meta.name.replace('Page', '') + 'ColumnsButton'
+      let className = this.meta.name + 'ColumnsButton'
       this.table.buttons().containers()
                     .appendTo($(`.${className}`))
 

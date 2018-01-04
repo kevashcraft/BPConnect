@@ -27,13 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="item ScheduleColumnsButton"></div>
-    <div class="item">
-      <button class="ui labeled blue icon button" @click="walkthrough">
-        <i class="street view icon"></i>
-        Walkthrough
-      </button>
-    </div>
+    <div class="item SchedulePageColumnsButton"></div>
   </form>
 </template>
 

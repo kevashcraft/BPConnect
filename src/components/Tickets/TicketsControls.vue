@@ -27,17 +27,11 @@
         </div>
       </div>
     </div>
-    <div class="item TicketsColumnsButton"></div>
+    <div class="item TicketsPageColumnsButton"></div>
     <div class="item">
-      <button class="ui labeled blue icon button" @click="$store.dispatch('modalOpen', 'TicketAddModal')">
+      <button class="ui labeled green icon button" @click="$store.dispatch('modalOpen', 'TicketAddModal')">
         <i class="add square icon"></i>
         Add Ticket
-      </button>
-    </div>
-    <div class="item">
-      <button class="ui labeled blue icon button" @click="walkthrough">
-        <i class="street view icon"></i>
-        Walkthrough
       </button>
     </div>
   </form>

@@ -23,7 +23,9 @@
       return {
         meta: {
           name: 'SchedulePage',
-          title: 'Schedule'
+          title: 'Schedule',
+          list: 'Schedule:list',
+          columns: ScheduleColumns
         }
       }
     },
@@ -33,37 +35,7 @@
       ScheduleSendoutTicketModal
     },
     methods: {
-      init () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Schedule:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-      initTable () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: ScheduleColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.schedule) {
-          var rows = $.extend(true, [], this.schedule)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton()
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#update_workers"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()
@@ -81,7 +53,6 @@
           var data = this.table.row(row).data()
           this.$refs.ScheduleSendoutTicketModal.open(data)
         })
-
       },
     },
   }

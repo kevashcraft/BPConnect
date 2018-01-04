@@ -27,43 +27,14 @@
       return {
         meta: {
           name: 'InspectionsPage',
-          title: 'Inspections'
+          title: 'Inspections',
+          list: 'Inspections:list',
+          columns: InspectionsColumns
         }
       }
     },
     methods: {
-      init: function () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Inspections:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-
-      initTable: function () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: InspectionsColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.inspections) {
-          var rows = $.extend(true, [], this.inspections)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton()
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#schedule_inspection"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

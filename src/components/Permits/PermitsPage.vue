@@ -21,43 +21,14 @@
       return {
         meta: {
           name: 'PermitsPage',
-          title: 'Permits'
+          title: 'Permits',
+          list: 'Permits:list',
+          columns: PermitsColumns
         }
       }
     },
     methods: {
-      init () {
-        this.initTable()
-        this.list()
-      },
-      list () {
-        this.$root.req('Permits:list', this.filters).then(response => {
-          this.table.clear()
-          this.table.rows.add(response)
-          this.table.draw()
-        })
-      },
-
-      initTable () {
-        var config = {
-          stateSave: true,
-          colReorder: true,
-          responsive: true,
-          columns: PermitsColumns,
-          paging: false,
-          dom: 'Bt',
-          buttons: [ { extend: 'colvis', text: 'Visible Columns', className: 'ui button' } ]
-        }
-
-        this.table = $(this.$refs.table).DataTable(config)
-        if (this.permits) {
-          var rows = $.extend(true, [], this.permits)
-          this.table.rows.add(rows)
-          this.table.draw()
-        }
-
-        this.moveColumnsButton()
-
+      initTableListeners () {
         $(this.$refs.table).on('click', 'a[href="#permit_add"]', (event) => {
           var row = $(event.currentTarget).closest('tr')
           var data = this.table.row(row).data()

@@ -38,7 +38,7 @@ body > .grid {
 .margin-t15 {margin-top: 15px; }
 .valign { vertical-align: middle; }
 .page-container {
-  padding: 15px;
+  // padding: 15px;
 }
 
 .w300 { width: 300px }
@@ -87,4 +87,8 @@ body > .grid {
   .pusher {
     width: calc(100% - 260px);
   }
+}
+
+.controls label {
+  color: white !important;
 }
