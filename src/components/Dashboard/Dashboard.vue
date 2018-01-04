@@ -69,6 +69,9 @@
     },
     mixins: [ Page ],
     methods: {
+      init () {
+
+      },
       openRollOut () {
         console.log("here");
         this.$refs.rollout.open()

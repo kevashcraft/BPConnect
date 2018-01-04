@@ -260,7 +260,7 @@ CREATE VIEW tickets_view AS
       ELSE tickets_master_view.ticket_date_imported_formatted
     END as ticket_date_imported_html,
     '<a href="#tasks">Tasks</a>' as ticket_tasks,
-    '<a href="/tickets/print/' || tickets_master_view.ticket_id || '" target="_blank">Print</a>' as print_ticket_html
+    '<a href="#print">Print</a>' as print_ticket_html
   FROM tickets_master_view;
 
 DROP VIEW IF EXISTS wip_view;

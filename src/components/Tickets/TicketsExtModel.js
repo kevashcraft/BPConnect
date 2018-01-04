@@ -120,7 +120,8 @@ exports.createPart = async (req) => {
 exports.retrieveParts = async (req) => {
   let sql = `
     SELECT
-      ticket_parts.*
+      ticket_parts.*,
+      house_rooms.
     FROM ticket_parts
     WHERE ticket_id = $1
       AND NOT deleted
@@ -192,64 +193,17 @@ exports.listOrders = async (req) => {
   return Model.query(db, sql, id)
 }
 
-/* TICKETS TICKETS TICKETS TICKETS */
+/*
 
-exports.retrieveDetails = async (req) => {
-  let sql = `
-    SELECT * FROM ticket_details
-    WHERE tickets.id = $1
-  `
+  ____
+ |  _ \ ___   ___  _ __ ___  ___
+ | |_) / _ \ / _ \| '_ ` _ \/ __|
+ |  _ < (_) | (_) | | | | | \__ \
+ |_| \_\___/ \___/|_| |_| |_|___/
 
-  let bind = [ req.id ]
+*/
 
-  return Model.query(db, sql, id)
-}
-
-/* WORK WORK WORK WORK */
-
-exports.deleteWorkTask = async (req) => {
-  let sql = `
-    UPDATE ticket_tasks
-    SET valid = false
-    WHERE id = $1
-  `
-
-  let bind = [ req.id ]
-
-  return Model.run(db, sql, id)
-}
-
-exports.listWorkParts = async (req) => {
-  let sql = `
-    SELECT
-      ticket_parts.id,
-      ticket_parts.description
-    FROM ticket_parts
-    WHERE valid
-    AND ticket_id = $1
-  `
-  let bind = [ req.id ]
-
-  return Model.query(db, sql, id)
-}
-
-exports.listWorkTasks = async (req) => {
-  let sql = `
-    SELECT
-      ticket_tasks.id,
-      ticket_tasks.task
-    FROM ticket_tasks
-    WHERE valid
-    AND ticket_id = $1
-  `
-  let bind = [ req.id ]
-
-  return Model.query(db, sql, id)
-}
-
-/* ROOMS ROOMS ROOMS ROOMS */
-
-exports.listRooms = async(req) => {
+exports.retrieveRooms = async(req) => {
   let sql = `
     SELECT
       house_rooms.name as room_name,
@@ -270,8 +224,9 @@ exports.listRooms = async(req) => {
     FROM ticket_parts
     LEFT JOIN house_rooms
       ON ticket_parts.room_id = house_rooms.id
-    WHERE valid
-    AND ticket_id = $1
+    WHERE ticket_parts.ticket_id = $1
+      AND NOT ticket_parts.deleted
+      AND NOT house_rooms.deleted
   `
   let bind = [ req.id ]
 

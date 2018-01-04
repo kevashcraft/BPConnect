@@ -14,6 +14,7 @@ import Suppliers from '../components/Suppliers/Suppliers'
 import Support from '../components/Support/Support'
 import Tickets from '../components/Tickets/Tickets'
 import TicketsExt from '../components/Tickets/TicketsExt'
+import TicketPdf from '../components/Tickets/TicketPdf'
 import TicketTypes from '../components/TicketTypes/TicketTypes'
 import TicketWorkers from '../components/TicketWorkers/TicketWorkers'
 import Wip from '../components/Wip/Wip'
@@ -36,6 +37,7 @@ export default {
   Support,
   Tickets,
   TicketsExt,
+  TicketPdf,
   TicketTypes,
   TicketWorkers,
   Wip,

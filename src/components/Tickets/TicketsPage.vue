@@ -89,6 +89,16 @@
           var data = this.table.row(row).data()
           this.$refs.TicketTasksModal.open(data)
         })
+        $(this.$refs.table).on('click', 'a[href="#print"]', (event) => {
+          this.$root.noty('Creating PDF..')
+          let row = $(event.currentTarget).closest('tr')
+          let data = this.table.row(row).data()
+          let req = { ticketId: data.ticketId }
+          this.$root.req('TicketPdf:create', req).then(response => {
+            window.open(response, '_blank')
+          })
+
+        })
       },
       // reloadTable () {
       //   this.ticketsTable.destroy()
