@@ -2,11 +2,11 @@ import Model from '../Model'
 
 exports.create = async (req) => {
   let sql = `
-    INSERT INTO builders (name, phone)
-    VALUES ($1, $2)
+    INSERT INTO builders (name, phone, email, address, zipcode_id)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING id
   `
-  let bind = [req.name, req.phone]
+  let bind = [req.name, req.phone, req.email, req.address, req.zipcodeId]
   return Model.query(sql, bind, true, true)
 }
 
@@ -19,6 +19,7 @@ exports.list = async (req) => {
       builders.email,
       builders.phone,
       builders.address,
+      builders.deleted,
       locations.citystate
     FROM builders
     LEFT JOIN locations ON locations.zipcode_id = builders.zipcode_id
@@ -43,4 +44,18 @@ exports.search = async (req) => {
   let bind = [req.query]
 
   return Model.query(sql, bind)
+}
+
+exports.update = async (id, fields) => {
+  console.log('fields', fields)
+  let update = Model.updateFields(fields)
+  console.log('update', update)
+
+  let sql = `
+    UPDATE builders SET ${update.set}
+    WHERE id = $${update.count + 1}
+  `
+  update.bind.push(id)
+
+  Model.run(sql, update.bind)
 }

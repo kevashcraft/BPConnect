@@ -4,12 +4,12 @@ CREATE TABLE inspectors (
     created timestamp DEFAULT current_timestamp NOT NULL,
     name varchar(64) NOT NULL,
     address varchar(256),
-    zip_id int REFERENCES zips(id),
+    zipcode_id int REFERENCES zips(id),
     email varchar(128),
     phone varchar(32),
     fax varchar(32),
     url varchar(256),
-    active BOOLEAN DEFAULT true NOT NULL,
+    deleted BOOLEAN DEFAULT false NOT NULL,
     PRIMARY KEY (id)
 );
 

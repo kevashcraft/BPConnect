@@ -60,7 +60,7 @@
       $(this.$refs.search).search({
         apiSettings: {
           responseAsync: (settings, callback) => {
-            let route = 'Inspections:searchInspectors'
+            let route = 'Inspectors:search'
             let data = { query: settings.urlData.query }
             this.$root.req(route, data).then(callback)
           }

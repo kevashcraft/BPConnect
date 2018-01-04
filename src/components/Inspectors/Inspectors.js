@@ -1,24 +1,24 @@
-import * as SuppliersModel from './SuppliersModel'
+import InspectorsModel from './InspectorsModel'
 
 exports.create = async (req) => {
-  return SuppliersModel.create(req)
+  return InspectorsModel.create(req)
 }
 
 exports.delete = async (req) => {
   let fields = { deleted: true }
-  await SuppliersModel.update(req.id, fields)
+  await InspectorsModel.update(req.id, fields)
 
   return true
 }
 
 exports.list = async (req) => {
   req.deleted = !!req.deleted
-  return SuppliersModel.list(req)
+  return InspectorsModel.list(req)
 }
 
 exports.search = async (req) => {
   req.queryString = "'%" + req.query.replace(' ', "%', '%") + "%'"
-  let results = await SuppliersModel.search(req)
+  let results = await InspectorsModel.searchInspectors(req)
 
   return {
     success: true,
@@ -28,7 +28,7 @@ exports.search = async (req) => {
 
 exports.undelete = async (req) => {
   let fields = { deleted: false }
-  await SuppliersModel.update(req.id, fields)
+  await InspectorsModel.update(req.id, fields)
 
   return true
 }
@@ -36,13 +36,14 @@ exports.undelete = async (req) => {
 exports.update = async (req) => {
   let fields = {
     name: req.name,
-    phone: req.phone,
     address: req.address,
     email: req.email,
+    phone: req.phone,
     fax: req.fax,
+    url: req.url,
     zipcode_id: req.zipcodeId
   }
-  await SuppliersModel.update(req.id, fields)
+  await InspectorsModel.update(req.id, fields)
 
   return true
 }

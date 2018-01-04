@@ -8,7 +8,7 @@ CREATE TABLE suppliers (
     phone varchar(32),
     fax varchar(32),
     email varchar(32),
-    active BOOLEAN DEFAULT true NOT NULL,
+    deleted BOOLEAN DEFAULT false NOT NULL,
     PRIMARY KEY (id)
 );
 

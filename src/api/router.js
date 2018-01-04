@@ -2,6 +2,7 @@ import Builders from '../components/Builders/Builders'
 import BuilderSupervisors from '../components/BuilderSupervisors/BuilderSupervisors'
 import Houses from '../components/Houses/Houses'
 import Inspections from '../components/Inspections/Inspections'
+import Inspectors from '../components/Inspectors/Inspectors'
 import Locations from '../components/Locations/Locations'
 import Orders from '../components/Orders/Orders'
 import Permits from '../components/Permits/Permits'
@@ -23,6 +24,7 @@ export default {
   BuilderSupervisors,
   Houses,
   Inspections,
+  Inspectors,
   Locations,
   Orders,
   Permits,

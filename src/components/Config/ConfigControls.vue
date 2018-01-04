@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="item">
-      <div class="ui fluid green button" @click="createOpen">Add New {{ config.title }}</div>
+      <div class="ui fluid green button" @click="createOpen">Add New {{ config.singular }}</div>
     </div>
   </div>
 </template>
@@ -39,6 +39,7 @@ export default {
         {
           value: 'builders',
           title: 'Builders',
+          singular: 'Builder',
           list: 'Builders:list',
           modal: 'ConfigBuilderModal',
           columns: [
@@ -57,8 +58,39 @@ export default {
             }
           ]
         }, {
+          value: 'inspectors',
+          title: 'Inspection Authorities',
+          singular: 'Inspection Authority',
+          list: 'Inspectors:list',
+          modal: 'ConfigInspectorModal',
+          columns: [
+            {
+              title: 'Inspection Authority',
+              data: 'name'
+            }, {
+              title: 'Email',
+              data: 'email'
+            }, {
+              title: 'Phone',
+              data: 'phone'
+            }, {
+              title: 'Fax',
+              data: 'fax'
+            }, {
+              title: 'Website',
+              data: 'url'
+            }, {
+              title: 'Address',
+              data: 'address'
+            }, {
+              title: 'Location',
+              data: 'citystate'
+            }
+          ]
+        }, {
           value: 'subdivisions',
           title: 'Subdivisions',
+          singular: 'Subdivision',
           list: 'Subdivisions:list',
           modal: 'ConfigSubdivisionModal',
           columns: [
@@ -68,6 +100,36 @@ export default {
             }, {
               title: 'Builder',
               data: 'builder'
+            }, {
+              title: 'Location',
+              data: 'citystate'
+            }
+          ]
+        }, {
+          value: 'suppliers',
+          title: 'Suppliers',
+          singular: 'Supplier',
+          list: 'Suppliers:list',
+          modal: 'ConfigSupplierModal',
+          columns: [
+            {
+              title: 'Supplier',
+              data: 'name'
+            }, {
+              title: 'Phone Number',
+              data: 'phone'
+            }, {
+              title: 'Email',
+              data: 'email'
+            }, {
+              title: 'Fax',
+              data: 'fax'
+            }, {
+              title: 'Address',
+              data: 'address'
+            }, {
+              title: 'Location',
+              data: 'citystate'
             }
           ]
         }

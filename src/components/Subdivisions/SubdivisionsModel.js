@@ -46,8 +46,8 @@ exports.search = async (req) => {
       builders.name as builder_name,
       locations.*
     FROM subdivisions
-    JOIN locations ON locations.zipcode_id = subdivisions.zipcode_id
-    JOIN builders ON builders.id = subdivisions.builder_id
+    LEFT JOIN locations ON locations.zipcode_id = subdivisions.zipcode_id
+    LEFT JOIN builders ON builders.id = subdivisions.builder_id
     WHERE subdivisions.name ilike ANY(ARRAY[${req.queryString}])
       AND NOT subdivisions.deleted
     ORDER BY similarity(subdivisions.name || ' ' || builders.name, $1) DESC

@@ -1,7 +1,7 @@
 <template>
   <div class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Update Subdivision</div>
+    <div class="header">{{ method }} Subdivision</div>
     <div class="content">
       <form class="ui form">
         <div class="field">
@@ -26,7 +26,7 @@
     </div>
     <div class="actions">
       <div class="ui left floated black deny button">Exit</div>
-      <div class="ui left floated red button" @click="deleteIt" v-show="!subdivision.deleted">Delete</div>
+      <div class="ui left floated red button" @click="deleteIt" v-show="!subdivision.deleted && method != 'Create'">Delete</div>
       <div class="ui left floated blue button" @click="undelete" v-show="subdivision.deleted">UnDelete</div>
       <div class="ui green labeled icon button" @click="post">
         {{ this.method }}
