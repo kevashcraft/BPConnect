@@ -1,11 +1,14 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Send Out Ticket</div>
-    <div class="ui icon message">
-      <i class="arrow right icon"></i>
-      <div class="content">
-        <p>Send out the plumbers to start the work</p>
+    <div class="content">
+      <div class="ui icon message">
+        <i class="arrow right icon"></i>
+        <div class="content">
+          <div class="header">Start the Job</div>
+          <p>Send out the plumbers to start the work</p>
+        </div>
       </div>
     </div>
     <div class="actions">

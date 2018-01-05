@@ -1,26 +1,38 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Update Site</div>
-    <form class="ui form padding30">
-      <div class="field fluid">
-        <div class="ui slider checkbox">
-          <label>Site <span v-show="!site.ready">not</span> ready</label>
-          <input type="checkbox" v-model="site.ready">
+    <div class="header">Site Ready</div>
+    <div class="content">
+      <div class="ui icon message">
+        <i class="home icon"></i>
+        <div class="content">
+          <div class="header">Is the Site Ready?</div>
+          <p>Select if the site is ready or a reason why it's not.</p>
         </div>
       </div>
-      <div class="two fields">
-        <div class="field" v-show="!site.ready">
-          <div ref="search" class="ui search">
-            <label>Reason not Ready</label>
-            <input type="text" class="prompt">
+      <form class="ui form padding30">
+        <div class="field" style="text-align: center">
+          <div class="ui slider checkbox">
+            <label>The Site is <span style="color: red" v-show="!site.ready">not</span> Ready</label>
+            <input type="checkbox" v-model="site.ready">
           </div>
         </div>
-        <div class="field" v-show="!site.ready">
-          <div class="ui button" @click="reasonAddModal">Add</div>
+        <div class="two fields">
+          <div class="field" v-show="!site.ready">
+            <label>Search Reasons not Ready</label>
+            <div ref="search" class="ui search">
+              <div class="ui left icon input">
+                <i class="bars icon"></i>
+                <input type="text" class="prompt" placeholder="Reason not ready">
+              </div>
+            </div>
+          </div>
+          <div class="field relative" v-show="!site.ready">
+            <div class="ui labeled icon button bottom" @click="reasonAddModal"><i class="plus icon"></i>Add New Reason</div>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui green icon button" @click="update">
@@ -69,7 +81,7 @@ export default {
       this.site = {
         ticketId: info.data.ticketId,
         reasonId: null,
-        ready: false,
+        ready: true,
       }
 
       $(this.$refs.search).search('set value', '')

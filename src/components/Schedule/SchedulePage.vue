@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
+      <table ref="table" class="ui celled table" width="100%"></table>
     </div>
     <schedule-update-workers-modal ref="ScheduleUpdateWorkersModal" @update="list"></schedule-update-workers-modal>
     <schedule-update-schedule-modal ref="ScheduleUpdateScheduleModal" @update="list"></schedule-update-schedule-modal>

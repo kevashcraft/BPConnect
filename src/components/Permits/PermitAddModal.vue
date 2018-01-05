@@ -1,26 +1,38 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Add a Permit</div>
     <form class="ui form padding30">
       <div class="field fluid">
+        <label>Inspection Authority</label>
         <div ref="search" class="ui search">
-          <label>Inspection Authority</label>
-          <input type="text" class="prompt">
+          <div class="ui left icon input">
+            <i class="spy icon"></i>
+            <input type="text" class="prompt" placeholder="Inspection Authority search">
+          </div>
         </div>
       </div>
       <div class="field">
         <label>Permit Number</label>
-        <input type="text" v-model="permit.name">
+        <div class="ui left icon input">
+          <i class="clipboard icon"></i>
+          <input type="text" v-model="permit.name" placeholder="Permit number">
+        </div>
       </div>
       <div class="two fields">
         <div class="field">
           <label>Start Date</label>
-          <input type="date" v-model="permit.starts">
+          <div class="ui left icon input">
+            <input type="date" v-model="permit.starts">
+            <i class="calendar o icon"></i>
+          </div>
         </div>
         <div class="field">
           <label>End Date</label>
-          <input type="date" v-model="permit.ends">
+          <div class="ui left icon input">
+            <i class="calendar o icon"></i>
+            <input type="date" v-model="permit.ends">
+          </div>
         </div>
       </div>
     </form>
@@ -82,7 +94,7 @@
         if (!this.permit.ends) this.$root.noty('Please add an end date', 'warning')
         this.$root.req('Permits:update', this.permit).then((response) => {
           if (response) {
-            this.$root.noty(`Created permit ${response}`)
+            this.$root.noty(`Created permit ${this.permit.name}`)
             this.close()
             this.$emit('update')
           } else {

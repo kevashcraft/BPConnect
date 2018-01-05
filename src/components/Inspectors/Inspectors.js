@@ -18,7 +18,7 @@ exports.list = async (req) => {
 
 exports.search = async (req) => {
   req.queryString = "'%" + req.query.replace(' ', "%', '%") + "%'"
-  let results = await InspectorsModel.searchInspectors(req)
+  let results = await InspectorsModel.search(req)
 
   return {
     success: true,

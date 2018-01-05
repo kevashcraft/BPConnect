@@ -43,10 +43,10 @@
           <span>Config</span>
         </router-link>
 
-        <a class="ui segment" @click="openRollOut">
+<!--         <a class="ui segment" @click="openRollOut">
           <i class="calendar icon"></i>
           <span>Rollout</span>
-        </a>
+        </a> -->
       </div>
     </div>
     <dashboard-rollout-modal ref="rollout"></dashboard-rollout-modal>

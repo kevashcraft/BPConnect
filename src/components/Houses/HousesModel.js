@@ -26,9 +26,8 @@ exports.search = async (req) => {
   let sql = `
     SELECT
       houses.id,
-      houses.lot  || ' ' || coalesce(houses.address, '') as title,
-      subdivisions.name
-        || ' by ' || builders.name
+      subdivisions.name || ' ' || houses.lot  || ' ' || coalesce(houses.address, '') as title,
+      ' by ' || builders.name
         || ' in ' || locations.city as description,
       houses.id as house_id,
       houses.lot as house_lot,

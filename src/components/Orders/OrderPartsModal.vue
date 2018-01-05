@@ -1,30 +1,42 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Order Parts</div>
     <form class="ui form padding30">
-      <div class="two fields">
-        <div class="field">
+      <div class="fields">
+        <div class="ten wide field">
+          <label>Supplier Search</label>
           <div ref="suppliersSearch" class="ui search">
-            <label>Supplier</label>
-            <input type="text" class="prompt">
+            <div class="ui left icon input">
+              <i class="shopping cart icon"></i>
+              <input type="text" class="prompt" placeholder="Search for a supplier">
+            </div>
           </div>
         </div>
-        <div class="field">
-          <div class="ui button" @click="openOrderSupplierAddModal">Add New</div>
+        <div class="six wide field relative">
+          <div class="ui left labeled icon button bottom" @click="openOrderSupplierAddModal"><i class="plus icon"></i>Add New Supplier</div>
         </div>
       </div>
       <div class="field">
         <label>Order Number</label>
-        <input type="text" v-model="order.number">
+        <div class="ui left icon input">
+          <i class="list ol icon"></i>
+          <input type="text" v-model="order.number" placeholder="Order number">
+        </div>
       </div>
       <div class="field">
         <label>Total Cost</label>
-        <input type="text" v-model="order.total" placeholder="Total Cost">
+        <div class="ui left icon input">
+          <i class="usd icon"></i>
+          <input type="text" v-model="order.total" placeholder="Total Cost">
+        </div>
       </div>
       <div class="field">
         <label>Order Date</label>
-        <input type="date" v-model="order.ordered" placeholder="Order Date">
+        <div class="ui left icon input">
+          <i class="calendar o icon"></i>
+          <input type="date" v-model="order.ordered" placeholder="Order Date">
+        </div>
       </div>
       <div v-for="part in parts">
         <div class="ui checkbox part">

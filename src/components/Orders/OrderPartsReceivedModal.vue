@@ -1,15 +1,24 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Parts Received</div>
-    <form class="ui form padding30">
-      <div v-for="part in parts" class="padding5">
-        <div class="ui slider checkbox part">
-          <input type="checkbox" v-model="part.received">
-          <label>{{ part.description }}</label>
+    <div class="content">
+      <div class="ui icon message">
+        <i class="shopping cart icon"></i>
+        <div class="content">
+          <div class="header">Select Received Parts</div>
+          <p>Select the parts that have been received.</p>
         </div>
       </div>
-    </form>
+      <form class="ui form padding30">
+        <div v-for="part in parts" class="padding5">
+          <div class="ui slider checkbox part">
+            <input type="checkbox" v-model="part.received">
+            <label>{{ part.description }}</label>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui blue button" @click="selectAll">Select All</div>

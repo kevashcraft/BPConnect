@@ -1,5 +1,5 @@
 <template>
-  <div class="ui modal" id="TicketAddModal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Add a Ticket</div>
     <div class="content">
@@ -40,70 +40,97 @@
             </div>
           </div>
           <div class="fields">
-            <div class="thirteen wide field" :class="{disabled: ticket.houseId === -1}">
-              <label>Lot</label>
+            <div class="ten wide field" :class="{disabled: ticket.houseId === -1}">
+              <label>Lot Search</label>
               <div class="ui search houses">
-                <input type="text" class="prompt" name="ticketLot">
+                <div class="ui left icon input">
+                  <input type="text" class="prompt" placeholder="Search for a lot">
+                  <i class="home icon"></i>
+                </div>
                 <div class="results"></div>
               </div>
             </div>
-            <div class="three wide field align-all">
-              <div class="ui button pop-up refresh" v-show="ticket.houseId !== -1" @click="ticket.houseId = -1" data-title="Add a New Lot" data-content="Add a new lot instead of searching for one">Add</div>
-              <div class="ui button pop-up refresh" v-show="ticket.houseId === -1" @click="ticket.houseId = 0" data-title="Search for Existing Lot" data-content="Switch to searching for a lot instead of adding one ">Search</div>
+            <div class="six wide field relative">
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.houseId !== -1" @click="ticket.houseId = -1" data-title="Add a New Lot" data-content="Add a new lot instead of searching for one">Add a New Lot<i class="plus icon"></i></div>
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.houseId === -1" @click="ticket.houseId = 0" data-title="Search for Existing Lot" data-content="Switch to searching for a lot instead of adding one">Search for a Lot<i class="search icon"></i></div>
             </div>
           </div>
           <div class="fields" v-show="ticket.houseId === -1">
-            <div class="thirteen wide field" :class="{disabled: ticket.subdivisionId === -1}">
-              <label>Subdivision</label>
+            <div class="ten wide field" :class="{disabled: ticket.subdivisionId === -1}">
+              <label>Subdivision Search</label>
               <div class="ui search subdivisions">
-                <input type="text" class="prompt">
+                <div class="ui left icon input">
+                  <input type="text" class="prompt" placeholder="Search for a subdivision">
+                  <i class="sun o icon"></i>
+                </div>
                 <div class="results"></div>
               </div>
             </div>
-            <div class="three wide field align-all">
-              <div class="ui button pop-up refresh" v-show="ticket.subdivisionId !== -1" @click="ticket.subdivisionId = -1" data-title="Add a New Subdivision" data-content="Add a new subdivision instead of searching for one">Add</div>
-              <div class="ui button pop-up refresh" v-show="ticket.subdivisionId === -1" @click="ticket.subdivisionId = 0" data-title="Search for Existing Subdivision" data-content="Switch to searching for a subdivision instead of adding one ">Search</div>
+            <div class="six wide field relative">
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.subdivisionId !== -1" @click="ticket.subdivisionId = -1" data-title="Add a New Subdivision" data-content="Add a new subdivision instead of searching for one"><i class="plus icon"></i>New Subdivision</div>
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.subdivisionId === -1" @click="ticket.subdivisionId = 0" data-title="Search for Existing Subdivision" data-content="Switch to searching for a subdivision instead of adding one "><i class="search icon"></i>Subdivision Search</div>
             </div>
           </div>
           <div class="fields" v-show="ticket.subdivisionId === -1">
-            <div class="thirteen wide field" :class="{disabled: ticket.builderId === -1}">
-              <label>Builder</label>
+            <div class="ten wide field" :class="{disabled: ticket.builderId === -1}">
+              <label>Builder Search</label>
               <div class="ui search builders">
-                <input type="text" class="prompt" name="newSubdivisionBuilder">
+                <div class="ui left icon input">
+                  <input type="text" class="prompt" placeholder="Search for a builder">
+                  <i class="bandcamp icon"></i>
+                </div>
                 <div class="results"></div>
               </div>
             </div>
-            <div class="three wide field align-all">
-              <div class="ui button pop-up refresh" v-show="ticket.builderId !== -1" @click="ticket.builderId = -1; ticket.builderSupervisorId = -1" data-title="Add a New Builder" data-content="Add a new builder instead of searching for one">Add</div>
-              <div class="ui button pop-up refresh" v-show="ticket.builderId === -1" @click="ticket.builderId = 0; ticket.builderSupervisorId = 0" data-title="Search for Existing Builder" data-content="Switch to searching for a builder instead of adding one ">Search</div>
+            <div class="six wide field relative">
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.builderId !== -1" @click="ticket.builderId = -1; ticket.builderSupervisorId = -1" data-title="Add a New Builder" data-content="Add a new builder instead of searching for one"><i class="plus icon"></i>Add Builder</div>
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.builderId === -1" @click="ticket.builderId = 0; ticket.builderSupervisorId = 0" data-title="Search for Existing Builder" data-content="Switch to searching for a builder instead of adding one "><i class="search icon"></i>Builder Search</div>
             </div>
           </div>
           <div class="field" v-show="ticket.builderId === -1">
             <label>Builder Name</label>
-            <input type="text" v-model="ticket.builderName">
+            <div class="ui left icon input">
+              <i class="bandcamp icon"></i>
+              <input type="text" v-model="ticket.builderName" placeholder="Builder Name">
+            </div>
           </div>
           <div class="field" v-show="ticket.builderId === -1">
             <label>Builder Phone</label>
-            <input type="tel" v-model="ticket.builderPhone">
+            <div class="ui left icon input">
+              <i class="phone icon"></i>
+              <input type="tel" v-model="ticket.builderPhone" placeholder="Builder phone number">
+            </div>
           </div>
           <div class="field" v-show="ticket.subdivisionId === -1">
             <label>Subdivision Name</label>
-            <input type="text" v-model="ticket.subdivisionName">
+            <div class="ui left icon input">
+              <i class="sun o icon"></i>
+              <input type="text" v-model="ticket.subdivisionName" placeholder="Subdivision name">
+            </div>
           </div>
           <div class="fields" v-show="ticket.houseId === -1">
             <div class="four wide field">
               <label>Lot Number</label>
-              <input type="text" name="ticketHouseLot" v-model="ticket.houseLot">
+              <div class="ui left icon input">
+                <i class="list ol icon"></i>
+                <input type="text" name="ticketHouseLot" v-model="ticket.houseLot" placeholder="Lot number">
+              </div>
             </div>
             <div class="twelve wide field">
               <label>Lot Address</label>
-              <input type="text" name="ticketHouseAddress" v-model="ticket.houseAddress">
+              <div class="ui left icon input">
+                <i class="home icon"></i>
+                <input type="text" name="ticketHouseAddress" v-model="ticket.houseAddress" placeholder="Lot street address">
+              </div>
             </div>
           </div>
           <div class="field" v-show="ticket.subdivisionId === -1">
-            <label>Location (city)</label>
+            <label>Location Search</label>
             <div class="ui search locations">
-              <input type="search" class="prompt" v-model="ticket.subdivisionZip">
+              <div class="ui left icon input">
+                <i class="globe icon"></i>
+                <input type="search" class="prompt" v-model="ticket.subdivisionZip" placeholder="Search for city and state">
+              </div>
               <div class="results"></div>
             </div>
           </div>
@@ -117,7 +144,7 @@
             </div>
           </div>
           <div class="fields">
-            <div class="thirteen wide field" :class="{ disabled: ticket.builderSupervisorId === -1 }">
+            <div class="ten wide field" :class="{ disabled: ticket.builderSupervisorId === -1 }">
               <label>Builder Supervisor</label>
               <div class="ui builderSupervisors search selection dropdown">
                 <input type="hidden" v-model="ticket.builderSupervisorId">
@@ -128,8 +155,8 @@
                 </div>
               </div>
             </div>
-            <div class="three wide field align-all">
-              <div class="ui button pop-up refresh" v-show="ticket.builderSupervisorId !== -1" @click="ticket.builderSupervisorId = -1" data-title="Add a Builder Supervisor" data-content="Add a new builder supervisor instead of searching for one">Add</div>
+            <div class="six wide field relative">
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.builderSupervisorId !== -1" @click="ticket.builderSupervisorId = -1" data-title="Add a Builder Supervisor" data-content="Add a new builder supervisor instead of searching for one"><i class="plus icon"></i>New Supervisor</div>
               <div class="ui button pop-up refresh" v-show="ticket.builderSupervisorId === -1" @click="ticket.builderSupervisorId = 0" data-title="Select Existing Supervisor" data-content="Switch to searching for a supervisor instead of adding one ">Search</div>
             </div>
           </div>
@@ -233,7 +260,7 @@
         </div>
       </div>
       <div v-show="stepIndex !== 0 && stepIndex !== stepsLength">
-        <div class="ui gray icon button" @click="goto(-1)">
+        <div class="ui gray left floated icon button" @click="goto(-1)">
           <i class="arrow left icon"></i>
           <span>Back</span>
         </div>
@@ -243,7 +270,7 @@
         </div>
       </div>
       <div v-show="stepIndex === stepsLength">
-        <div class="ui gray icon button" @click="goto(-1)">
+        <div class="ui gray left floated icon button" @click="goto(-1)">
           <i class="arrow left icon"></i>
           <span>Back</span>
         </div>
@@ -296,7 +323,7 @@ export default {
         'typeDate',
         'ticketLot',
         'ticketSupervisors',
-        'ticketEinfo',
+        // 'ticketEinfo',
         'ticketFinish',
       ],
       stepsLength: 0,

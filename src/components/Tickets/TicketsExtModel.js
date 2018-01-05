@@ -120,8 +120,7 @@ exports.createPart = async (req) => {
 exports.retrieveParts = async (req) => {
   let sql = `
     SELECT
-      ticket_parts.*,
-      house_rooms.
+      ticket_parts.*
     FROM ticket_parts
     WHERE ticket_id = $1
       AND NOT deleted

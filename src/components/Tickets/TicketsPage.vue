@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
+      <table ref="table" class="ui celled table" width="100%"></table>
     </div>
     <ticket-add-modal ref="TicketAddModal" @update="list"></ticket-add-modal>
     <ticket-import-data-modal ref="TicketImportDataModal" @update="list"></ticket-import-data-modal>

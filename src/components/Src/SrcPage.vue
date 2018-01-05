@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
+      <table ref="table" class="ui celled table" width="100%"></table>
     </div>
     <src-update-modal ref="SrcUpdateModal" @update="list"></src-update-modal>
     <src-reason-add-modal ref="SrcReasonAddModal"></src-reason-add-modal>

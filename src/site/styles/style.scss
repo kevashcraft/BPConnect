@@ -18,6 +18,10 @@ body > .grid {
   position: absolute;
 }
 
+.center { text-align: center; }
+.capitalize { text-transform: capitalize; }
+.relative { position: relative; }
+.bottom { position: absolute !important; bottom: 0; }
 .invisible { visibility: hidden; }
 .visible { visibility: visible; }
 .relative { position: relative; }

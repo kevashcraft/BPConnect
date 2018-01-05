@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
+      <table ref="table" class="ui celled table" width="100%"></table>
     </div>
     <inspection-fail-modal ref="InspectionFailModal" @update="list"></inspection-fail-modal>
     <inspection-pass-modal ref="InspectionPassModal" @update="list"></inspection-pass-modal>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <table ref="table" class="ui celled table"></table>
+      <table ref="table" class="ui celled table" width="100%"></table>
     </div>
     <permit-add-modal ref="PermitAddModal" @update="list"></permit-add-modal>
   </div>

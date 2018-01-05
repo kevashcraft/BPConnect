@@ -54,7 +54,7 @@
           this.table.destroy()
         }
         $(this.$el).find('.page-container').empty()
-          .append('<table class="ui celled table"></table>')
+          .append('<table class="ui celled table" width="100%"></table>')
 
         var config = {
           responsive: true,

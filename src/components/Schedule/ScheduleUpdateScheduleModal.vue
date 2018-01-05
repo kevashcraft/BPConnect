@@ -1,41 +1,50 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Reschedule Ticket</div>
-    <p class="padding30">Ticket has already been rescheduled {{ ticket.bumpedCount }} times.</p>
-    <form class="ui form padding30">
-      <div class="field">
-        <label>Date Scheduled</label>
-        <input type="date" v-model="ticket.ticketDateScheduled">
-      </div>
-<!--       <div class="field">
-        <label>Email Builder</label>
-        <div class="ui toggle checkbox">
-          <input type="checkbox" v-model="ticket.sendEmail">
-          <label>Send Email</label>
-        </div>
-      </div> -->
-      <div v-show="ticket.sendEmail">
-        <div class="two fields">
-          <div class="field">
-            <label>To</label>
-            <input type="text" v-model="ticket.builderName">
-          </div>
-          <div class="field">
-            <label>Email Address</label>
-            <input type="email" v-model="ticket.builderEmail">
-          </div>
-        </div>
-        <div class="field">
-          <label>Subject</label>
-          <input type="text" v-model="ticket.emailSubject">
-        </div>
-        <div class="field">
-          <label>Message</label>
-          <textarea v-model="ticket.emailMessage"></textarea>
+    <div class="content">
+      <div class="ui icon message">
+        <i class="calendar icon"></i>
+        <div class="content">
+          <div class="header">Change Ticket Date</div>
+          <p>Select the new date for this job.</p>
         </div>
       </div>
-    </form>
+      <div class="ui red message" v-show="ticket.bumpedCount">Ticket has already been rescheduled {{ ticket.bumpedCount }} time<span v-show="ticket.bumpedCount > 1">s</span>.</div>
+      <form class="ui form padding30">
+        <div class="field">
+          <label>Date Scheduled</label>
+          <input type="date" v-model="ticket.ticketDateScheduled">
+        </div>
+  <!--       <div class="field">
+          <label>Email Builder</label>
+          <div class="ui toggle checkbox">
+            <input type="checkbox" v-model="ticket.sendEmail">
+            <label>Send Email</label>
+          </div>
+        </div> -->
+        <div v-show="ticket.sendEmail">
+          <div class="two fields">
+            <div class="field">
+              <label>To</label>
+              <input type="text" v-model="ticket.builderName">
+            </div>
+            <div class="field">
+              <label>Email Address</label>
+              <input type="email" v-model="ticket.builderEmail">
+            </div>
+          </div>
+          <div class="field">
+            <label>Subject</label>
+            <input type="text" v-model="ticket.emailSubject">
+          </div>
+          <div class="field">
+            <label>Message</label>
+            <textarea v-model="ticket.emailMessage"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="actions">
       <div class="ui black deny button left floated">Exit</div>
       <div class="ui green icon button" @click="submit">
