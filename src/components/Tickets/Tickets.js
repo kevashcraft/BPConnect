@@ -51,11 +51,14 @@ exports.create = async (req) => {
 
   let ticketId = await TicketsModel.create(ticket)
 
+  console.log('ticketType.needspermit', ticketType.needspermit)
   if (ticketType.needspermit) {
     let permit = { houseId: ticket.houseId }
-    let permitCountForHouse = await PermitsModel.countForHouseId(ticket.houseId)
+    let permitCountForHouse = await PermitsModel.countForHouseId({id: ticket.houseId})
+    console.log('permitCountForHouse', permitCountForHouse)
     if (permitCountForHouse === 0) {
       let permitId = await PermitsModel.create(permit)
+      console.log('permitId', permitId)
     }
   }
 

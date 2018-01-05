@@ -1,5 +1,5 @@
 <template>
-  <div class="ui small modal">
+  <div class="ui tiny modal">
     <i class="close icon"></i>
     <div class="header">Schedule Inspection</div>
     <div>

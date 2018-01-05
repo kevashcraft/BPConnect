@@ -157,16 +157,22 @@
             </div>
             <div class="six wide field relative">
               <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.builderSupervisorId !== -1" @click="ticket.builderSupervisorId = -1" data-title="Add a Builder Supervisor" data-content="Add a new builder supervisor instead of searching for one"><i class="plus icon"></i>New Supervisor</div>
-              <div class="ui button pop-up refresh" v-show="ticket.builderSupervisorId === -1" @click="ticket.builderSupervisorId = 0" data-title="Select Existing Supervisor" data-content="Switch to searching for a supervisor instead of adding one ">Search</div>
+              <div class="ui labeled icon button pop-up refresh bottom" v-show="ticket.builderSupervisorId === -1" @click="ticket.builderSupervisorId = 0" data-title="Select Existing Supervisor" data-content="Switch to searching for a supervisor instead of adding one "><i class="search icon"></i>Search Supervisors</div>
             </div>
           </div>
           <div class="field" v-show="ticket.builderSupervisorId === -1">
             <label>Supervisor Name</label>
-            <input type="text" v-model="ticket.builderSupervisorName">
+            <div class="ui left icon input">
+              <i class="spy icon"></i>
+              <input type="text" v-model="ticket.builderSupervisorName" placeholder="Builder supervisor's name">
+            </div>
           </div>
           <div class="field" v-show="ticket.builderSupervisorId === -1">
             <label>Phone Number</label>
-            <input type="tel" v-model="ticket.builderSupervisorPhone">
+            <div class="ui left icon input">
+              <i class="phone icon"></i>
+              <input type="tel" v-model="ticket.builderSupervisorPhone" placeholder="Builder supervisor's phone number">
+            </div>
           </div>
           <div class="field">
             <label>BP Supervisor</label>
@@ -362,6 +368,7 @@ export default {
 
 
     $(this.$el).find('.search.locations').search({
+      selectFirstResult: true,
       apiSettings: {
         responseAsync: (settings, callback) => {
           let route = 'Locations:search'
@@ -375,6 +382,7 @@ export default {
     })
 
     $(this.$el).find('.search.builders').search({
+      selectFirstResult: true,
       apiSettings: {
         responseAsync: (settings, callback) => {
           let route = 'Builders:search'
@@ -394,6 +402,7 @@ export default {
     })
 
     $(this.$el).find('.search.houses').search({
+      selectFirstResult: true,
       apiSettings: {
         responseAsync: (settings, callback) => {
           let route = 'Houses:search'
@@ -474,6 +483,7 @@ export default {
     })
 
     $(this.$el).find('.search.subdivisions').search({
+      selectFirstResult: true,
       apiSettings: {
         responseAsync: (settings, callback) => {
           let route = 'Subdivisions:search'
@@ -482,7 +492,6 @@ export default {
         }
       },
       onSelect: (value) => {
-        console.log("value",value);
         this.ticket.subdivisionId = value.subdivisionId
         if (value.subdivisionId === -1) {
           this.ticket.subdivisionName = ''
@@ -528,7 +537,6 @@ export default {
         this.ticket.builderName =  ''
         this.ticket.zipId =  0
         $('.search.houses').search('set value', '')
-        console.log("$('.search.houses')",$('.search.houses'))
       }
     },
   },
@@ -537,6 +545,7 @@ export default {
       this.step = this.steps[0]
       this.stepIndex = 0
       this.ticket = JSON.parse(this.emptyTicket)
+      (this.$el).find('.search').search('set value', '')
     },
     goto (step) {
       if (Number.isInteger(step)) {

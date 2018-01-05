@@ -9,11 +9,11 @@ export default [
     visible: false
   }, {
     title: 'Ticket Scheduled',
-    data: 'ticketDateScheduled',
+    data: 'ticketDateScheduledFormatted',
     visible: false
   }, {
     title: 'Date Imported',
-    data: 'ticketDateImported',
+    data: 'ticketDateImportedFormatted',
     visible: false
   }, {
     title: 'Order ID',
@@ -37,10 +37,10 @@ export default [
     visible: true
   }, {
     title: 'Date Ordered',
-    data: 'dateOrdered',
+    data: 'dateOrderedFormatted',
     visible: true
   }, {
-    title: 'Date Received',
+    title: 'Amount Received',
     data: 'receivedPercent',
     visible: true
   }, {
@@ -81,11 +81,11 @@ export default [
     visible: false
   }, {
     title: 'Site Ready',
-    data: 'ticketDateReady',
+    data: 'ticketDateReadyFormatted',
     visible: false
   }, {
     title: 'Sent Out',
-    data: 'ticketDateSentout',
+    data: 'ticketDateSentoutFormatted',
     visible: false
   }, {
     title: 'Supervisor',
@@ -101,15 +101,15 @@ export default [
     visible: false
   }, {
     title: 'Work Started',
-    data: 'ticketDateStarted',
+    data: 'ticketDateStartedFormatted',
     visible: false
   }, {
     title: 'Completed',
-    data: 'ticketDateCompleted',
+    data: 'ticketDateCompletedFormatted',
     visible: false
   }, {
     title: 'Walked',
-    data: 'ticketDateWalked',
+    data: 'ticketDateWalkedFormatted',
     visible: false
   }
 ]

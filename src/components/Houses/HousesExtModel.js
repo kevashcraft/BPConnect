@@ -8,7 +8,7 @@ exports.createRoom = async (req) => {
   `
   let bind = [req.houseId, req.name, req.color]
 
-  return await Model.query(sql, bind, true, true)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.retrieveRoomIdByHNC = async (req) => {
@@ -21,7 +21,7 @@ exports.retrieveRoomIdByHNC = async (req) => {
   `
   let bind = [req.houseId, req.name, req.color || '']
 
-  return await Model.query(sql, bind, true, true)
+  return Model.query(sql, bind, true, true)
 }
 
 exports.countRooms = async (req) => {
@@ -30,5 +30,5 @@ exports.countRooms = async (req) => {
   `
   let bind = [id]
 
-  return await Model.query(sql, bind)
+  return Model.query(sql, bind)
 }

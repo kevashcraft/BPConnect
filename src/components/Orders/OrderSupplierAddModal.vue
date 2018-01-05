@@ -2,23 +2,23 @@
   <div class="ui tiny modal" id="supplier_add_modal">
     <i class="close icon"></i>
     <div class="header">Add Supplier</div>
-    <form class="ui form padding30 center aligned">
+    <form class="ui form padding30 aligned">
       <div class="field">
-        <label>Supplier</label>
+        <label>Supplier Name</label>
         <div class="ui left icon input">
           <i class="shopping cart icon"></i>
           <input type="text" v-model="supplier.name" placeholder="Supplier name">
         </div>
       </div>
       <div class="field">
-        <label>Address</label>
+        <label>Supplier's Address</label>
         <div class="ui left icon input">
           <i class="map market icon"></i>
           <input type="text" v-model="supplier.address" placeholder="Supplier address">
         </div>
       </div>
       <div class="field">
-        <label>Phone Number</label>
+        <label>Supplier's Phone Number</label>
         <div class="ui left icon input">
           <i class="phone icon"></i>
           <input type="text" v-model="supplier.phone" placeholder="Supplier phone number">

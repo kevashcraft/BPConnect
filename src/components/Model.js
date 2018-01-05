@@ -60,7 +60,6 @@ exports.updateFields = (fields) => {
     .keys(fields)
     .map((field, index) => {
       if (fields[field] && typeof fields[field] === 'object') {
-        console.log('OBJECT!!!!')
         let key = Object.keys(fields[field])[0]
         if (key === 'safe') {
           return field + ' = ' + fields[field].safe

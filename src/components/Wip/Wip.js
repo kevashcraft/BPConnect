@@ -56,5 +56,16 @@ exports.updateWalked = async (req) => {
     await TicketsExtModel.updateTask(task.id, fields)
   })
 
+  // create inspection placeholder
+  let ticket = await TicketsModel.retrieve({id: ticketId})
+  if (ticket.ticketNeedspermit) {
+    let permits = await HousesModel.retrievePermits(ticket)
+    let inspection = {
+      ticketId: ticket.ticketId,
+      permitId: permits[0].id
+    }
+    await InspectionsModel.create(inspection)
+  }
+
   return true
 }

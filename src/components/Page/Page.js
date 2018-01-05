@@ -46,7 +46,7 @@ export default {
                     .appendTo($(`.${className}`))
 
       $(`.${className} .dt-buttons.ui.basic`).removeClass('basic').on('click', () => {
-        $(`.${className} .dt-button-collection.vertical`).removeClass('vertical').removeClass('basic').addClass('horizontal').css('width', '80vw').css('overflow-x', 'auto')
+        $(`.${className} .dt-button-collection.vertical`).css('top', '-300px').css('height', '300px').css('overflow', 'scroll')
       })
     }
   }

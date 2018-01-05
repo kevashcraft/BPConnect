@@ -15,12 +15,11 @@ exports.countForHouseId = async (req) => {
   let sql = `
     SELECT count(*) FROM permits
     WHERE house_id = $1
-      AND permits.starts <= current_date
-      AND permits.ends >= current_date
   `
   let bind = [req.id]
 
-  return parseInt(Model.query(sql, bind, true, true))
+  let res = await Model.query(sql, bind, true, true)
+  return parseInt(res)
 }
 
 exports.list = async (req) => {
