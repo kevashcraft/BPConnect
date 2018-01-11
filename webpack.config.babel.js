@@ -41,13 +41,6 @@ module.exports = {
       }
     ]
   },
-  // devServer: {
-  //   contentBase: path.join(__dirname, 'src/site/static'),
-  //   inline: true,
-  //   historyApiFallback: true,
-  //   host: '0.0.0.0',
-  //   hot: true
-  // },
   plugins: [
     new webpack.ProvidePlugin({
       moment: 'moment',
