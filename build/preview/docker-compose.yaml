@@ -1,0 +1,19 @@
+version: '3'
+services:
+  api:
+    image: gcr.io/agency-reviews/api:latest
+    ports:
+      - 3000:3000
+    environment:
+      - SITE_URL=http://agency-reviews.com
+  site:
+    image: gcr.io/agency-reviews/site:latest
+    ports:
+      - 80:80
+  postgres:
+    image: gcr.io/agency-reviews/postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+
+volumes:
+  postgres_data:

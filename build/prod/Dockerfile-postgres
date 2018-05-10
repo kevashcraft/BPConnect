@@ -1,0 +1,9 @@
+FROM postgres:10.3
+
+ARG PGINIT_DIR=/docker-entrypoint-initdb.d/
+
+ENV DB_NAME=agencyreviews
+ENV PGINIT_DIR=${PGINIT_DIR}
+
+COPY ./src/db ${PGINIT_DIR}
+RUN chown postgres.postgres ${PGINIT_DIR} -R

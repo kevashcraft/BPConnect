@@ -1,5 +1,5 @@
 INSERT INTO ticket_types
-(ticket_type, requiresimport, requirespermit, requirespo, payout)
+(type, needsimport, needspermit, needspo, payout)
 VALUES
 ('Rough In', false, false, false, 0),
 ('Sewer and Water', false, false, false, 0),

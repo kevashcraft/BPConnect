@@ -1,0 +1,12 @@
+FROM node:9.9.0
+
+ARG PORT=3000
+
+RUN mkdir -p /app/src/api
+WORKDIR /app
+
+ENV PORT ${PORT}
+
+EXPOSE ${PORT}
+
+CMD ["npm", "run", "api:dev"]

@@ -23,26 +23,8 @@ io.on('connection', (socket) => {
     callback(response)
   })
 
-  // socket.on('request', async (requests) => {
-  //   // console.log("request", requests);
-  //   if (!Array.isArray(requests)) {
-  //     requests = [requests]
-  //   }
-
-  //   requests.forEach(async req => {
-  //     let response = {
-  //       object: req.object,
-  //       key: req.key,
-  //     }
-
-  //     response.value = await router[req.controller][req.method](req.data, postgres)
-  //     // console.log("response",response);
-  //     socket.emit('response', response)
-  //   })
-
-  // })
 })
 
-http.listen('3001', () => {
-  console.log('listening on 3001')
+http.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`)
 })

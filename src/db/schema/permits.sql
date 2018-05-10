@@ -4,7 +4,7 @@ CREATE TABLE inspectors (
     created timestamp DEFAULT current_timestamp NOT NULL,
     name varchar(64) NOT NULL,
     address varchar(256),
-    zipcode_id int REFERENCES zips(id),
+    zipcode_id int REFERENCES zipcodes(id),
     email varchar(128),
     phone varchar(32),
     fax varchar(32),
@@ -16,7 +16,7 @@ CREATE TABLE inspectors (
 DROP TABLE IF EXISTS inspector_zips CASCADE;
 CREATE TABLE inspector_zips (
     inspector_id int REFERENCES inspectors(id) NOT NULL,
-    zip_id int REFERENCES zips(id) NOT NULL
+    zipcode_id int REFERENCES zipcodes(id) NOT NULL
 );
 
 DROP TABLE IF EXISTS permits CASCADE;

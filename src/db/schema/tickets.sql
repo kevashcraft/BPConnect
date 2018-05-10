@@ -16,7 +16,7 @@ CREATE TABLE ticket_types (
 -- ALTER TABLE ticket_types ADD COLUMN details varchar(32);
 -- ALTER TABLE ticket_types ADD COLUMN needsepo boolean DEFAULT false NOT NULL;
 
-DROP TYPE fault IF EXISTS;
+DROP TYPE IF EXISTS fault;
 CREATE TYPE fault AS ENUM('bp', 'builder');
 
 DROP TABLE IF EXISTS reasons CASCADE;
@@ -32,7 +32,7 @@ CREATE TABLE tickets (
   id serial NOT NULL,
   parent_id int,
   child_id int,
-  punch_id REFERENCES tickets(id),
+  punch_id int REFERENCES tickets(id),
   ticket_type_id int REFERENCES ticket_types(id),
   reason_id int REFERENCES reasons(id),
   house_id int REFERENCES houses(id) NOT NULL,
@@ -61,38 +61,6 @@ CREATE TABLE tickets (
   valid boolean DEFAULT true NOT NULL,
   PRIMARY KEY (id)
 );
-
--- ALTER TABLE tickets ADD COLUMN punch_id int REFERENCES tickets(id);
--- ALTER TABLE tickets ADD COLUMN sentout timestamp;
--- ALTER TABLE tickets ADD COLUMN needspo BOOLEAN default false NOT NULL;
--- ALTER TABLE tickets ADD COLUMN billed timestamp;
--- ALTER TABLE tickets ADD COLUMN po varchar(128);
--- ALTER TABLE tickets ADD COLUMN epo varchar(128);
--- ALTER TABLE tickets ADD COLUMN paid timestamp;
--- ALTER TABLE tickets RENAME COLUMN paid TO lastpaid;
--- ALTER TABLE tickets ADD COLUMN paid decimal(12,2);
--- ALTER TABLE tickets ADD COLUMN total decimal(12,2);
-
-DROP TABLE IF EXISTS ticket_parts CASCADE;
-CREATE TABLE ticket_parts (
-  id serial NOT NULL,
-  ticket_id int REFERENCES tickets(id) NOT NULL,
-  room_id int REFERENCES house_rooms(id) NOT NULL,
-  qty int NOT NULL,
-  payout decimal(9,2) DEFAULT 0 NOT NULL,
-  description varchar(256) NOT NULL,
-  order_id int REFERENCES orders(id),
-  created timestamp DEFAULT current_timestamp NOT NULL,
-  updated timestamp,
-  ordered timestamp,
-  received timestamp,
-  installed timestamp,
-  walked timestamp,
-  destroyed timestamp,
-  deleted boolean DEFAULT false NOT NULL,
-  PRIMARY KEY (id)
-);
-
 DROP TABLE IF EXISTS ticket_tasks CASCADE;
 CREATE TABLE ticket_tasks (
   id serial NOT NULL,
@@ -116,16 +84,6 @@ CREATE TABLE task_templates (
   city_id int REFERENCES cities(id),
   task varchar(2056) NOT NULL,
   valid boolean DEFAULT true NOT NULL,
-  PRIMARY KEY (id)
-);
-
-DROP TABLE IF EXISTS ticket_part_files CASCADE;
-CREATE TABLE ticket_part_files (
-  id serial NOT NULL,
-  created timestamp DEFAULT current_timestamp NOT NULL,
-  ticket_part_id int REFERENCES ticket_parts(id) NOT NULL,
-  file_id int REFERENCES files(id) NOT NULL,
-  worker_id int REFERENCES workers(id) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -156,7 +114,7 @@ CREATE TABLE ticket_notes (
   id serial NOT NULL,
   created timestamp DEFAULT current_timestamp NOT NULL,
   ticket_id int REFERENCES tickets(id) NOT NULL,
-  worker_id int REFERENCES workers(id) NOT NULL,
+  user_id int REFERENCES users(id) NOT NULL,
   note text,
   PRIMARY KEY (id)
 );
@@ -174,4 +132,3 @@ CREATE TABLE ticket_details (
   paidon date,
   PRIMARY KEY (id)
 );
-

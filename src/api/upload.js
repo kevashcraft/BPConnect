@@ -20,26 +20,26 @@ export default (socket) => {
     transmissionDelay: 0,           // delay of each transmission, higher value saves more cpu resources, lower upload speed. default is 0(no delay)
     overwrite: true,               // overwrite file if exists, default is true.
     rename: (filename) => {
-      console.log("filename",filename);
-      let file = path.parse(filename);
+      console.log("filename",filename)
+      let file = path.parse(filename)
 
       let name = uuidv1() + '-' + file.name + file.ext
-      console.log("name",name);
+      console.log("name",name)
       return name
     }
-  });
+  })
   uploader.on('start', (fileInfo) => {
-    console.log("fileInfo",fileInfo);
-    console.log("fileInfo.dar",fileInfo.dar);
-    console.log('Start uploading');
-    console.log(fileInfo);
-  });
+    console.log("fileInfo",fileInfo)
+    console.log("fileInfo.dar",fileInfo.dar)
+    console.log('Start uploading')
+    console.log(fileInfo)
+  })
   uploader.on('stream', (fileInfo) => {
-    console.log(`${fileInfo.wrote} / ${fileInfo.size} byte(s)`);
-  });
+    console.log(`${fileInfo.wrote} / ${fileInfo.size} byte(s)`)
+  })
   uploader.on('complete', (fileInfo) => {
-    console.log('Upload Complete.');
-    console.log(fileInfo);
+    console.log('Upload Complete.')
+    console.log(fileInfo)
     let route = fileInfo.data.route.split(':')
     let controller = route[0]
     let method = route[1]
@@ -47,11 +47,11 @@ export default (socket) => {
 
     router[controller][method](fileInfo)
     // let response = await router[controller][method](data)
-  });
+  })
   uploader.on('error', (err) => {
-    console.log('Error!', err);
-  });
+    console.log('Error!', err)
+  })
   uploader.on('abort', (fileInfo) => {
-    console.log('Aborted: ', fileInfo);
-  });
+    console.log('Aborted: ', fileInfo)
+  })
 }
