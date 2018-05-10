@@ -14,7 +14,7 @@ exports.create = async (req) => {
 exports.list = async (req) => {
   let sql = `
     SELECT * FROM builder_supervisors
-    WHERE active
+    WHERE NOT deleted
     ORDER BY name
   `
   let bind = []

@@ -23,7 +23,7 @@ CREATE VIEW tickets_master_view AS
     tickets.started as ticket_date_started,
     tickets.completed as ticket_date_completed,
     tickets.imported as ticket_date_imported,
-    tickets.ready as ticket_date_ready,
+    tickets.siteready as ticket_date_ready,
     TO_CHAR(tickets.created, 'MM/DD/YY') as ticket_date_created_formatted,
     TO_CHAR(tickets.scheduled, 'MM/DD/YY') as ticket_date_scheduled_formatted,
     TO_CHAR(tickets.walked, 'MM/DD/YY') as ticket_date_walked_formatted,
@@ -31,7 +31,7 @@ CREATE VIEW tickets_master_view AS
     TO_CHAR(tickets.started, 'MM/DD/YY') as ticket_date_started_formatted,
     TO_CHAR(tickets.completed, 'MM/DD/YY') as ticket_date_completed_formatted,
     TO_CHAR(tickets.imported, 'MM/DD/YY') as ticket_date_imported_formatted,
-    TO_CHAR(tickets.ready, 'MM/DD/YY') as ticket_date_ready_formatted,
+    TO_CHAR(tickets.siteready, 'MM/DD/YY') as ticket_date_ready_formatted,
     tickets.payout as payout_total,
     tickets.needsimport as ticket_needsimport,
     tickets.needspermit as ticket_needspermit,
@@ -43,20 +43,20 @@ CREATE VIEW tickets_master_view AS
     houses.subdivision_id,
     houses.lot as house_lot,
     houses.address as house_address,
-    zipcitystatecounty.zip_id as house_zip_id,
-    zipcitystatecounty.zip as house_zip,
-    zipcitystatecounty.county as house_county,
-    zipcitystatecounty.county_id as house_county_id,
-    zipcitystatecounty.city as house_city,
-    zipcitystatecounty.city_id as house_city_id,
-    zipcitystatecounty.state as house_state,
-    zipcitystatecounty.state_id as house_state_id,
+    locations.zipcode_id as house_zipcode_id,
+    locations.zipcode as house_zipcode,
+    locations.county as house_county,
+    locations.county_id as house_county_id,
+    locations.city as house_city,
+    locations.city_id as house_city_id,
+    locations.state as house_state,
+    locations.state_id as house_state_id,
     builder_supervisors.name as builder_supervisor,
     site_reasons.reason as site_reason,
-    supervisor.fname || ' ' || supervisor.lname as supervisor_name,
-    plumber.fname || ' ' || plumber.lname as plumber_name,
+    supervisor.first_name || ' ' || supervisor.last_name as supervisor_name,
+    plumber.first_name || ' ' || plumber.last_name as plumber_name,
     plumber.id as plumber_id,
-    helper.fname || ' ' || helper.lname as helper_name,
+    helper.first_name || ' ' || helper.last_name as helper_name,
     helper.id as helper_id
   FROM tickets
   LEFT JOIN ticket_types
@@ -77,8 +77,8 @@ CREATE VIEW tickets_master_view AS
     ON houses.id = tickets.house_id
   LEFT JOIN subdivisions
     ON subdivisions.id = houses.subdivision_id
-  LEFT JOIN zipcitystatecounty
-    ON zipcitystatecounty.zip_id = subdivisions.zipcode_id
+  LEFT JOIN locations
+    ON locations.zipcode_id = subdivisions.zipcode_id
   LEFT JOIN builders
     ON builders.id = subdivisions.builder_id
   LEFT JOIN builder_supervisors
@@ -301,8 +301,8 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     tickets.house_id,
     houses.lot as house_lot,
     houses.address as house_address,
-    locations.zipcode_id as house_zip_id,
-    locations.zipcode as house_zip,
+    locations.zipcode_id as house_zipcode_id,
+    locations.zipcode as house_zipcode,
     locations.county as house_county,
     locations.county_id as house_county_id,
     locations.city as house_city,
@@ -319,10 +319,10 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     tickets.builder_supervisor_id,
     tickets.bumped as bumped_count,
     site_reasons.reason as site_reason,
-    supervisor.fname || ' ' || supervisor.lname as supervisor_name,
-    plumber.fname || ' ' || plumber.lname as plumber_name,
+    supervisor.first_name || ' ' || supervisor.last_name as supervisor_name,
+    plumber.first_name || ' ' || plumber.last_name as plumber_name,
     plumber.id as plumber_id,
-    helper.fname || ' ' || helper.lname as helper_name,
+    helper.first_name || ' ' || helper.last_name as helper_name,
     helper.id as helper_id,
     tickets.po as ticket_po,
     tickets.epo as ticket_epo,
@@ -332,7 +332,7 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     tickets.created as ticket_date_created,
     tickets.imported as ticket_date_imported,
     tickets.scheduled as ticket_date_scheduled,
-    tickets.ready as ticket_date_ready,
+    tickets.siteready as ticket_date_ready,
     tickets.sentout as ticket_date_sentout,
     tickets.started as ticket_date_started,
     tickets.completed as ticket_date_completed,
@@ -343,7 +343,7 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     TO_CHAR(tickets.created, 'MM/DD/YY') as ticket_date_created_formatted,
     TO_CHAR(tickets.imported, 'MM/DD/YY') as ticket_date_imported_formatted,
     TO_CHAR(tickets.scheduled, 'MM/DD/YY') as ticket_date_scheduled_formatted,
-    TO_CHAR(tickets.ready, 'MM/DD/YY') as ticket_date_ready_formatted,
+    TO_CHAR(tickets.siteready, 'MM/DD/YY') as ticket_date_ready_formatted,
     TO_CHAR(tickets.sentout, 'MM/DD/YY') as ticket_date_sentout_formatted,
     TO_CHAR(tickets.started, 'MM/DD/YY') as ticket_date_started_formatted,
     TO_CHAR(tickets.completed, 'MM/DD/YY') as ticket_date_completed_formatted,
@@ -408,9 +408,8 @@ CREATE MATERIALIZED VIEW tickets_master_view2 AS
     builders.id,
     builder_supervisors.name,
     site_reasons.reason,
-    supervisor.fname || ' ' || supervisor.lname,
+    supervisor.first_name || ' ' || supervisor.last_name,
     plumber.id,
     helper.id
   ORDER BY tickets.id
 ;
-

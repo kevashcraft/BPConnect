@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "site:build": "webpack --progress --colors --config build/dev/webpack.config.babel.js --env.API_SERVER $API_SERVER",
     "api:build": "rimraf ./dist/api/* && babel ./src/ --out-dir ./dist/api --copy-files --source-maps --inline",
-    "api:dev": "npm run api:build && npm-watch api:build | nodemon -C --watch dist/api --delay 3 dist/api/api/api.js",
+    "api:dev": "npm run api:build && npm-watch api:build | nodemon -C --watch dist/api --delay 5 dist/api/api/api.js",
     "site:dev": "webpack-dev-server --config build/dev/webpack.config.babel.js --content-base ./src/site/static --content-base generated --inline --hot --history-api-fallback --host 0.0.0.0 --colors --disable-host-check --env.API_SERVER $API_SERVER"
   },
   "watch": {

@@ -4,13 +4,13 @@ exports.list = async (req) => {
   let sql = `
     SELECT
       users.*,
-      users.fname || ' ' || users.lname as name,
+      users.first_name || ' ' || users.last_name as name,
       workers.type
     FROM workers
     JOIN users ON users.id = workers.user_id
     ORDER BY
-      users.fname,
-      users.lname
+      users.first_name,
+      users.last_name
   `
   let bind = []
 
@@ -23,11 +23,11 @@ exports.search = async (req) => {
       users.id,
       initcap(workers.type::text) as category,
       workers.type,
-      users.fname || ' ' || users.lname as title
+      users.first_name || ' ' || users.last_name as title
     FROM users
     JOIN workers ON workers.user_id = users.id
-    WHERE users.fname || ' ' || users.lname ilike ANY(ARRAY[${req.queryString}])
-    ORDER BY similarity(users.fname || ' ' || users.lname, $1) DESC
+    WHERE users.first_name || ' ' || users.last_name ilike ANY(ARRAY[${req.queryString}])
+    ORDER BY similarity(users.first_name || ' ' || users.last_name, $1) DESC
     LIMIT 5
   `
   let bind = [ req.query ]

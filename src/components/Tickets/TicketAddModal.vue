@@ -544,7 +544,7 @@ export default {
     afterOpen () {
       this.step = this.steps[0]
       this.stepIndex = 0
-      this.ticket = JSON.parse(this.emptyTicket)
+    	this.ticket = JSON.parse(this.emptyTicket)
       (this.$el).find('.search').search('set value', '')
     },
     goto (step) {
