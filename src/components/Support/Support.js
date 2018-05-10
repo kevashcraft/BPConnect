@@ -1,6 +1,7 @@
 import sgMail from '@sendgrid/mail'
-import keys from '../../api/keys'
+// import keys from '../api/keys.js'
 
+var keys = {}
 exports.email = (req) => {
   sgMail.setApiKey(keys.sg)
   const msg = {
