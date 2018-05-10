@@ -4,6 +4,8 @@ ARG PORT=3000
 
 RUN mkdir -p /app/src/api
 WORKDIR /app
+COPY *.json ./
+RUN npm install
 
 ENV PORT ${PORT}
 

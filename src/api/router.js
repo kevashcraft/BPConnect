@@ -1,4 +1,4 @@
-import Builders from '../components/Builders/Builders'
+import Builders from '../components/Builders/Builders.js'
 import BuilderSupervisors from '../components/BuilderSupervisors/BuilderSupervisors'
 import Houses from '../components/Houses/Houses'
 import Inspections from '../components/Inspections/Inspections'
